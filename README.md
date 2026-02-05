@@ -4,7 +4,7 @@ Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yar
 
 ## Legacy System
 
-Milenyum başında geliştirilmeye başlamış olan bayi yönetimi sistemi(Dealer Management System - DMS), tamamen Microsoft .net teknolojileri üzerine kurgulanmıştır. Bu nedenle .net Framework'ün zaman içerisindeki değişimine bağlı olarak yer yer modernize edilmiş ve güncellenmiştir. Şu anda .Net Framework 4.8 sürümünü kullanmaktadır. Sistem, bayi operasyonlarını yönetmek için kritik öneme sahip birçok modül içermektedir. Tabii Microsoft'un .Net Framework için olan desteği 2029 yılında sona erecektir. Bu nedenle, sistemin gelecekteki sürdürülebilirliği için modernizasyon kaçınılmazdır.
+Milenyum başında geliştirilmeye başlamış olan bayi yönetimi sistemi *(Dealer Management System - DMS)*, tamamen Microsoft .Net teknolojileri üzerine kurgulanmıştır. Bu nedenle .Net Framework'ün zaman içerisindeki değişimine bağlı olarak yer yer modernize edilmiş ve güncellenmiştir. Şu anda .Net Framework 4.8 sürümünü kullanmaktadır. Sistem, bayi operasyonlarını yönetmek için kritik öneme sahip birçok modül içermektedir. Tabii Microsoft'un .Net Framework için olan desteği 2029 yılında sona erecektir. Bu nedenle, sistemin gelecekteki sürdürülebilirliği için modernizasyon kaçınılmazdır.
 
 Genel olarak N-Tier mimarisine göre düzenlenmiş bir sistemdir. Presentation, Business Logic Layer ve Data Acces Layer olmak üzere üç ana katmandan oluşan bir mimari üzerine kurgulanmıştır. Daha önceden var olan Façade katmanı ilk modernizasyon çalışması kapsamında kaldırılmıştır. Sistem Microsoft SQL Server veritabanı kullanmaktadır. İş kuralları ve süreçleri modül bazında son derece karmaşık ve iç içe geçmiş olabilir. Bu noktada SQL Server'ın stored procedure avantajları gözetilerek iş kuralları ve süreçlerin bir kısmı veritabanı katmanında da uygulanmıştır. Dolayısıyla kod ve veritabanına yayılmış iş kuralları ve süreçleri mecvuttur.
 
@@ -132,19 +132,18 @@ Bu çalışma sırasında geliştirme hızımızın önemli ölçüde arttığı
 
 Yukarıdaki süreçte kullanılan başlıca teknolojiler ve araçlara ait özet bilgileri aşağıdaki tabloda bulabilirsiniz:
 
-| Kategori                   | Teknoloji/ Araç                                          |
+| Kategori                   | Teknoloji / Araç                                         |
 |----------------------------|----------------------------------------------------------|
 | Yapay Zeka Modelleri       | Anthropic Claude Sonnet, OpenAI GPT, Google Gemini, Grok |
+| YZ Asistanları             | GitHub Copilot                                           |
+| Metodoloji                 | Spec-Oriented Development, RAG *(Deneme Aşamasında)*     |
 | Front-End Teknolojileri    | Vue.js, Nuxt.js                                          |
 | Back-End Teknolojeleri     | .NET Core, C#                                            |
 | Veri Tabanı                | PostgreSQL                                               |
 | ORM                        | Entity Framework, Dapper                                 |
 | Auth/Authorization         | Keycloak                                                 |
 | CI/CD                      | GitHub Actions                                           |
-| Kod Kalitesi ve Güvenlik   | Sonarqube                                                |
-| Kod Editörü                | Visual Studio Code                                       |
-| YZ Asistanları             | GitHub Copilot                                           |
-| YZ Metodu                  | Spec-Oriented Development, RAG *(Deneme Aşamasında)*     |
+| Kod Kalitesi ve Güvenlik   | Sonarqube, Copilot                                       |
 
 ## Sonuçlar
 
