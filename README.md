@@ -158,4 +158,9 @@ Bu çalışma kapsamında elde edilen başlıca sonuçlar aşağıdaki gibi öze
 
 ## Sonraki Planlar ve Hedefler
 
-> SONRADAN TAMAMLANACAK
+- PoC çalışmasının başarıyla tamamlanmasının ardından, yapay zeka tabanlı modernizasyon sürecinin diğer modüllere de genişletilmesi planlanmakta.
+- Yapay zeka asistanlarının eğitiminde kullanılacak veri setlerinden hareketle daha küçük ve domain'e özgü dil modelleri *(Custom LLM)* oluşturulması değerlendirilebilir.
+- RAG *(Retrieval Augmented Generation)* yaklaşımının daha etkin kullanılması için doküman yönetim sistemlerinin entegrasyonu planlanabilir.
+- Süreçte kullanılan prompt'ların sürekli iyileştirilmesi ve optimize edilmesi için bir geri bildirim mekanizması oluşturulması faydalı olacaktır.
+- MCP tabanlı etkileşimlerin daha da geliştirilmesi ve yaygınlaştırılması düşünülebilir.
+- Mutlak suretle çıktıların maliyeti ölçümlenmeli ve insan denetimi için gereken kaynaklar optimize edilmelidir.
