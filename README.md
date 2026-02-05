@@ -164,3 +164,43 @@ Bu çalışma kapsamında elde edilen başlıca sonuçlar aşağıdaki gibi öze
 - Süreçte kullanılan prompt'ların sürekli iyileştirilmesi ve optimize edilmesi için bir geri bildirim mekanizması oluşturulması faydalı olacaktır.
 - MCP tabanlı etkileşimlerin daha da geliştirilmesi ve yaygınlaştırılması düşünülebilir.
 - Mutlak suretle çıktıların maliyeti ölçümlenmeli ve insan denetimi için gereken kaynaklar optimize edilmelidir.
+
+---
+
+## Demo Simülasyonu
+
+Bu repoda, sunumda anlatılan Spec-Oriented Development yaklaşımını göstermek için basitleştirilmiş bir **Araç Envanter Yönetimi** modülü simülasyonu bulunmaktadır.
+
+### 📁 Doküman Yapısı
+
+```
+docs/
+├── architectural-overview/     # Teknoloji stack, kodlama standartları, proje yapısı
+├── business/                   # User story'ler (US-001, US-002)
+├── domain-model/               # Entity ve Value Object tanımları
+├── ui/                         # HTML mockup'lar
+├── static-data/                # Enum'lar, marka/model listeleri
+└── prompts/                    # AI asistanlarına kullandırılacak prompt'lar
+```
+
+### 🎯 İçerik
+
+- **2 User Story**: Araç ekleme ve listeleme
+- **3 Domain Model**: Vehicle (Entity), VIN ve Money (Value Objects)
+- **2 UI Mockup**: Araç ekleme formu ve liste sayfası
+- **3 AI Prompt Template**: API endpoint, EF Migration, Vue component geliştirme
+- **Coding Standards**: C# ve TypeScript/Vue için detaylı standartlar
+
+### 🚀 Kullanım
+
+Bu dokümanlar GitHub Copilot veya diğer AI asistanlarına context olarak verilerek:
+1. Backend API endpoint'leri geliştirilebilir
+2. Database migration'ları oluşturulabilir
+3. Frontend component'leri üretilebilir
+4. Test senaryoları yazılabilir
+
+Detaylı kullanım için: [`docs/prompts/README.md`](docs/prompts/README.md)
+
+### 📝 Not
+
+Bu simülasyon **eğitim ve sunum amaçlıdır**. Gerçek kurumsal uygulamanın kod ve verileri gizlilik nedeniyle paylaşılamamıştır.
