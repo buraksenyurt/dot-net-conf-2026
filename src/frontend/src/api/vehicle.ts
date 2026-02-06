@@ -3,6 +3,9 @@ import type { Vehicle, CreateVehicleRequest, PagedResult } from '../types/vehicl
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5280/api'
 
+console.log('[API Config] Base URL:', API_BASE)
+console.log('[API Config] Environment:', import.meta.env.MODE)
+
 const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
