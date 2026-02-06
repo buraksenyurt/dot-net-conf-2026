@@ -390,7 +390,7 @@ export enum VehicleStatus {
 }
 ```
 
-Nuxt 3 best practices kullan.
+Vue 3 Composition API ve Vite best practices kullan.
 ```
 
 ---

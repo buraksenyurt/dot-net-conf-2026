@@ -7,7 +7,7 @@ Bu doküman, demo uygulamasının kalan kısımlarını AI kullanarak nasıl tam
 ### ✅ Tamamlanan
 - **Spec Dokümanları** (`docs/`) - Tüm user story'ler, domain modeller, UI mockup'ları hazır
 - **Backend Temelleri** (.NET 9 Clean Architecture, Value Objects)
-- **Frontend Şablonu** (Nuxt 3, Layout, Navigation, Placeholder pages)
+- **Frontend Şablonu** (Vue 3 + Vite, Router, Layout, TypeScript)
 
 ### 🤖 AI ile Tamamlanacak
 - Backend: Entity, Commands/Queries, DbContext, API Controllers
