@@ -98,10 +98,9 @@
       </div>
 
       <div class="flex gap-4 justify-end">
-        <NuxtLink to="/vehicles"
-          class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+        <router-link to="/vehicles" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
           İptal
-        </NuxtLink>
+        </router-link>
         <button type="submit" :disabled="submitting"
           class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
           {{ submitting ? 'Kaydediliyor...' : 'Kaydet' }}
@@ -112,14 +111,13 @@
 </template>
 
 <script setup lang="ts">
-import type { CreateVehicleRequest } from '~/types/vehicle';
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { vehicleApi } from '../api/vehicle'
+import type { CreateVehicleRequest } from '../types/vehicle'
 
-useHead({ title: 'Yeni Araç Ekle - Araç Envanter Yönetimi' });
-
-const { createVehicle } = useVehicleApi();
-const router = useRouter();
-
-const currentYear = new Date().getFullYear();
+const router = useRouter()
+const currentYear = new Date().getFullYear()
 
 const form = reactive<CreateVehicleRequest>({
   vin: '',
@@ -137,27 +135,27 @@ const form = reactive<CreateVehicleRequest>({
   fuelConsumption: 0,
   engineCapacity: 0,
   features: []
-});
+})
 
-const submitting = ref(false);
-const successMessage = ref('');
-const errorMessage = ref('');
+const submitting = ref(false)
+const successMessage = ref('')
+const errorMessage = ref('')
 
 const submitForm = async () => {
-  submitting.value = true;
-  successMessage.value = '';
-  errorMessage.value = '';
+  submitting.value = true
+  successMessage.value = ''
+  errorMessage.value = ''
 
   try {
-    await createVehicle(form);
-    successMessage.value = 'Araç başarıyla eklendi!';
+    await vehicleApi.createVehicle(form)
+    successMessage.value = 'Araç başarıyla eklendi!'
     setTimeout(() => {
-      router.push('/vehicles');
-    }, 1500);
+      router.push('/vehicles')
+    }, 1500)
   } catch (e: any) {
-    errorMessage.value = e.data?.error || e.message || 'Bir hata oluştu';
+    errorMessage.value = e.response?.data?.error || e.message || 'Bir hata oluştu'
   } finally {
-    submitting.value = false;
+    submitting.value = false
   }
-};
+}
 </script>
