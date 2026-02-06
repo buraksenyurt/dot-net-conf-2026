@@ -25,14 +25,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddVehicleCommand>();
 // Repositories
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 
-// CORS - Allow frontend origins
+// CORS - Allow ANY origin for debugging
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:3000", 
-                "http://localhost:5173")
+        policy.AllowAnyOrigin()  // Nuclear option for debugging
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -47,8 +45,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// CORS must be first
-app.UseCors();
+app.UseRouting(); // Explicitly add routing
+app.UseCors();    // CORS must be after Routing for some scenarios, but before Auth
 
 app.UseAuthorization();
 app.MapControllers();
