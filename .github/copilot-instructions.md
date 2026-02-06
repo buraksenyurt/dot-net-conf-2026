@@ -36,14 +36,19 @@ The README follows this narrative structure:
 
 ### Modern Stack (PoC Target)
 - .NET 9, Vue.js 3, Vite
+- Bootstrap 5 (UI Framework)
 - PostgreSQL
 - Entity Framework, Dapper
+- Serilog (Logging)
 - Keycloak (auth)
 - GitHub Actions (CI/CD)
 - Sonarqube
 
 ### AI Development Approach
-- **Spec-Oriented Development** - Uses structured markdown documentation in `docs/` folder (architectural-overview, business, domain-model, ui, static-data, prompts)
+- **Spec-Oriented Development** - Uses structured markdown documentation in `docs/` folder:
+  - `docs/ui/`: HTML Wireframes for UI generation (Source of Truth for Frontend)
+  - `docs/business/`: User Stories and Acceptance Criteria
+  - `docs/domain-model/`: Entities and Value Objects
 - **GitHub Copilot Agents** - Custom agents for different roles (Senior Developer, UI/UX Expert, Business Analyst, DevOps, QA)
 - **MCP (Model Context Protocol)** - Custom MCP server for domain-specific interactions
 - **Template-based generation** - dotnet templates and CLI tools for project scaffolding

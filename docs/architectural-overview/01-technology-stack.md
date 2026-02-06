@@ -32,8 +32,8 @@
 - **TypeScript** - Tip güvenli JavaScript
 
 ### UI Component Library
-- **Kurum İçi Geliştirilen Bileşen Kütüphanesi**
-- **Tailwind CSS** - Utility-first CSS framework
+- **Bootstrap 5** - CSS Framework ve Bileşen Kütüphanesi
+- **Bootstrap Icons** - İkon seti
 
 ### State Management
 - **Vue Composition API** - Built-in reactivity
