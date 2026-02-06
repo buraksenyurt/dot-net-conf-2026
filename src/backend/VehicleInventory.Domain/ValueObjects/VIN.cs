@@ -10,6 +10,9 @@ public sealed class VIN : IEquatable<VIN>
 {
     public string Value { get; }
 
+    // Parameterless constructor for EF Core
+    private VIN() : this(string.Empty) { }
+
     private VIN(string value)
     {
         Value = value;

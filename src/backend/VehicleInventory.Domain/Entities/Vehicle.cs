@@ -27,6 +27,18 @@ public sealed class Vehicle
     public VehicleStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
+    // Parameterless constructor for EF Core
+    private Vehicle()
+    {
+        VIN = null!;
+        Brand = null!;
+        Model = null!;
+        Color = null!;
+        PurchasePrice = null!;
+        SuggestedPrice = null!;
+        Features = new List<string>();
+    }
+
     private Vehicle(
         Guid id,
         VIN vin,

@@ -416,3 +416,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Entity Framework Core Migrations
+# Note: In production scenarios, migrations should typically be committed
+# This is configured for demo/development purposes
+**/Migrations/

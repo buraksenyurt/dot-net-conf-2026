@@ -11,6 +11,9 @@ public sealed class Money : IEquatable<Money>
     public decimal Amount { get; }
     public string Currency { get; }
 
+    // Parameterless constructor for EF Core
+    private Money() : this(0, string.Empty) { }
+
     private Money(decimal amount, string currency)
     {
         Amount = amount;
