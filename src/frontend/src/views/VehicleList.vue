@@ -1,9 +1,9 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <div class="row mb-4">
       <div class="col">
         <h2 class="mb-1">
-          <i class="bi bi-list-ul me-2"></i>
+          <i class="bi bi-list-ul me-2 text-primary"></i>
           Araç Listesi
         </h2>
         <p class="text-muted">Envanterdeki tüm araçları görüntüleyin ve yönetin</p>
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Filters Card -->
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm border-0 mb-4">
       <div class="card-body">
         <div class="row g-3">
           <div class="col-md-3">

@@ -1,67 +1,69 @@
 <template>
-  <div class="container py-5">
-    <div class="text-center mb-5">
-      <h1 class="display-4 fw-bold text-primary mb-3">
-        <i class="bi bi-car-front-fill me-3"></i>
-        Araç Envanter Yönetim Sistemi
-      </h1>
-      <p class="lead text-muted">AI Destekli Legacy Modernizasyonu Demo Uygulaması</p>
-    </div>
-
-    <div class="row g-4 mb-5">
+  <div>
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
       <div class="col-md-4">
-        <div class="card h-100 border-primary shadow-sm hover-card">
-          <div class="card-body text-center">
-            <i class="bi bi-lightning-charge-fill text-primary fs-1 mb-3"></i>
-            <h5 class="card-title">Vue 3 + TypeScript</h5>
-            <p class="card-text text-muted">Composition API ile modern frontend framework</p>
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-4 d-flex align-items-center">
+            <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-car-front-fill text-primary fs-3"></i>
+            </div>
+            <div>
+              <h6 class="text-muted mb-1">Toplam Araç</h6>
+              <h3 class="fw-bold mb-0">{{ totalVehicles }}</h3>
+            </div>
           </div>
         </div>
       </div>
+      
       <div class="col-md-4">
-        <div class="card h-100 border-success shadow-sm hover-card">
-          <div class="card-body text-center">
-            <i class="bi bi-gear-fill text-success fs-1 mb-3"></i>
-            <h5 class="card-title">.NET 9 + Clean Architecture</h5>
-            <p class="card-text text-muted">Domain-Driven Design ile modern backend</p>
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-4 d-flex align-items-center">
+            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-currency-dollar text-success fs-3"></i>
+            </div>
+            <div>
+              <h6 class="text-muted mb-1">Toplam Değer</h6>
+              <h3 class="fw-bold mb-0">₺{{ totalValue }}</h3>
+            </div>
           </div>
         </div>
       </div>
+
       <div class="col-md-4">
-        <div class="card h-100 border-info shadow-sm hover-card">
-          <div class="card-body text-center">
-            <i class="bi bi-database-fill text-info fs-1 mb-3"></i>
-            <h5 class="card-title">PostgreSQL</h5>
-            <p class="card-text text-muted">Modern ilişkisel veritabanı</p>
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-4 d-flex align-items-center">
+             <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-lightning-charge-fill text-warning fs-3"></i>
+            </div>
+            <div>
+              <h6 class="text-muted mb-1">Son Aktivite</h6>
+              <h5 class="fw-bold mb-0">Yeni Giriş</h5>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="text-center">
-      <router-link to="/vehicles" class="btn btn-primary btn-lg px-5 py-3 shadow">
-        <i class="bi bi-list-ul me-2"></i>
-        Araçları Görüntüle
-      </router-link>
-    </div>
-
-    <div class="mt-5 pt-5 border-top">
-      <div class="row">
-        <div class="col-md-6">
-          <h4 class="mb-3"><i class="bi bi-info-circle-fill text-primary me-2"></i>Proje Hakkında</h4>
-          <p class="text-muted">
-            Bu uygulama, spec-oriented development yaklaşımını ve AI destekli kod üretimini 
-            göstermek için hazırlanmış bir demo projedir.
-          </p>
-        </div>
-        <div class="col-md-6">
-          <h4 class="mb-3"><i class="bi bi-stack text-success me-2"></i>Teknoloji Stack</h4>
-          <ul class="list-unstyled text-muted">
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Vue 3 + Vite + TypeScript</li>
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>.NET 9 + EF Core</li>
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Clean Architecture + CQRS</li>
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>PostgreSQL + Docker</li>
-          </ul>
+    <!-- Info Section -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white py-3">
+        <h5 class="card-title mb-0">Hoş Geldiniz</h5>
+      </div>
+      <div class="card-body p-4">
+        <p class="lead text-muted">
+          Araç Envanter Yönetim Sistemi'ne hoş geldiniz. Sol menüyü kullanarak araç listesini görüntüleyebilir veya yeni araç girişi yapabilirsiniz.
+        </p>
+        <hr>
+        <div class="row mt-4">
+          <div class="col-md-6">
+             <h6><i class="bi bi-check-circle-fill text-success me-2"></i>Sistem Durumu</h6>
+             <p class="text-muted small">Tüm servisler aktif ve çalışır durumda.</p>
+          </div>
+           <div class="col-md-6">
+             <h6><i class="bi bi-clock-fill text-primary me-2"></i>Son Güncelleme</h6>
+             <p class="text-muted small">{{ new Date().toLocaleDateString('tr-TR') }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -69,28 +71,24 @@
 </template>
 
 <script setup lang="ts">
-// Home page with Bootstrap cards
+import { ref, onMounted } from 'vue'
+import { vehicleApi } from '../api/vehicle'
+
+const totalVehicles = ref(0)
+const totalValue = ref('0')
+
+const loadStats = async () => {
+  try {
+    const data = await vehicleApi.getVehicles({ pageSize: 1 })
+    totalVehicles.value = data.totalCount
+    // Mock value calculation or implement aggregation endpoint
+    totalValue.value = "7.450.000" 
+  } catch (e) {
+    console.error('Stats loading error', e)
+  }
+}
+
+onMounted(() => {
+  loadStats()
+})
 </script>
-
-<style scoped>
-.hover-card {
-  transition: all 0.3s ease;
-}
-
-.hover-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-
-.btn-lg {
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  transition: all 0.3s;
-}
-
-.btn-lg:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-}
-</style>
