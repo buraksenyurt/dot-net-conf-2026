@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: somew0rds
       POSTGRES_DB: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgres/data
     networks:
@@ -21,7 +21,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: scoth@tiger.com
       PGADMIN_DEFAULT_PASSWORD: 123456
     ports:
-      - "5050:80"
+      - "5052:80"
     depends_on:
       - postgres
     networks:
@@ -34,8 +34,8 @@ services:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
     ports:
-      - "5672:5672"
-      - "15672:15672" 
+      - "5673:5672"
+      - "15673:15672" 
     networks:
       - aio-network
 
@@ -45,7 +45,7 @@ services:
     environment:
       SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
     ports:
-      - "9000:9000"
+      - "9001:9000"
     networks:
       - aio-network
 
