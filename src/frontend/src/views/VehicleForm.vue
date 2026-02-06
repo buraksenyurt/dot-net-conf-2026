@@ -1,112 +1,148 @@
 <template>
-  <div>
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-800 mb-2">Yeni Araç Ekle</h1>
-      <p class="text-gray-600">Envantere yeni araç kaydı oluşturun</p>
-    </div>
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <div class="mb-4">
+          <h2 class="mb-1">
+            <i class="bi bi-plus-circle-dotted me-2 text-primary"></i>
+            Yeni Araç Ekle
+          </h2>
+          <p class="text-muted">Envantere yeni bir araç kaydı oluşturun</p>
+        </div>
 
-    <div v-if="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-      <p class="text-green-800">✓ {{ successMessage }}</p>
-    </div>
+        <div v-if="successMessage" class="alert alert-success d-flex align-items-center mb-4" role="alert">
+          <i class="bi bi-check-circle-fill flex-shrink-0 me-2"></i>
+          <div>{{ successMessage }}</div>
+        </div>
 
-    <div v-if="errorMessage" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-      <p class="text-red-800">✗ {{ errorMessage }}</p>
-    </div>
+        <div v-if="errorMessage" class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+          <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
+          <div>{{ errorMessage }}</div>
+        </div>
 
-    <form @submit.prevent="submitForm" class="bg-white rounded-lg shadow-md p-6 space-y-6">
-      <div class="grid md:grid-cols-2 gap-6">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">VIN (17 karakter)*</label>
-          <input v-model="form.vin" type="text" maxlength="17" required
-            class="w-full px-4 py-2 border rounded-lg" placeholder="1HGBH41JXMN109186" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Marka*</label>
-          <input v-model="form.brand" type="text" required class="w-full px-4 py-2 border rounded-lg" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Model*</label>
-          <input v-model="form.model" type="text" required class="w-full px-4 py-2 border rounded-lg" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Yıl*</label>
-          <input v-model.number="form.year" type="number" :max="currentYear" required
-            class="w-full px-4 py-2 border rounded-lg" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Motor Tipi*</label>
-          <select v-model="form.engineType" required class="w-full px-4 py-2 border rounded-lg">
-            <option value="">Seçiniz</option>
-            <option value="Gasoline">Benzin</option>
-            <option value="Diesel">Dizel</option>
-            <option value="Electric">Elektrik</option>
-            <option value="Hybrid">Hibrit</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Vites Tipi*</label>
-          <select v-model="form.transmissionType" required class="w-full px-4 py-2 border rounded-lg">
-            <option value="">Seçiniz</option>
-            <option value="Manual">Manuel</option>
-            <option value="Automatic">Otomatik</option>
-            <option value="SemiAutomatic">Yarı Otomatik</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Kilometre*</label>
-          <input v-model.number="form.mileage" type="number" min="0" required
-            class="w-full px-4 py-2 border rounded-lg" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Renk*</label>
-          <input v-model="form.color" type="text" required class="w-full px-4 py-2 border rounded-lg" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Alış Fiyatı*</label>
-          <div class="flex gap-2">
-            <input v-model.number="form.purchaseAmount" type="number" min="0" required
-              class="flex-1 px-4 py-2 border rounded-lg" />
-            <select v-model="form.purchaseCurrency" class="px-4 py-2 border rounded-lg">
-              <option value="TRY">TRY</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white py-3">
+            <h5 class="card-title mb-0">Araç Bilgileri</h5>
+          </div>
+          <div class="card-body p-4">
+            <form @submit.prevent="submitForm" class="row g-3">
+              <!-- VIN -->
+              <div class="col-12">
+                <label class="form-label fw-semibold">VIN (Şasi No)*</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                  <input v-model="form.vin" type="text" maxlength="17" required
+                    class="form-control" placeholder="17 haneli şasi numarası" />
+                </div>
+                <div class="form-text">Benzersiz 17 karakterli araç kimlik numarası</div>
+              </div>
+
+              <!-- Brand & Model -->
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Marka*</label>
+                <input v-model="form.brand" type="text" required class="form-control" placeholder="Örn: Tesla" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Model*</label>
+                <input v-model="form.model" type="text" required class="form-control" placeholder="Örn: Model Y" />
+              </div>
+
+              <!-- Year & Color -->
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Yıl*</label>
+                <input v-model.number="form.year" type="number" :max="currentYear" required class="form-control" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Renk*</label>
+                <input v-model="form.color" type="text" required class="form-control" placeholder="Örn: Beyaz" />
+              </div>
+
+              <!-- Technical Specs -->
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Motor Tipi*</label>
+                <select v-model="form.engineType" required class="form-select">
+                  <option value="">Seçiniz</option>
+                  <option value="Gasoline">Benzin</option>
+                  <option value="Diesel">Dizel</option>
+                  <option value="Electric">Elektrik</option>
+                  <option value="Hybrid">Hibrit</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Vites Tipi*</label>
+                <select v-model="form.transmissionType" required class="form-select">
+                  <option value="">Seçiniz</option>
+                  <option value="Manual">Manuel</option>
+                  <option value="Automatic">Otomatik</option>
+                  <option value="SemiAutomatic">Yarı Otomatik</option>
+                </select>
+              </div>
+
+              <!-- Mileage & Engine Info -->
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Kilometre*</label>
+                <div class="input-group">
+                  <input v-model.number="form.mileage" type="number" min="0" required class="form-control" />
+                  <span class="input-group-text">km</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Yakıt Tüketimi*</label>
+                <div class="input-group">
+                  <input v-model.number="form.fuelConsumption" type="number" step="0.1" min="0" required class="form-control" />
+                  <span class="input-group-text">L/100km</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Motor Hacmi*</label>
+                <div class="input-group">
+                  <input v-model.number="form.engineCapacity" type="number" min="0" required class="form-control" />
+                  <span class="input-group-text">cc</span>
+                </div>
+              </div>
+
+              <!-- Pricing -->
+              <div class="col-12"><hr class="my-2"></div>
+              
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-secondary">Alış Fiyatı*</label>
+                <div class="input-group">
+                  <input v-model.number="form.purchaseAmount" type="number" min="0" required class="form-control" />
+                  <select v-model="form.purchaseCurrency" class="form-select" style="max-width: 100px;">
+                    <option value="TRY">TRY</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-success">Satış Fiyatı*</label>
+                <div class="input-group">
+                  <input v-model.number="form.suggestedAmount" type="number" min="0" required class="form-control" />
+                  <select v-model="form.suggestedCurrency" class="form-select" style="max-width: 100px;">
+                    <option value="TRY">TRY</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                <router-link to="/vehicles" class="btn btn-outline-secondary px-4">
+                  İptal
+                </router-link>
+                <button type="submit" :disabled="submitting" class="btn btn-primary px-4">
+                  <span v-if="submitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ submitting ? 'Kaydediliyor...' : 'Kaydet' }}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Satış Fiyatı*</label>
-          <div class="flex gap-2">
-            <input v-model.number="form.suggestedAmount" type="number" min="0" required
-              class="flex-1 px-4 py-2 border rounded-lg" />
-            <select v-model="form.suggestedCurrency" class="px-4 py-2 border rounded-lg">
-              <option value="TRY">TRY</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Yakıt Tüketimi (L/100km)*</label>
-          <input v-model.number="form.fuelConsumption" type="number" step="0.1" min="0" required
-            class="w-full px-4 py-2 border rounded-lg" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Motor Hacmi (cc)*</label>
-          <input v-model.number="form.engineCapacity" type="number" min="0" required
-            class="w-full px-4 py-2 border rounded-lg" />
-        </div>
       </div>
-
-      <div class="flex gap-4 justify-end">
-        <router-link to="/vehicles" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-          İptal
-        </router-link>
-        <button type="submit" :disabled="submitting"
-          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-          {{ submitting ? 'Kaydediliyor...' : 'Kaydet' }}
-        </button>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
