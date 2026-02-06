@@ -3,14 +3,14 @@
 ## Backend Stack
 
 ### Framework ve Dil
-- **.NET 8.0** - Ana framework
-- **C# 12** - Programlama dili
+- **.NET 9.0** - Ana framework
+- **C# 13** - Programlama dili
 - **ASP.NET Core Web API** - REST API geliştirme
 
 ### Veri Erişim
-- **Entity Framework Core 8.0** - ORM
+- **Entity Framework Core 9.0** - ORM
 - **Dapper** - Performans kritik sorgular için
-- **PostgreSQL 15** - İlişkisel veritabanı
+- **PostgreSQL 16** - İlişkisel veritabanı
 
 ### Güvenlik ve Kimlik Yönetimi
 - **Keycloak** - Authentication ve Authorization
