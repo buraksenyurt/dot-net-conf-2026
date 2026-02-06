@@ -6,7 +6,7 @@ using VehicleInventory.Application.Queries;
 namespace VehicleInventory.API.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/vehicles")]
 [Produces("application/json")]
 public class VehiclesController : ControllerBase
 {
