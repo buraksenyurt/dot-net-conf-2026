@@ -421,3 +421,5 @@ FodyWeavers.xsd
 # Note: In production scenarios, migrations should typically be committed
 # This is configured for demo/development purposes
 **/Migrations/
+src/frontend/.vite/deps/_metadata.json
+src/frontend/.vite/deps/package.json
