@@ -88,7 +88,7 @@ Yapay zeka tabanlı teknolojilerin gelişimi ve vaat ettikleri çok cazip görü
 
 ## Level 0: Birinci Aşama
 
-İlk etapta bir **PoC** çalışması ile başlanmasına karar verilmiş ve belli bir modülün orta karmaşıklıkta iş süreçleri barındıran bir alt bölümünün sıfırdan, lisansı alınmış yapay zeka modelleri kullanılarak yeniden geliştirilmesine karar verilmiştir. Ağırlıklı olarak **Anthropic**'in **Claude Sonnet** modeli tercih edilmiştir. Bunun en büyük sebebi diğer modellere göre daha tutarlı kodlar üretmesi ve **halüsinasyon** oranının daha düşük olduğunun gözlemlenmesidir. Süreçte **front-end** tarafında **Vue** ve **Nuxt**, **back-end** tarafında ise **.NET Core** kullanılmasına karar verilmiştir. Özellikle ön yüz tarafında kurum için geliştirilen özel komponentler tercih edilmiştir. Veri tabanı tarafında **PostgreSQL**'de karar kılınmış ve kod tarafında **Entity Framework** ile **Dapper** entegrasyonları tercih edilmiştir. **Authentication/Authorization** için halihazırda diğer yeni nesil kurum içi uygulamaların da kullandığı servisler tercih edilmiş ve **Keycloak** ile devam edilmiştir. Kod tabanı **GitHub**'a alınmış ve **CI/CD** hattında **GitOps** kullanılarak otomatikleştirilmiştir. Kod kalitesi ve güvenlik taramaları için **Sonarqube** entegre edilmiştir. **Backend** taraf ile **front-end** arası haberleşme yine **REST API** üzerinden sağlanmış ancak özel entegrasyon noktaları için gerekli soyutlamalar da yapılmıştır. Bu sayede örneğin **gRPC** tabanlı noktalarla entegre olunabilmiştir. **Backend** tarafta kurum içi geliştirilmiş ve **cross-cutting concern**'leri de ele alan bir framework kullanılmıştır. Burada bağımlılıkların yönetimi için **.NET**'in dahili **dependency injection** altyapısı kullanılmıştır. Yeni yazılan **PoC** uygulamasında **legacy** sistemden hiçbir parçanın yer almamasını ve her şeyin sıfırdan tasarlanmasına özellikle dikkat edilmiştir.
+İlk etapta bir **PoC** çalışması ile başlanmasına karar verilmiş ve belli bir modülün orta karmaşıklıkta iş süreçleri barındıran bir alt bölümünün sıfırdan, lisansı alınmış yapay zeka modelleri kullanılarak yeniden geliştirilmesine karar verilmiştir. Ağırlıklı olarak **Anthropic**'in **Claude Sonnet** modeli tercih edilmiştir. Bunun en büyük sebebi diğer modellere göre daha tutarlı kodlar üretmesi ve **halüsinasyon** oranının daha düşük olduğunun gözlemlenmesidir. Süreçte **front-end** tarafında **Vue 3** ve **Vite**, **back-end** tarafında ise **.NET Core** kullanılmasına karar verilmiştir. Özellikle ön yüz tarafında kurum için geliştirilen özel komponentler tercih edilmiştir. Veri tabanı tarafında **PostgreSQL**'de karar kılınmış ve kod tarafında **Entity Framework** ile **Dapper** entegrasyonları tercih edilmiştir. **Authentication/Authorization** için halihazırda diğer yeni nesil kurum içi uygulamaların da kullandığı servisler tercih edilmiş ve **Keycloak** ile devam edilmiştir. Kod tabanı **GitHub**'a alınmış ve **CI/CD** hattında **GitOps** kullanılarak otomatikleştirilmiştir. Kod kalitesi ve güvenlik taramaları için **Sonarqube** entegre edilmiştir. **Backend** taraf ile **front-end** arası haberleşme yine **REST API** üzerinden sağlanmış ancak özel entegrasyon noktaları için gerekli soyutlamalar da yapılmıştır. Bu sayede örneğin **gRPC** tabanlı noktalarla entegre olunabilmiştir. **Backend** tarafta kurum içi geliştirilmiş ve **cross-cutting concern**'leri de ele alan bir framework kullanılmıştır. Burada bağımlılıkların yönetimi için **.NET**'in dahili **dependency injection** altyapısı kullanılmıştır. Yeni yazılan **PoC** uygulamasında **legacy** sistemden hiçbir parçanın yer almamasını ve her şeyin sıfırdan tasarlanmasına özellikle dikkat edilmiştir.
 
 ### Geliştirme Süreci
 
@@ -108,7 +108,7 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 
 - Yapay zeka asistanları ile etkileşim için belirli **Copilot** üzerinde **Agent**'lar tanımlandı: Senior Software Developer, UI/UX Expert, Senior Business Analyst, DevOps Engineer, QA Engineer gibi.
 - Diğer modüllerin kolayca geliştirme yapmaya başlamaları için bir **dotnet template** projesi ve **CLI** aracı geliştirildi. Bu sayede sıfırdan bir projeye başlayacaklar için gerekli spec doküman şablonlarını içeren, çalışır temel **back-end** ve **front-end** uygulamalarını otomatik olarak oluşturan araçlar sağlandı.
-- **Domain** odaklı geliştirilmiş **Framework** ve **Source Code Generator** kütüphaneleri kurum içi **NuGet** repolarına benzer şekilde **Nuxt** bileşenleri de **npm** repolarına alındı.
+- **Domain** odaklı geliştirilmiş **Framework** ve **Source Code Generator** kütüphaneleri kurum içi **NuGet** repolarına benzer şekilde **Vue** bileşenleri de **npm** repolarına alındı.
 - Üretilen çözüm alt yapısı belirli bir olgunluğa ulaştıktan sonra, kod kalitesi ölçümü için **Sonarqube** ile entegrasyon sağlandı. Ayrıca **SonarSource Sonarqube MCP Server** ile entegre olundu ve **VS Code** arabiriminden çıkmadan yerleşik agent'lar yardımıyla, bulgu analizi, yorumlama, düzeltme *(issue çözdürme, cognitive complexity düşürme, code-coverage değerlerini yükseltme)* gibi işlemler yapıldı.
 
 ### Deneyimler
@@ -139,7 +139,7 @@ Yukarıdaki süreçte kullanılan başlıca teknolojiler ve araçlara ait özet 
 | Yapay Zeka Modelleri       | Anthropic Claude Sonnet, OpenAI GPT, Google Gemini, Grok |
 | YZ Asistanları             | GitHub Copilot                                           |
 | Metodoloji                 | Spec-Oriented Development, RAG *(Deneme Aşamasında)*     |
-| Front-End Teknolojileri    | Vue.js, Nuxt.js                                          |
+| Front-End Teknolojileri    | Vue.js 3, Vite, Vue Router                               |
 | Back-End Teknolojileri     | .NET Core, C#                                            |
 | Veri Tabanı                | PostgreSQL                                               |
 | ORM                        | Entity Framework, Dapper                                 |
@@ -280,7 +280,7 @@ graph LR
     end
     
     subgraph "MODERN STACK (PoC)"
-        M1[Vue.js/Nuxt.js]
+        M1[Vue.js 3 + Vite]
         M2[.NET Core]
         M3[EF Core/Dapper]
         M4[PostgreSQL]
@@ -339,7 +339,7 @@ flowchart TD
     AGENT --> AG4[QA Engineer<br/>Test Cases]
     
     AG1 --> CODE1[API Endpoint<br/>+ EF Migration]
-    AG2 --> CODE2[Vue/Nuxt<br/>Component]
+    AG2 --> CODE2[Vue 3 + TypeScript<br/>Component]
     AG3 --> CODE3[Business Rules<br/>Validation]
     AG4 --> CODE4[Unit & Integration<br/>Tests]
     
@@ -544,7 +544,8 @@ graph TD
 - **Liquid Template**: Shopify tarafından geliştirilen, güvenli ve esnek template dili
 - **MCP (Model Context Protocol)**: AI modellerinin harici veri kaynaklarına erişimini standartlaştıran protokol
 - **N-Tier Architecture**: Presentation, Business Logic, Data Access gibi katmanlara ayrılmış mimari
-- **Nuxt.js**: Vue.js için full-stack framework, SSR ve static site generation destekler
+- **Vite**: Yeni nesil frontend build tool, son derece hızlı HMR (Hot Module Replacement) ve modern JavaScript özelliklerini destekler
+- **Vue.js 3**: Progressive JavaScript framework, Composition API ve TypeScript ile modern kullanıcı arayüzleri geliştirmek için kullanılır
 - **ORM (Object-Relational Mapping)**: Nesne ve veritabanı tabloları arasında mapping sağlayan teknoloji
 - **PoC (Proof of Concept)**: Bir fikrin veya yaklaşımın uygulanabilirliğini test etmek için yapılan deneysel çalışma
 - **PostgreSQL**: Açık kaynaklı, güçlü ilişkisel veritabanı yönetim sistemi

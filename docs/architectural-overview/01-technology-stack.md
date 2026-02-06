@@ -27,7 +27,8 @@
 
 ### Framework ve Library
 - **Vue.js 3** - Progressive JavaScript framework
-- **Nuxt 3** - Vue meta-framework
+- **Vite** - Modern build tool ve dev server
+- **Vue Router** - Routing library
 - **TypeScript** - Tip güvenli JavaScript
 
 ### UI Component Library
@@ -35,7 +36,7 @@
 - **Tailwind CSS** - Utility-first CSS framework
 
 ### State Management
-- **Pinia** - Vue state management
+- **Vue Composition API** - Built-in reactivity
 
 ## Altyapı ve DevOps
 
@@ -86,7 +87,8 @@
 - **TestContainers** - Integration test için container'lar
 
 ### Frontend
-- **Vitest** - Unit test framework
+- **Vite** - Yeni nesil build tool
+- **Vitest** - Vite-native unit test framework
 - **Vue Test Utils** - Vue component testing
 - **Playwright** - E2E testing
 
