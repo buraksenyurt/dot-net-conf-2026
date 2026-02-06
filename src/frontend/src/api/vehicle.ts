@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { Vehicle, CreateVehicleRequest, PagedResult } from '../types/vehicle'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api'
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5280/api'
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -21,7 +21,7 @@ export const vehicleApi = {
     if (filters?.brand) params.append('brand', filters.brand)
     if (filters?.status) params.append('status', filters.status)
 
-    const response = await api.get<PagedResult<Vehicle>>(+"/v1/vehicles?${params}"+)
+    const response = await api.get<PagedResult<Vehicle>>(`/v1/vehicles?${params}`)
     return response.data
   },
 
