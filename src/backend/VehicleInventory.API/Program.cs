@@ -25,18 +25,16 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddVehicleCommand>();
 // Repositories
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 
-// CORS - Allow both HTTP and HTTPS ports
+// CORS - Allow frontend origins
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddDefaultPolicy(policy =>
     {
         policy.WithOrigins(
                 "http://localhost:3000", 
-                "http://localhost:5173",
-                "https://localhost:5173")  // If frontend ever uses HTTPS
+                "http://localhost:5173")
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyMethod();
     });
 });
 
@@ -49,14 +47,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// IMPORTANT: CORS must come first in development
-app.UseCors("AllowFrontend");
-
-// Skip HTTPS redirection in development to avoid CORS issues
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
+// CORS must be first
+app.UseCors();
 
 app.UseAuthorization();
 app.MapControllers();
