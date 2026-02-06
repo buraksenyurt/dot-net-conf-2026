@@ -1,41 +1,41 @@
 <template>
   <div>
-    <div class="row justify-content-center">
-      <div class="col-md-10 col-lg-8">
-        <div class="mb-4">
-          <h2 class="mb-1">
-            <i class="bi bi-plus-circle-dotted me-2 text-primary"></i>
-            Yeni Araç Ekle
-          </h2>
-          <p class="text-muted">Envantere yeni bir araç kaydı oluşturun</p>
-        </div>
+    <div class="row mb-4">
+      <div class="col">
+        <h2 class="mb-1">
+          <i class="bi bi-plus-circle-dotted me-2 text-primary"></i>
+          Yeni Araç Ekle
+        </h2>
+        <p class="text-muted">Envantere yeni bir araç kaydı oluşturun</p>
+      </div>
+    </div>
 
-        <div v-if="successMessage" class="alert alert-success d-flex align-items-center mb-4" role="alert">
-          <i class="bi bi-check-circle-fill flex-shrink-0 me-2"></i>
-          <div>{{ successMessage }}</div>
-        </div>
+    <div v-if="successMessage" class="alert alert-success d-flex align-items-center mb-4" role="alert">
+      <i class="bi bi-check-circle-fill flex-shrink-0 me-2"></i>
+      <div>{{ successMessage }}</div>
+    </div>
 
-        <div v-if="errorMessage" class="alert alert-danger d-flex align-items-center mb-4" role="alert">
-          <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
-          <div>{{ errorMessage }}</div>
-        </div>
+    <div v-if="errorMessage" class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+      <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
+      <div>{{ errorMessage }}</div>
+    </div>
 
-        <div class="card shadow-sm border-0">
-          <div class="card-header bg-white py-3">
-            <h5 class="card-title mb-0">Araç Bilgileri</h5>
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3">
+        <h5 class="card-title mb-0">Araç Bilgileri</h5>
+      </div>
+      <div class="card-body p-4">
+        <form @submit.prevent="submitForm" class="row g-3">
+          <!-- VIN -->
+          <div class="col-12">
+            <label class="form-label fw-semibold">VIN (Şasi No)*</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+              <input v-model="form.vin" type="text" maxlength="17" required
+                class="form-control" placeholder="17 haneli şasi numarası" />
+            </div>
+            <div class="form-text">Benzersiz 17 karakterli araç kimlik numarası</div>
           </div>
-          <div class="card-body p-4">
-            <form @submit.prevent="submitForm" class="row g-3">
-              <!-- VIN -->
-              <div class="col-12">
-                <label class="form-label fw-semibold">VIN (Şasi No)*</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
-                  <input v-model="form.vin" type="text" maxlength="17" required
-                    class="form-control" placeholder="17 haneli şasi numarası" />
-                </div>
-                <div class="form-text">Benzersiz 17 karakterli araç kimlik numarası</div>
-              </div>
 
               <!-- Brand & Model -->
               <div class="col-md-6">
@@ -142,7 +142,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
