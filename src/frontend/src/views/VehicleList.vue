@@ -1,78 +1,160 @@
 <template>
-  <div>
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-800 mb-2">Araç Listesi</h1>
-      <p class="text-gray-600">Envanterdeki tüm araçları görüntüleyin ve yönetin</p>
-    </div>
-
-    <!-- Filters -->
-    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
-      <div class="grid md:grid-cols-3 gap-4">
-        <input v-model="filters.brand" type="text" placeholder="Marka ara..." 
-          class="px-4 py-2 border rounded-lg" @input="loadVehicles" />
-        <select v-model="filters.status" class="px-4 py-2 border rounded-lg" @change="loadVehicles">
-          <option value="">Tüm Durumlar</option>
-          <option value="InStock">Stokta</option>
-          <option value="OnSale">Satışta</option>
-          <option value="Sold">Satıldı</option>
-        </select>
-        <router-link to="/vehicles/new" 
-          class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 text-center flex items-center justify-center">
-          + Yeni Araç Ekle
-        </router-link>
+  <div class="container-fluid">
+    <div class="row mb-4">
+      <div class="col">
+        <h2 class="mb-1">
+          <i class="bi bi-list-ul me-2"></i>
+          Araç Listesi
+        </h2>
+        <p class="text-muted">Envanterdeki tüm araçları görüntüleyin ve yönetin</p>
       </div>
     </div>
 
-    <!-- Loading -->
-    <div v-if="loading" class="text-center py-12">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      <p class="mt-4 text-gray-600">Yükleniyor...</p>
+    <!-- Filters Card -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-search me-1"></i>Marka
+            </label>
+            <input v-model="filters.brand" type="text" class="form-control" 
+              placeholder="Marka ara..." @input="loadVehicles" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-filter me-1"></i>Durum
+            </label>
+            <select v-model="filters.status" class="form-select" @change="loadVehicles">
+              <option value="">Tüm Durumlar</option>
+              <option value="InStock">Stokta</option>
+              <option value="OnSale">Satışta</option>
+              <option value="Sold">Satıldı</option>
+              <option value="Reserved">Rezerve</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-grid-3x3-gap me-1"></i>Sayfa Boyutu
+            </label>
+            <select v-model="filters.pageSize" class="form-select" @change="loadVehicles">
+              <option :value="5">5</option>
+              <option :value="10">10</option>
+              <option :value="25">25</option>
+              <option :value="50">50</option>
+            </select>
+          </div>
+          <div class="col-md-3 d-flex align-items-end">
+            <router-link to="/vehicles/new" class="btn btn-success w-100">
+              <i class="bi bi-plus-circle-fill me-2"></i>
+              Yeni Araç Ekle
+            </router-link>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Error -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
-      <p class="text-red-800">Hata: {{ error }}</p>
+    <!-- Loading State -->
+    <div v-if="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Yükleniyor...</span>
+      </div>
+      <p class="mt-3 text-muted">Araçlar yükleniyor...</p>
     </div>
 
-    <!-- Vehicle List -->
-    <div v-else-if="vehicles" class="bg-white rounded-lg shadow-md overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">VIN</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Araç</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Yıl</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fiyat</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Durum</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="vehicle in vehicles.items" :key="vehicle.id" class="hover:bg-gray-50">
-            <td class="px-6 py-4 text-sm font-mono text-gray-900">{{ vehicle.vin }}</td>
-            <td class="px-6 py-4 text-sm text-gray-900">{{ vehicle.brand }} {{ vehicle.model }}</td>
-            <td class="px-6 py-4 text-sm text-gray-900">{{ vehicle.year }}</td>
-            <td class="px-6 py-4 text-sm text-gray-900">
-              {{ vehicle.suggestedAmount.toLocaleString() }} {{ vehicle.suggestedCurrency }}
-            </td>
-            <td class="px-6 py-4 text-sm">
-              <span :class="getStatusClass(vehicle.status)" class="px-2 py-1 rounded-full text-xs">
-                {{ getStatusText(vehicle.status) }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Error State -->
+    <div v-else-if="error" class="alert alert-danger shadow-sm" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <strong>Hata:</strong> {{ error }}
+    </div>
+
+    <!-- Vehicle Table -->
+    <div v-else-if="vehicles && vehicles.items.length > 0" class="card shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th><i class="bi bi-hash me-1"></i>VIN</th>
+              <th><i class="bi bi-car-front me-1"></i>Araç</th>
+              <th><i class="bi bi-calendar me-1"></i>Yıl</th>
+              <th><i class="bi bi-speedometer me-1"></i>KM</th>
+              <th><i class="bi bi-cash-coin me-1"></i>Fiyat</th>
+              <th><i class="bi bi-flag-fill me-1"></i>Durum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="vehicle in vehicles.items" :key="vehicle.id" class="cursor-pointer">
+              <td>
+                <code class="text-primary">{{ vehicle.vin }}</code>
+              </td>
+              <td>
+                <strong>{{ vehicle.brand }}</strong> {{ vehicle.model }}
+                <br>
+                <small class="text-muted">
+                  <i class="bi bi-palette me-1"></i>{{ vehicle.color }}
+                </small>
+              </td>
+              <td>{{ vehicle.year }}</td>
+              <td>{{ vehicle.mileage.toLocaleString() }} km</td>
+              <td>
+                <strong>{{ vehicle.suggestedAmount.toLocaleString() }}</strong>
+                <small class="text-muted">{{ vehicle.suggestedCurrency }}</small>
+              </td>
+              <td>
+                <span :class="getStatusClass(vehicle.status)" class="badge">
+                  <i :class="getStatusIcon(vehicle.status)" class="me-1"></i>
+                  {{ getStatusText(vehicle.status) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Pagination -->
-      <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-t">
-        <div class="text-sm text-gray-700">Toplam {{ vehicles.totalCount }} araç</div>
-        <div class="flex gap-2">
-          <button @click="previousPage" :disabled="filters.page === 1"
-            class="px-4 py-2 border rounded-lg disabled:opacity-50">Önceki</button>
-          <span class="px-4 py-2">Sayfa {{ filters.page }} / {{ vehicles.totalPages }}</span>
-          <button @click="nextPage" :disabled="filters.page >= vehicles.totalPages"
-            class="px-4 py-2 border rounded-lg disabled:opacity-50">Sonraki</button>
+      <div class="card-footer bg-light">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <span class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Toplam <strong>{{ vehicles.totalCount }}</strong> araç bulundu
+              (Sayfa {{ filters.page }} / {{ vehicles.totalPages }})
+            </span>
+          </div>
+          <div class="col-md-6">
+            <nav>
+              <ul class="pagination justify-content-end mb-0">
+                <li class="page-item" :class="{ disabled: filters.page === 1 }">
+                  <button class="page-link" @click="previousPage" :disabled="filters.page === 1">
+                    <i class="bi bi-chevron-left"></i> Önceki
+                  </button>
+                </li>
+                <li class="page-item active">
+                  <span class="page-link">{{ filters.page }}</span>
+                </li>
+                <li class="page-item" :class="{ disabled: filters.page >= vehicles.totalPages }">
+                  <button class="page-link" @click="nextPage" 
+                    :disabled="filters.page >= vehicles.totalPages">
+                    Sonraki <i class="bi bi-chevron-right"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else class="card shadow-sm text-center py-5">
+      <div class="card-body">
+        <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+        <h4>Henüz araç bulunmuyor</h4>
+        <p class="text-muted mb-4">Sisteme ilk aracı ekleyerek başlayın</p>
+        <router-link to="/vehicles/new" class="btn btn-primary">
+          <i class="bi bi-plus-circle-fill me-2"></i>
+          Yeni Araç Ekle
+        </router-link>
       </div>
     </div>
   </div>
@@ -101,6 +183,7 @@ const loadVehicles = async () => {
     vehicles.value = await vehicleApi.getVehicles(filters)
   } catch (e: any) {
     error.value = e.response?.data?.error || e.message || 'Araçlar yüklenirken bir hata oluştu'
+    console.error('API Error:', e)
   } finally {
     loading.value = false
   }
@@ -122,12 +205,22 @@ const previousPage = () => {
 
 const getStatusClass = (status: string) => {
   const classes: Record<string, string> = {
-    InStock: 'bg-blue-100 text-blue-800',
-    OnSale: 'bg-green-100 text-green-800',
-    Sold: 'bg-gray-100 text-gray-800',
-    Reserved: 'bg-yellow-100 text-yellow-800'
+    InStock: 'bg-primary',
+    OnSale: 'bg-success',
+    Sold: 'bg-secondary',
+    Reserved: 'bg-warning text-dark'
   }
-  return classes[status] || 'bg-gray-100 text-gray-800'
+  return classes[status] || 'bg-secondary'
+}
+
+const getStatusIcon = (status: string) => {
+  const icons: Record<string, string> = {
+    InStock: 'bi-box-seam',
+    OnSale: 'bi-cart-check',
+    Sold: 'bi-check-circle-fill',
+    Reserved: 'bi-hourglass-split'
+  }
+  return icons[status] || 'bi-circle'
 }
 
 const getStatusText = (status: string) => {
@@ -144,3 +237,24 @@ onMounted(() => {
   loadVehicles()
 })
 </script>
+
+<style scoped>
+.cursor-pointer {
+  cursor: pointer;
+}
+
+tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+code {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+}
+</style>
