@@ -4,51 +4,80 @@ using VehicleInventory.Domain.Interfaces;
 using VehicleInventory.Infrastructure.Persistence;
 using VehicleInventory.Infrastructure.Repositories;
 using FluentValidation;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+// Bootstrap logger
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-// Add services to the container
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// DbContext
-builder.Services.AddDbContext<VehicleInventoryDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddVehicleCommand).Assembly));
-
-// FluentValidation
-builder.Services.AddValidatorsFromAssemblyContaining<AddVehicleCommand>();
-
-// Repositories
-builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
-
-// CORS - Allow ANY origin for debugging
-builder.Services.AddCors(options =>
+try 
 {
-    options.AddDefaultPolicy(policy =>
+    Log.Information("Starting web application");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Add Serilog with colorful console output
+    builder.Host.UseSerilog((context, configuration) =>
+        configuration.ReadFrom.Configuration(context.Configuration)
+                     .Enrich.FromLogContext()
+                     .WriteTo.Console(theme: Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme.Code));
+
+
+    // Add services to the container
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    // DbContext
+    builder.Services.AddDbContext<VehicleInventoryDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    // MediatR
+    builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddVehicleCommand).Assembly));
+
+    // FluentValidation
+    builder.Services.AddValidatorsFromAssemblyContaining<AddVehicleCommand>();
+
+    // Repositories
+    builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+
+    // CORS - Allow ANY origin for debugging
+    builder.Services.AddCors(options =>
     {
-        policy.AllowAnyOrigin()  // Nuclear option for debugging
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        options.AddDefaultPolicy(policy =>
+        {
+            policy.AllowAnyOrigin()  // Nuclear option for debugging
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
     });
-});
 
-var app = builder.Build();
+    var app = builder.Build();
+    
+    // Enable Serilog Request Logging
+    app.UseSerilogRequestLogging();
 
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Configure the HTTP request pipeline
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseRouting(); // Explicitly add routing
+    app.UseCors();    // CORS must be after Routing for some scenarios, but before Auth
+
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();
 }
-
-app.UseRouting(); // Explicitly add routing
-app.UseCors();    // CORS must be after Routing for some scenarios, but before Auth
-
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

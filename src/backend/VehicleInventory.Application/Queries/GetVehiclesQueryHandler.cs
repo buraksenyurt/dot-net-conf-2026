@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using VehicleInventory.Application.DTOs;
 using VehicleInventory.Domain.Interfaces;
 
@@ -10,14 +11,19 @@ namespace VehicleInventory.Application.Queries;
 public class GetVehiclesQueryHandler : IRequestHandler<GetVehiclesQuery, PagedResult<VehicleDto>>
 {
     private readonly IVehicleRepository _repository;
+    private readonly ILogger<GetVehiclesQueryHandler> _logger;
 
-    public GetVehiclesQueryHandler(IVehicleRepository repository)
+    public GetVehiclesQueryHandler(IVehicleRepository repository, ILogger<GetVehiclesQueryHandler> logger)
     {
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<PagedResult<VehicleDto>> Handle(GetVehiclesQuery request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Fetching vehicles. Page: {Page}, PageSize: {PageSize}, Brand: {Brand}, Status: {Status}", 
+            request.Page, request.PageSize, request.Brand, request.Status);
+
         var (vehicles, totalCount) = await _repository.GetAllAsync(
             request.Page,
             request.PageSize,
@@ -25,6 +31,8 @@ public class GetVehiclesQueryHandler : IRequestHandler<GetVehiclesQuery, PagedRe
             request.Status,
             cancellationToken
         );
+
+        _logger.LogInformation("Found {Count} vehicles out of {TotalCount} total.", vehicles.Count(), totalCount);
 
         var vehicleDtos = vehicles.Select(v => new VehicleDto(
             v.Id,

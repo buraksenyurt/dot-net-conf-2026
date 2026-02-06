@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using VehicleInventory.Domain.Common;
 using VehicleInventory.Domain.Entities;
 using VehicleInventory.Domain.Enums;
@@ -13,17 +14,22 @@ namespace VehicleInventory.Application.Commands;
 public class AddVehicleCommandHandler : IRequestHandler<AddVehicleCommand, Result<Guid>>
 {
     private readonly IVehicleRepository _repository;
+    private readonly ILogger<AddVehicleCommandHandler> _logger;
 
-    public AddVehicleCommandHandler(IVehicleRepository repository)
+    public AddVehicleCommandHandler(IVehicleRepository repository, ILogger<AddVehicleCommandHandler> logger)
     {
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<Result<Guid>> Handle(AddVehicleCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Attempting to add new vehicle. VIN: {Vin}, Brand: {Brand}, Model: {Model}", request.Vin, request.Brand, request.Model);
+
         // Check if vehicle with same VIN already exists
         if (await _repository.ExistsAsync(request.Vin, cancellationToken))
         {
+            _logger.LogWarning("Vehicle with VIN {Vin} already exists", request.Vin);
             return Result<Guid>.Failure($"Vehicle with VIN {request.Vin} already exists");
         }
 
@@ -31,6 +37,7 @@ public class AddVehicleCommandHandler : IRequestHandler<AddVehicleCommand, Resul
         var vinResult = VIN.Create(request.Vin);
         if (vinResult.IsFailure)
         {
+            _logger.LogError("Invalid VIN provided: {Vin}. Error: {Error}", request.Vin, vinResult.Error);
             return Result<Guid>.Failure(vinResult.Error);
         }
 
@@ -77,11 +84,14 @@ public class AddVehicleCommandHandler : IRequestHandler<AddVehicleCommand, Resul
 
         if (vehicleResult.IsFailure)
         {
+            _logger.LogError("Failed to create vehicle entity: {Error}", vehicleResult.Error);
             return Result<Guid>.Failure(vehicleResult.Error);
         }
 
         // Save to repository
         var savedVehicle = await _repository.AddAsync(vehicleResult.Value!, cancellationToken);
+        
+        _logger.LogInformation("Vehicle added successfully. ID: {Id}, VIN: {Vin}", savedVehicle.Id, savedVehicle.VIN.Value);
 
         return Result<Guid>.Success(savedVehicle.Id);
     }
