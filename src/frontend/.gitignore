@@ -1,0 +1,14 @@
+node_modules
+*.log*
+.nuxt
+.output
+.env
+dist
+.DS_Store
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
