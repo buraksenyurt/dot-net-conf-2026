@@ -1,245 +1,104 @@
+<!-- 
+  TYPE: Wireframe
+  LAYOUT: MasterLayout (Sidebar + Header)
+  PAGE: Vehicle List
+  DESC: Araçların listelendiği, filtrelendiği ve yeni araç ekleme butonunun olduğu sayfa.
+-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Araç Envanter Listesi</title>
+    <title>Wireframe: Araç Listesi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
-        .header { background: white; border-bottom: 1px solid #e0e0e0; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 24px; color: #1a1a1a; }
-        .header .btn-primary { padding: 10px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
-        .header .btn-primary:hover { background: #1976d2; }
-        .container { max-width: 1400px; margin: 24px auto; padding: 0 24px; }
-        
-        /* Filters */
-        .filters { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .filter-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
-        .filter-group { display: flex; flex-direction: column; flex: 1; min-width: 180px; }
-        .filter-group label { font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #555; }
-        .filter-group input, .filter-group select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-        .filter-group input:focus, .filter-group select:focus { outline: none; border-color: #2196f3; }
-        .filter-actions { display: flex; gap: 8px; }
-        .btn-filter { padding: 8px 16px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        .btn-clear { padding: 8px 16px; background: #f5f5f5; color: #333; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        
-        /* Stats */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .stat-card .label { font-size: 13px; color: #777; margin-bottom: 8px; }
-        .stat-card .value { font-size: 28px; font-weight: 600; color: #1a1a1a; }
-        
-        /* Table */
-        .table-container { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        thead { background: #f9f9f9; }
-        thead th { padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; color: #555; border-bottom: 2px solid #e0e0e0; }
-        tbody tr { border-bottom: 1px solid #f0f0f0; transition: background-color 0.2s; }
-        tbody tr:hover { background: #f9f9f9; cursor: pointer; }
-        tbody td { padding: 16px; font-size: 14px; color: #333; }
-        
-        /* Badges */
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-        .badge-green { background: #e8f5e9; color: #2e7d32; }
-        .badge-yellow { background: #fff9e6; color: #f57c00; }
-        .badge-gray { background: #f5f5f5; color: #757575; }
-        .badge-blue { background: #e3f2fd; color: #1976d2; }
-        
-        /* Price */
-        .price { font-weight: 600; color: #2196f3; }
-        
-        /* Pagination */
-        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: white; border-top: 1px solid #f0f0f0; }
-        .pagination-info { font-size: 14px; color: #666; }
-        .pagination-controls { display: flex; gap: 8px; }
-        .pagination-controls button { padding: 6px 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        .pagination-controls button:hover:not(:disabled) { background: #f5f5f5; }
-        .pagination-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .pagination-controls .active { background: #2196f3; color: white; border-color: #2196f3; }
-        
-        /* Loading */
-        .loading { text-align: center; padding: 40px; color: #999; }
-        
-        /* Empty State */
-        .empty-state { text-align: center; padding: 60px 20px; }
-        .empty-state svg { width: 120px; height: 120px; margin-bottom: 20px; opacity: 0.3; }
-        .empty-state h3 { font-size: 18px; color: #666; margin-bottom: 8px; }
-        .empty-state p { font-size: 14px; color: #999; }
+        body { padding: 20px; background: #f8f9fa; }
+        .wireframe-box { border: 2px dashed #ccc; padding: 15px; background: #fff; margin-bottom: 20px; }
+        .wireframe-label { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block; }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <h1>Araç Envanteri</h1>
-        <button class="btn-primary" onclick="window.location.href='vehicle-add-form.html'">+ Yeni Araç Ekle</button>
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Araç Listesi</h1>
+            <p>Envanterdeki tüm araçların yönetimi.</p>
+        </div>
     </div>
-    
-    <div class="container">
-        <!-- Filters -->
-        <div class="filters">
-            <div class="filter-row">
-                <div class="filter-group" style="flex: 2;">
-                    <label>Ara (VIN, Marka, Model)</label>
-                    <input type="text" placeholder="Arama yapın..." id="searchInput">
-                </div>
-                
-                <div class="filter-group">
-                    <label>Marka</label>
-                    <select id="brandFilter">
-                        <option value="">Tümü</option>
-                        <option value="honda">Honda</option>
-                        <option value="toyota">Toyota</option>
-                        <option value="mercedes">Mercedes-Benz</option>
-                        <option value="bmw">BMW</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label>Motor Tipi</label>
-                    <select id="engineFilter">
-                        <option value="">Tümü</option>
-                        <option value="petrol">Benzin</option>
-                        <option value="diesel">Dizel</option>
-                        <option value="electric">Elektrik</option>
-                        <option value="hybrid">Hibrit</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label>Durum</label>
-                    <select id="statusFilter">
-                        <option value="">Tümü</option>
-                        <option value="available">Stokta</option>
-                        <option value="reserved">Rezerve</option>
-                        <option value="sold">Satıldı</option>
-                    </select>
-                </div>
-                
-                <div class="filter-actions">
-                    <button class="btn-filter">Filtrele</button>
-                    <button class="btn-clear">Temizle</button>
-                </div>
+
+    <!-- Filters Area -->
+    <div class="wireframe-box">
+        <span class="wireframe-label">Filtreleme ve Aksiyon Alanı</span>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label>Marka Ara</label>
+                <input type="text" class="form-control" placeholder="Text Input">
             </div>
-        </div>
-        
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card">
-                <div class="label">Toplam Araç</div>
-                <div class="value">247</div>
+            <div class="col-md-3">
+                <label>Durum Filtresi</label>
+                <select class="form-select">
+                    <option>Tümü</option>
+                    <option>Stokta</option>
+                    <option>Satıldı</option>
+                </select>
             </div>
-            <div class="stat-card">
-                <div class="label">Stokta</div>
-                <div class="value" style="color: #2e7d32;">189</div>
+            <div class="col-md-3">
+                <label>Sayfa Boyutu</label>
+                <select class="form-select">
+                    <option>10</option>
+                    <option>20</option>
+                </select>
             </div>
-            <div class="stat-card">
-                <div class="label">Rezerve</div>
-                <div class="value" style="color: #f57c00;">32</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Satıldı (Bu Ay)</div>
-                <div class="value" style="color: #1976d2;">26</div>
-            </div>
-        </div>
-        
-        <!-- Table -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>VIN</th>
-                        <th>Marka / Model</th>
-                        <th>Yıl</th>
-                        <th>Motor / Vites</th>
-                        <th>Km</th>
-                        <th>Fiyat</th>
-                        <th>Durum</th>
-                        <th>Ekleme Tarihi</th>
-                    </tr>
-                </thead>
-                <tbody id="vehicleTableBody">
-                    <!-- Sample Data -->
-                    <tr>
-                        <td><code style="font-size: 12px;">1HGBH41JXMN109186</code></td>
-                        <td><strong>Honda Civic</strong></td>
-                        <td>2026</td>
-                        <td>Hibrit / Otomatik</td>
-                        <td>0 km</td>
-                        <td class="price">1.725.000 ₺</td>
-                        <td><span class="badge badge-green">Stokta</span></td>
-                        <td>05.02.2026</td>
-                    </tr>
-                    <tr>
-                        <td><code style="font-size: 12px;">WBAPH5C55BE123456</code></td>
-                        <td><strong>BMW 3 Serisi</strong></td>
-                        <td>2025</td>
-                        <td>Dizel / Otomatik</td>
-                        <td>12.500 km</td>
-                        <td class="price">2.450.000 ₺</td>
-                        <td><span class="badge badge-yellow">Rezerve</span></td>
-                        <td>02.02.2026</td>
-                    </tr>
-                    <tr>
-                        <td><code style="font-size: 12px;">JM1BL1S59B1234567</code></td>
-                        <td><strong>Mazda 3</strong></td>
-                        <td>2024</td>
-                        <td>Benzin / Manuel</td>
-                        <td>8.200 km</td>
-                        <td class="price">1.350.000 ₺</td>
-                        <td><span class="badge badge-green">Stokta</span></td>
-                        <td>28.01.2026</td>
-                    </tr>
-                    <tr>
-                        <td><code style="font-size: 12px;">1FTFW1ET5EFA12345</code></td>
-                        <td><strong>Ford F-150</strong></td>
-                        <td>2023</td>
-                        <td>Benzin / Otomatik</td>
-                        <td>45.800 km</td>
-                        <td class="price">2.850.000 ₺</td>
-                        <td><span class="badge badge-gray">Satıldı</span></td>
-                        <td>15.01.2026</td>
-                    </tr>
-                    <tr>
-                        <td><code style="font-size: 12px;">5YJ3E1EA1KF123456</code></td>
-                        <td><strong>Tesla Model 3</strong></td>
-                        <td>2025</td>
-                        <td>Elektrik / Otomatik</td>
-                        <td>3.100 km</td>
-                        <td class="price">2.200.000 ₺</td>
-                        <td><span class="badge badge-green">Stokta</span></td>
-                        <td>10.01.2026</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <!-- Pagination -->
-            <div class="pagination">
-                <div class="pagination-info">
-                    Toplam 247 kayıt - Sayfa 1 / 13 gösteriliyor (1-20)
-                </div>
-                <div class="pagination-controls">
-                    <button disabled>‹ Önceki</button>
-                    <button class="active">1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button>...</button>
-                    <button>13</button>
-                    <button>Sonraki ›</button>
-                </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-success w-100">+ Yeni Araç Ekle Butonu</button>
             </div>
         </div>
     </div>
-    
-    <script>
-        // Table row click handler
-        document.querySelectorAll('tbody tr').forEach(row => {
-            row.addEventListener('click', function() {
-                alert('Araç detay sayfasına yönlendiriliyorsunuz... (Demo)');
-            });
-        });
-    </script>
+
+    <!-- Data Grid -->
+    <div class="wireframe-box">
+        <span class="wireframe-label">Veri Tablosu</span>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>VIN (Code)</th>
+                    <th>Araç (Marka/Model/Renk)</th>
+                    <th>Yıl</th>
+                    <th>KM</th>
+                    <th>Fiyat (Tutar + Para Birimi)</th>
+                    <th>Durum (Badge)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>[VIN]</td>
+                    <td>
+                        <strong>[Brand]</strong> [Model]<br>
+                        <small>[Color]</small>
+                    </td>
+                    <td>[Year]</td>
+                    <td>[Mileage] km</td>
+                    <td>[Price] [Currency]</td>
+                    <td>[Status Badge]</td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="text-center text-muted">... Diğer kayıtlar ...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between mt-3">
+            <span>Toplam Kayıt Bilgisi</span>
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">Önceki</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Sonraki</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
 </body>
 </html>

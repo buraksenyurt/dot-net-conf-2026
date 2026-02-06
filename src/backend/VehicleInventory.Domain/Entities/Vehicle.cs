@@ -120,8 +120,9 @@ public sealed class Vehicle
         if (fuelConsumption < 0)
             return Result<Vehicle>.Failure("Fuel consumption cannot be negative");
 
-        if (engineCapacity <= 0)
-            return Result<Vehicle>.Failure("Engine capacity must be greater than zero");
+        // Engine capacity must be > 0 for non-electric vehicles
+        if (engineType != EngineType.Electric && engineCapacity <= 0)
+            return Result<Vehicle>.Failure("Engine capacity must be greater than zero for non-electric vehicles");
 
         var vehicle = new Vehicle(
             Guid.NewGuid(),

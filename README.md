@@ -2,6 +2,11 @@
 
 Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yararlanıyoruz, ne gibi zorluklarla karşılaşıyoruz ve vardığımız sonuçlar...
 
+## Kendime Notlar
+
+- Tersine mühendislikten bahsettik mi? Çalışır bir solution oluşturup sayfa tasarımları, doküman şablonları gibi içerikleri geriye dönük hazırladık ve beklenen çıktılara yakın üretimler için standarları bu taktik ile belirledik.
+- Aralara özlü söz tadında kartlar eklenebilir mi?
+
 ## Legacy System
 
 Milenyum başında geliştirilmeye başlamış olan bayi yönetimi sistemi *(Dealer Management System - DMS)*, tamamen Microsoft .Net teknolojileri üzerine kurgulanmıştır. Bu nedenle .Net Framework'ün zaman içerisindeki değişimine bağlı olarak yer yer modernize edilmiş ve güncellenmiştir. Şu anda .Net Framework 4.8 sürümünü kullanmaktadır. Sistem, bayi operasyonlarını yönetmek için kritik öneme sahip birçok modül içermektedir. Tabii Microsoft'un .Net Framework için olan desteği 2029 yılında sona erecektir. Bu nedenle, sistemin gelecekteki sürdürülebilirliği için modernizasyon kaçınılmazdır.
