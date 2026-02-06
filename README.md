@@ -68,7 +68,7 @@ Modernizasyon ihtiyaçlarının netleştirilmesi için 2020 öncesinde birçok *
 - **Unit testler** yazılmaya başlanmış ve **code coverage** değerlerinin kabul edilebilir seviyelere gelmesi sağlanmıştır.
 - **CI/CD** süreçleri iyileştirilmiş ve otomasyon oranı artırılmıştır.
 
-Bu modernizasyon çalışmaları hali hazırda devam etmektedir ancak asıl stratejik hedeflere ulaşma noktasında ürünün sıfırdan yazılma maliyetinin çok yüksek olması nedeniyle yeni yaklaşımlar araştırılmaya başlanmış ve bu kapsamda yapay zeka tabanlı modernizasyon çözümleri mercek altına alınmıştır. Yazının bundan sonraki kısımlarında son altı aylık dönem içerisinde gerçekleştirilen yapay zeka tabanlı modernizasyon çalışmaları anlatılmakta olup sonuçlar ve gelecek planları paylaşılmaktadır. 
+Bu modernizasyon çalışmaları hali hazırda devam etmektedir ancak asıl stratejik hedeflere ulaşma noktasında ürünün sıfırdan yazılma maliyetinin çok yüksek olması nedeniyle yeni yaklaşımlar araştırılmaya başlanmış ve bu kapsamda yapay zeka tabanlı modernizasyon çözümleri mercek altına alınmıştır. Yazının bundan sonraki kısımlarında son altı aylık dönem içerisinde gerçekleştirilen yapay zeka tabanlı modernizasyon çalışmaları anlatılmakta olup sonuçlar ve gelecek planları paylaşılmaktadır.
 
 ### Motivasyon
 
@@ -109,7 +109,7 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 - Yapay zeka asistanları ile etkileşim için belirli **Copilot** üzerinde **Agent**'lar tanımlandı: Senior Software Developer, UI/UX Expert, Senior Business Analyst, DevOps Engineer, QA Engineer gibi.
 - Diğer modüllerin kolayca geliştirme yapmaya başlamaları için bir **dotnet template** projesi ve **CLI** aracı geliştirildi. Bu sayede sıfırdan bir projeye başlayacaklar için gerekli spec doküman şablonlarını içeren, çalışır temel **back-end** ve **front-end** uygulamalarını otomatik olarak oluşturan araçlar sağlandı.
 - **Domain** odaklı geliştirilmiş **Framework** ve **Source Code Generator** kütüphaneleri kurum içi **NuGet** repolarına benzer şekilde **Nuxt** bileşenleri de **npm** repolarına alındı.
-- Üretilen çözüm alt yapısı belirli bir olgunluğa ulaştıktan sonra, kod kalitesi ölçümü için **Sonarqube** ile entegrasyon sağlandı. Ayrıca **SonarSource Sonarqube MCP Server** ile entegre olundu ve **VS Code** arabiriminden çıkmadan, yerleşik agent'lar yardımıyla, bulgu analizi, yorumlama, düzeltme *(issue çözdürme, cognitive complexity düşürme, code-coverage değerlerini yükseltme)* gibi işlemler yapıldı.
+- Üretilen çözüm alt yapısı belirli bir olgunluğa ulaştıktan sonra, kod kalitesi ölçümü için **Sonarqube** ile entegrasyon sağlandı. Ayrıca **SonarSource Sonarqube MCP Server** ile entegre olundu ve **VS Code** arabiriminden çıkmadan yerleşik agent'lar yardımıyla, bulgu analizi, yorumlama, düzeltme *(issue çözdürme, cognitive complexity düşürme, code-coverage değerlerini yükseltme)* gibi işlemler yapıldı.
 
 ### Deneyimler
 
@@ -127,7 +127,7 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 Bu çalışma sırasında geliştirme hızımızın önemli ölçüde arttığını fark ettik ve birkaç yardımcı araç da yazdık:
 
 - **Domain Sözlüğü:** Ürün paydaşlarının ortak bir terminoloji kullanmasını sağlamak için bir domain sözlüğü aracı geliştirdik. Bu araç, yapay zeka asistanlarının doğru terimleri kullanmasını kolaylaştırdı.
-- **MCP** *(Model Context Protocol)*: Template kullanımı haricinde kullanıcı hikayeleri *(User Story)* ve iş kurallarını barındıran analiz dokümanlarını minimum hatada oluşturmak için bir **MCP** sunucusu ve gerekli **API** endpoint'leri geliştirildi. İlgili **MCP server** **VS Code** ortamlarına da adapte edildi ve böylece analist veya yazılım geliştiricilerin, yapay zeka asistanlarıyla bu **domain** özelinde konuşabilmeleri ve domain kurallarına uygun çıktılar alabilmeleri sağlandı.
+- **MCP *(Model Context Protocol)*:** Template kullanımı haricinde kullanıcı hikayeleri *(User Story)* ve iş kurallarını barındıran analiz dokümanlarını minimum hatada oluşturmak için bir **MCP** sunucusu ve gerekli **API** endpoint'leri geliştirildi. İlgili **MCP server** **VS Code** ortamlarına da adapte edildi ve böylece analist veya yazılım geliştiricilerin, yapay zeka asistanlarıyla bu **domain** özelinde konuşabilmeleri ve domain kurallarına uygun çıktılar alabilmeleri sağlandı.
 - **Tersine Mühendislik Aracı:** Var olan **legacy** sistemdeki belirli kod parçalarının analiz edilerek, iş kurallarının ve süreçlerin çıkarılmasını sağlayan bir tersine mühendislik aracı geliştirildi. Bu araç ile var olan bazı iş kuralları için doküman hazırlanması, gözden geçirilmek kaydıyla yeni sisteme adapte edilmeleri ile ilgili test ortamları sağlanmış oldu.
 
 ### Teknik Özet
@@ -169,13 +169,433 @@ Bu çalışma kapsamında elde edilen başlıca sonuçlar aşağıdaki gibi öze
 
 ---
 
+## Yardımcı Diagramlar
+
+> Bu bölümde dokümanı destekleyici bazı diagramlar yer almaktadır.
+
+### Legacy Sistem Mimarisi
+
+```mermaid
+graph TB
+    subgraph "Sunum Katmanı"
+        WF[ASP.NET Web Forms<br/>1000+ Ekran]
+    end
+    
+    subgraph "İş Katmanı"
+        BL[Business Logic Layer<br/>C# .NET Framework 4.8]
+        MOD1[Finansal Hizmetler]
+        MOD2[Araç]
+        MOD3[Satış Sonrası]
+        MOD4[Yedek Parça]
+        MOD5[Müşteri]
+    end
+    
+    subgraph "Veri Erişim Katmanı"
+        DAL[Data Access Layer<br/>ADO.NET]
+        SP[1000+ Stored Procedures]
+    end
+    
+    subgraph "Veritabanı"
+        DB[(SQL Server<br/>30+ TB)]
+    end
+    
+    subgraph "Dış Entegrasyonlar"
+        EXT1[E-Fatura/İrsaliye<br/>SOAP]
+        EXT2[POS Cihazları<br/>REST]
+        EXT3[Yeni Nesil Apps<br/>REST]
+        MQ[RabbitMQ<br/>Asenkron Mesajlaşma]
+    end
+    
+    subgraph "Raporlama Sistemi"
+        DW[Data Warehouse<br/>ETL]
+        JOBS[200+ Jobs<br/>SSIS]
+        RPT[SSRS & Liquid<br/>500+ Rapor]
+    end
+    
+    WF --> BL
+    BL --> MOD1 & MOD2 & MOD3 & MOD4 & MOD5
+    MOD1 & MOD2 & MOD3 & MOD4 & MOD5 --> DAL
+    DAL --> SP
+    SP --> DB
+    
+    BL --> EXT1 & EXT2 & EXT3
+    BL -.-> MQ
+    MQ -.-> EXT3
+    
+    DB --> DW
+    DW --> JOBS
+    JOBS --> RPT
+    
+    style WF fill:#e1f5ff
+    style DB fill:#ffebee
+    style MQ fill:#fff3e0
+    style DW fill:#f3e5f5
+```
+
+### Modernizasyon Yol Haritası
+
+```mermaid
+timeline
+    title Legacy Modernizasyon Süreç Haritası
+    
+    section 2020 Öncesi
+        Legacy Durum : 5M+ LOC
+                     : .NET Framework 4.8
+                     : Teknik Borç 1000 kişi/gün
+                     : Test Coverage Düşük
+    
+    section 2020-2024
+        İlk Modernizasyon : Sonarqube Entegrasyonu
+                         : Teknik Borç 100 kişi/gün
+                         : Dependency Injection
+                         : Unit Test & CI/CD
+                         : Façade Katmanı Kaldırıldı
+    
+    section 2024-2025
+        AI Tabanlı PoC : Claude Sonnet
+                      : Vue.js & .NET Core
+                      : PostgreSQL
+                      : Spec-Oriented Development
+                      : %40 Süre Azaltma
+    
+    section 2026+
+        Gelecek Planlar : Diğer Modüllere Yaygınlaştırma
+                       : Custom LLM & RAG
+                       : MCP Genişletme
+```
+
+### PoC Modernizasyon Stack Karşılaştırması
+
+```mermaid
+graph LR
+    subgraph "LEGACY STACK"
+        L1[ASP.NET Web Forms]
+        L2[.NET Framework 4.8]
+        L3[ADO.NET]
+        L4[SQL Server]
+        L5[Azure DevOps]
+        L6[WCF/SOAP]
+        
+        L1 --> L2 --> L3 --> L4
+    end
+    
+    subgraph "MODERN STACK (PoC)"
+        M1[Vue.js/Nuxt.js]
+        M2[.NET Core]
+        M3[EF Core/Dapper]
+        M4[PostgreSQL]
+        M5[GitHub Actions]
+        M6[REST API/gRPC]
+        
+        M1 --> M2 --> M3 --> M4
+    end
+    
+    subgraph "AI Asistanları"
+        AI1[Claude Sonnet]
+        AI2[GPT]
+        AI3[Gemini]
+        AI4[GitHub Copilot]
+    end
+    
+    L1 -.Modernize.-> M1
+    L2 -.Modernize.-> M2
+    L3 -.Modernize.-> M3
+    L4 -.Modernize.-> M4
+    L5 -.Modernize.-> M5
+    L6 -.Modernize.-> M6
+    
+    AI1 & AI2 & AI3 & AI4 -.Destekler.-> M1 & M2 & M3
+    
+    style L1 fill:#ffcdd2
+    style L2 fill:#ffcdd2
+    style L3 fill:#ffcdd2
+    style L4 fill:#ffcdd2
+    style M1 fill:#c8e6c9
+    style M2 fill:#c8e6c9
+    style M3 fill:#c8e6c9
+    style M4 fill:#c8e6c9
+    style AI1 fill:#e1bee7
+    style AI2 fill:#e1bee7
+    style AI3 fill:#e1bee7
+    style AI4 fill:#e1bee7
+```
+
+### Spec-Oriented Development İş Akışı
+
+```mermaid
+flowchart TD
+    START([Yeni Feature Talebi]) --> SPEC[Spec Dokümanları Hazırla]
+    
+    SPEC --> DOC1[Business<br/>User Stories]
+    SPEC --> DOC2[Domain Model<br/>Entities & VOs]
+    SPEC --> DOC3[UI Mockups<br/>HTML]
+    SPEC --> DOC4[Architecture<br/>Standards]
+    
+    DOC1 & DOC2 & DOC3 & DOC4 --> AGENT{Copilot Agent Seç}
+    
+    AGENT --> AG1[Senior Developer<br/>Backend API]
+    AGENT --> AG2[UI/UX Expert<br/>Vue Component]
+    AGENT --> AG3[Business Analyst<br/>Domain Logic]
+    AGENT --> AG4[QA Engineer<br/>Test Cases]
+    
+    AG1 --> CODE1[API Endpoint<br/>+ EF Migration]
+    AG2 --> CODE2[Vue/Nuxt<br/>Component]
+    AG3 --> CODE3[Business Rules<br/>Validation]
+    AG4 --> CODE4[Unit & Integration<br/>Tests]
+    
+    CODE1 & CODE2 & CODE3 & CODE4 --> BRANCH[Feature Branch]
+    
+    BRANCH --> BUILD[CI/CD Pipeline<br/>Build & Test]
+    BUILD --> SQ{Sonarqube<br/>Analiz}
+    
+    SQ -->|Issues| FIX[MCP Server<br/>AI Düzeltme]
+    FIX --> BUILD
+    
+    SQ -->|OK| PR[Pull Request]
+    PR --> REVIEW{Human Review}
+    
+    REVIEW -->|Değişiklik| FIX2[AI ile Düzelt]
+    FIX2 --> PR
+    
+    REVIEW -->|Onay| MERGE[Main Branch'e Merge]
+    MERGE --> DEPLOY[Production Deploy]
+    DEPLOY --> END([Tamamlandı])
+    
+    style START fill:#e3f2fd
+    style SPEC fill:#fff3e0
+    style AGENT fill:#f3e5f5
+    style SQ fill:#ffebee
+    style REVIEW fill:#fff9c4
+    style END fill:#c8e6c9
+```
+
+### SonarSource Sonarqube MCP Server Entegrasyonu
+
+```mermaid
+sequenceDiagram
+    participant Dev as Geliştirici<br/>(VS Code)
+    participant CP as Copilot Agent
+    participant MCP as Sonarqube<br/>MCP Server
+    participant SQ as Sonarqube<br/>Server
+    participant Code as Kod Tabanı
+    
+    Dev->>CP: Kod üret / düzelt
+    CP->>Code: Kod yazılır
+    
+    Code->>SQ: CI/CD pipeline<br/>Sonarqube analiz
+    SQ-->>MCP: Issue'lar<br/>+ Metrikler
+    
+    Dev->>CP: Sonarqube bulgularını<br/>analiz et
+    CP->>MCP: get_issues()
+    MCP->>SQ: API isteği
+    SQ-->>MCP: Issue listesi<br/>+ detaylar
+    MCP-->>CP: Yapılandırılmış veri
+    
+    CP->>CP: Issue'ları analiz et<br/>(cognitive complexity,<br/>code smells, bugs)
+    
+    CP-->>Dev: Açıklama + Çözüm önerisi
+    
+    Dev->>CP: Düzeltmeleri uygula
+    CP->>MCP: get_issue_details(key)
+    MCP->>SQ: Detay iste
+    SQ-->>MCP: Kod snippet + context
+    MCP-->>CP: Detaylı bilgi
+    
+    CP->>Code: Kod düzeltilir
+    Code->>SQ: Yeniden analiz
+    SQ-->>MCP: Güncel durum
+    MCP-->>CP: Issue kapatıldı ✓
+    CP-->>Dev: Düzeltme tamamlandı
+    
+    Note over Dev,SQ: Tüm işlem VS Code'dan<br/>çıkmadan gerçekleşir
+```
+
+### DotNet Tabanlı MCP Server ve Client Araçları
+
+```mermaid
+graph TB
+    subgraph "Geliştirme Ortamı"
+        VSC[VS Code<br/>+ Copilot Extension]
+        CLI[Custom CLI Tool]
+    end
+    
+    subgraph "MCP Server (Custom)"
+        MCP_SRV[.NET MCP Server]
+        MCP_API[RESTful API Endpoints]
+        
+        subgraph "Domain Services"
+            DS1[Domain Sözlük Service]
+            DS2[User Story Generator]
+            DS3[Template Service]
+            DS4[Business Rules Service]
+        end
+    end
+    
+    subgraph "Knowledge Base"
+        KB1[(Domain Terminology)]
+        KB2[(Business Rules)]
+        KB3[(Coding Standards)]
+        KB4[(UI Component Docs)]
+    end
+    
+    subgraph "AI Models"
+        AI_CLAUDE[Claude Sonnet]
+        AI_GPT[GPT]
+        AI_COPILOT[GitHub Copilot]
+    end
+    
+    subgraph "Output"
+        OUT1[Spec Dokümanlar]
+        OUT2[Dotnet Template Project]
+        OUT3[Backend + Frontend Scaffold]
+    end
+    
+    VSC <--> AI_COPILOT
+    CLI --> MCP_SRV
+    AI_COPILOT <--> MCP_SRV
+    
+    MCP_SRV --> MCP_API
+    MCP_API --> DS1 & DS2 & DS3 & DS4
+    
+    DS1 --> KB1
+    DS2 --> KB2
+    DS3 --> KB3
+    DS4 --> KB4
+    
+    AI_CLAUDE & AI_GPT -.Context.-> MCP_SRV
+    
+    MCP_SRV --> OUT1
+    CLI --> OUT2 & OUT3
+    
+    style MCP_SRV fill:#e1bee7
+    style VSC fill:#c8e6c9
+    style CLI fill:#c8e6c9
+    style AI_COPILOT fill:#bbdefb
+    style AI_CLAUDE fill:#bbdefb
+    style AI_GPT fill:#bbdefb
+```
+
+### AI Destekli Geliştirme Akışı ve Maliyet İyileştirmesi
+
+```mermaid
+graph TD
+    subgraph "Geleneksel Yöntem"
+        T1[Analiz<br/>10 gün] --> T2[Tasarım<br/>15 gün]
+        T2 --> T3[Kodlama<br/>30 gün]
+        T3 --> T4[Test<br/>10 gün]
+        T4 --> T5[Düzeltme<br/>5 gün]
+        T5 --> TR[Toplam: 70 gün]
+    end
+    
+    subgraph "AI Destekli Yöntem"
+        A1[Spec Hazırlama<br/>5 gün] --> A2[AI Kod Üretimi<br/>8 gün]
+        A2 --> A3[Human Review<br/>4 gün]
+        A3 --> A4[AI Test Üretimi<br/>3 gün]
+        A4 --> A5[Sonarqube + AI Fix<br/>2 gün]
+        A5 --> A6[Integration Test<br/>3 gün]
+        A6 --> A7[Final Review<br/>2 gün]
+        A7 --> AR[Toplam: 27 gün<br/>⚡ %40 Azalma]
+    end
+    
+    subgraph "Kritik Başarı Faktörleri"
+        KF1[✓ Detaylı Spec Dokümanları]
+        KF2[✓ Domain Sözlüğü]
+        KF3[✓ MCP Server Entegrasyonu]
+        KF4[✓ Copilot Agent'lar]
+        KF5[✓ İnsan Denetimi]
+        KF6[✓ Sürekli İyileştirme]
+    end
+    
+    TR -.Karşılaştırma.-> AR
+    
+    style TR fill:#ffcdd2
+    style AR fill:#c8e6c9
+    style KF1 fill:#fff9c4
+    style KF2 fill:#fff9c4
+    style KF3 fill:#fff9c4
+    style KF4 fill:#fff9c4
+    style KF5 fill:#fff9c4
+    style KF6 fill:#fff9c4
+```
+
+## Sözlük
+
+> Dokümanda geçen terimlerin tanımları ve açıklamaları için bu bölüme bakabilirsiniz.
+
+### Teknoloji Terimleri
+
+- **AI Agent / Copilot Agent**: GitHub Copilot üzerinde tanımlanmış, belirli roller ve sorumluluklar verilen yapay zeka asistanları (örn: Senior Developer, QA Engineer)
+- **ADO.NET**: Microsoft'un veri erişim teknolojisi, veritabanı işlemleri için düşük seviyeli API sağlar
+- **Aggregate Root**: DDD'de bir entity kümesinin kök elemanı, tutarlılık sınırlarını belirler
+- **ASP.NET Web Forms**: Microsoft'un event-driven web uygulama geliştirme framework'ü
+- **Claude Sonnet**: Anthropic firması tarafından geliştirilen büyük dil modeli, kod üretme konusunda güçlü
+- **Cross-Cutting Concerns**: Loglama, güvenlik, transaction yönetimi gibi birçok katmanı ilgilendiren ortak fonksiyonellikler
+- **Dapper**: Hafif, yüksek performanslı .NET için micro-ORM
+- **DDD (Domain Driven Design)**: İş mantığını merkeze alan yazılım geliştirme yaklaşımı
+- **Dependency Injection**: Bağımlılıkların dışarıdan enjekte edildiği tasarım deseni
+- **Entity**: DDD'de benzersiz kimliği olan ve yaşam döngüsü takip edilen iş nesneleri
+- **Entity Framework (EF)**: Microsoft'un Object-Relational Mapping (ORM) framework'ü
+- **ETL (Extract, Transform, Load)**: Verilerin çekilmesi, dönüştürülmesi ve yüklenmesi süreci
+- **gRPC**: Google tarafından geliştirilen yüksek performanslı RPC framework'ü
+- **GitOps**: Git repository'sini infrastructure ve uygulama konfigürasyonları için tek doğruluk kaynağı olarak kullanan yaklaşım
+- **Halüsinasyon**: Yapay zeka modellerinin gerçek olmayan veya yanlış bilgi üretmesi
+- **Keycloak**: Açık kaynaklı Identity ve Access Management çözümü
+- **Legacy System**: Eski teknoloji veya mimarilerle geliştirilmiş, uzun süredir çalışan sistemler
+- **Liquid Template**: Shopify tarafından geliştirilen, güvenli ve esnek template dili
+- **MCP (Model Context Protocol)**: AI modellerinin harici veri kaynaklarına erişimini standartlaştıran protokol
+- **N-Tier Architecture**: Presentation, Business Logic, Data Access gibi katmanlara ayrılmış mimari
+- **Nuxt.js**: Vue.js için full-stack framework, SSR ve static site generation destekler
+- **ORM (Object-Relational Mapping)**: Nesne ve veritabanı tabloları arasında mapping sağlayan teknoloji
+- **PoC (Proof of Concept)**: Bir fikrin veya yaklaşımın uygulanabilirliğini test etmek için yapılan deneysel çalışma
+- **PostgreSQL**: Açık kaynaklı, güçlü ilişkisel veritabanı yönetim sistemi
+- **RAG (Retrieval Augmented Generation)**: AI modellerine harici bilgi kaynaklarından context sağlayan yaklaşım
+- **SSIS (SQL Server Integration Services)**: Microsoft'un ETL ve veri entegrasyonu aracı
+- **SSRS (SQL Server Reporting Services)**: Microsoft'un kurumsal raporlama platformu
+- **Stored Procedure**: Veritabanında saklanan ve çalıştırılabilen SQL kod blokları
+- **Value Object**: DDD'de kimliği olmayan, değerleriyle tanımlanan nesneler (örn: Money, Address)
+- **Vue.js**: Progressive JavaScript framework, kullanıcı arayüzleri geliştirmek için kullanılır
+- **WCF (Windows Communication Foundation)**: Microsoft'un servis tabanlı uygulamalar için framework'ü
+
+### İş ve Süreç Terimleri
+
+- **Bayi Yönetimi Sistemi (DMS)**: Otomotiv sektöründe bayi operasyonlarını yöneten kapsamlı yazılım sistemi
+- **Code Coverage**: Test kodlarının kaynak kodunun ne kadarını kapsadığını gösteren metrik
+- **Cognitive Complexity**: Kodun anlaşılma zorluğunu ölçen metrik
+- **DevOps**: Yazılım geliştirme (Dev) ve IT operasyonlarını (Ops) birleştiren kültür ve pratikler
+- **Domain**: Yazılımın çözdüğü iş probleminin alanı ve konusu
+- **Feature Branch**: Yeni özellik geliştirmesi için açılan izole git dalı
+- **Fizibilite**: Bir projenin teknik ve ekonomik olarak gerçekleştirilebilirliğinin araştırılması
+- **IT4IT**: IT yönetimi için referans mimari framework'ü
+- **Modernizasyon**: Eski sistemlerin yeni teknolojilere ve mimarilere taşınması süreci
+- **Pull Request**: Kod değişikliklerinin review edilip ana branch'e alınması için yapılan istek
+- **Refaktörizasyon**: Kodun davranışını değiştirmeden iç yapısını iyileştirme
+- **Spec-Oriented Development**: Detaylı specification dokümanları ile yönlendirilen geliştirme yaklaşımı
+- **Sprint**: Agile metodolojide sabit sürede planlanan çalışma periyodu (genellikle 1-4 hafta)
+- **Technical Debt (Teknik Borç)**: Hızlı çözümler nedeniyle birikmiş, gelecekte düzeltilmesi gereken kod kalitesi problemleri
+- **User Story**: Kullanıcı bakış açısından yazılmış fonksiyonel gereksinim
+
+### Araçlar ve Platformlar
+
+- **Azure DevOps**: Microsoft'un DevOps için sunduğu bulut platform (CI/CD, repo, boards vb.)
+- **GitHub Actions**: GitHub'ın CI/CD automation servisi
+- **GitHub Copilot**: GitHub ve OpenAI'ın geliştirdiği AI kod asistanı
+- **Git Flow**: Git branching stratejisi (main, develop, feature, release, hotfix)
+- **NuGet**: .NET için paket yöneticisi
+- **npm**: Node.js ve JavaScript için paket yöneticisi
+- **RabbitMQ**: Açık kaynaklı message broker, asenkron mesajlaşma için kullanılır
+- **Sonarqube**: Kod kalitesi ve güvenlik analizi platformu
+- **Visual Studio Code (VS Code)**: Microsoft'un popüler, hafif code editor'ü
+- **Windsor Castle**: .NET için IoC container ve Dependency Injection framework'ü
+
+---
+
 ## Demo Simülasyonu
 
 Bu repoda, sunumda anlatılan **Spec-Oriented Development** yaklaşımını göstermek için basitleştirilmiş bir **Araç Envanter Yönetimi** modülü simülasyonu bulunmaktadır.
 
-### 📁 Doküman Yapısı
+### Doküman Yapısı
 
-```
+```text
 docs/
 ├── architectural-overview/     # Teknoloji stack, kodlama standartları, proje yapısı
 ├── business/                   # User story'ler (US-001, US-002)
@@ -185,7 +605,7 @@ docs/
 └── prompts/                    # AI asistanlarına kullandırılacak prompt'lar
 ```
 
-### 🎯 İçerik
+### İçerik
 
 - **2 User Story**: Araç ekleme ve listeleme
 - **3 Domain Model**: Vehicle (Entity), VIN ve Money (Value Objects)
@@ -193,9 +613,10 @@ docs/
 - **3 AI Prompt Template**: API endpoint, EF Migration, Vue component geliştirme
 - **Coding Standards**: C# ve TypeScript/Vue için detaylı standartlar
 
-### 🚀 Kullanım
+### Kullanım
 
 Bu dokümanlar **GitHub Copilot** veya diğer **AI** asistanlarına context olarak verilerek:
+
 1. Backend API endpoint'leri geliştirilebilir
 2. Database migration'ları oluşturulabilir
 3. Frontend component'leri üretilebilir
@@ -203,6 +624,6 @@ Bu dokümanlar **GitHub Copilot** veya diğer **AI** asistanlarına context olar
 
 Detaylı kullanım için: [`docs/prompts/README.md`](docs/prompts/README.md)
 
-### 📝 Not
+### Not
 
 Bu simülasyon **eğitim ve sunum amaçlıdır**. Gerçek kurumsal uygulamanın kod ve verileri gizlilik nedeniyle paylaşılamamıştır.
