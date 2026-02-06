@@ -69,7 +69,7 @@
       </header>
 
       <!-- Main Content -->
-      <main class="flex-grow-1 p-4 overflow-auto">
+      <main class="flex-grow-1 p-4 overflow-y-scroll">
          <!-- Use container-fluid to maximize width but keep bootstrap grid available -->
          <div class="container-fluid p-0"> 
             <router-view v-slot="{ Component }">
