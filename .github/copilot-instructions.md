@@ -20,7 +20,7 @@ The primary content is `README.md`, which serves as both a conference presentati
 The README follows this narrative structure:
 1. **Legacy System** - Description of the original DMS (5M+ LOC, .NET Framework 4.8, SQL Server, N-Tier architecture)
 2. **Initial Modernization (2020-2024)** - Pre-AI modernization efforts (dependency injection, unit tests, CI/CD improvements)
-3. **Level 0: First Stage** - AI-powered PoC using Claude Sonnet, Vue/Nuxt, .NET Core, PostgreSQL
+3. **Level 0: First Stage** - AI-powered PoC using Claude Sonnet, Vue 3/Vite, .NET 9, PostgreSQL
 4. **Development Process** - Spec-Oriented approach with AI agents and structured documentation
 5. **Results and Future Plans** - 40% time reduction, RAG implementation plans, MCP protocol usage
 
@@ -35,7 +35,7 @@ The README follows this narrative structure:
 - Azure DevOps (CI/CD)
 
 ### Modern Stack (PoC Target)
-- .NET Core, Vue.js, Nuxt.js
+- .NET 9, Vue.js 3, Vite
 - PostgreSQL
 - Entity Framework, Dapper
 - Keycloak (auth)
@@ -88,7 +88,8 @@ This repository follows standard practices:
 
 ## Notes
 
-- This is a documentation-only repository - there is no code to build, test, or run
-- The .gitignore is configured for Visual Studio/.NET projects (likely templated) but not currently needed
-- No contributing guidelines or code of conduct exist yet
+- **Demo application** exists in `src/` folder (backend: .NET 9 Clean Architecture, frontend: Vue 3 + Vite + TypeScript)
+- The repository contains both presentation documentation (README.md) and a working demo application
+- Frontend uses Yarn package manager (not npm) due to Windows native binding compatibility
+- The .gitignore is configured for Visual Studio/.NET projects
 - Content is meant for conference presentation and public knowledge sharing

@@ -174,8 +174,8 @@ Teknoloji Stack:
 
 Gereksinimler:
 1. GitHub Actions workflow (build, test, deploy)
-2. Backend Dockerfile (.NET 8)
-3. Frontend Dockerfile (Nuxt 3)
+2. Backend Dockerfile (.NET 9)
+3. Frontend Dockerfile (Vue 3 + Vite)
 4. Docker Compose (local development)
 5. SonarQube entegrasyonu
 6. Container registry push

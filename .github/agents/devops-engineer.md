@@ -124,7 +124,7 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'ui/**'
+      - 'src/frontend/**'
       - '.github/workflows/frontend-ci.yml'
   pull_request:
     branches: [ main, develop ]
@@ -143,28 +143,39 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
+    
+    - name: Setup Yarn
+      run: corepack enable
+    
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+    
+    - name: Cache yarn dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
     
     - name: Install dependencies
-      run: npm ci
-    
-    - name: Lint
-      run: npm run lint
+      working-directory: ./src/frontend
+      run: yarn install --frozen-lockfile
     
     - name: Type check
-      run: npm run type-check
-    
-    - name: Run tests
-      run: npm run test:unit
+      working-directory: ./src/frontend
+      run: yarn type-check
     
     - name: Build
-      run: npm run build
+      working-directory: ./src/frontend
+      run: yarn build
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: dist
-        path: dist/
+        path: src/frontend/dist/
 ```
 
 ## Dockerfile Templates
@@ -212,7 +223,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 ENTRYPOINT ["dotnet", "VehicleManagement.Api.dll"]
 ```
 
-### Frontend (Nuxt) Dockerfile
+### Frontend (Vue 3 + Vite) Dockerfile
 ```dockerfile
 # Build stage
 FROM node:20-alpine AS build
@@ -220,33 +231,38 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-RUN npm ci
+COPY yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 # Copy source
 COPY . .
 
 # Build application
-RUN npm run build
+RUN yarn build
 
-# Production stage
-FROM node:20-alpine AS production
+# Production stage (Nginx)
+FROM nginx:alpine AS production
 WORKDIR /app
 
 # Copy built application
-COPY --from=build /app/.output ./.output
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy nginx configuration (optional)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Create non-root user
 RUN addgroup -g 1000 appuser && \
-    adduser -D -u 1000 -G appuser appuser
+    adduser -D -u 1000 -G appuser appuser && \
+    chown -R appuser:appuser /usr/share/nginx/html
 
 USER appuser
 
-EXPOSE 3000
+EXPOSE 80
 
-ENV NODE_ENV=production
-ENV PORT=3000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
 
-CMD ["node", ".output/server/index.mjs"]
+CMD ["nginx", "-g", "daemon off;"]
 ```
 
 ## Docker Compose (Local Development)
@@ -296,14 +312,13 @@ services:
 
   ui:
     build:
-      context: ./ui
+      context: ./src/frontend
       dockerfile: Dockerfile
     container_name: vehicle-ui
     environment:
-      API_URL: http://api:80
-      KEYCLOAK_URL: http://localhost:8080
+      VITE_API_BASE: http://api:80
     ports:
-      - "3000:3000"
+      - "8080:80"
     depends_on:
       - api
 
