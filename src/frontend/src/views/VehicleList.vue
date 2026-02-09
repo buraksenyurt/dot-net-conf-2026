@@ -83,9 +83,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="vehicle in vehicles.items" :key="vehicle.id" class="cursor-pointer">
+            <tr v-for="vehicle in vehicles.items" :key="vehicle.id">
               <td>
-                <code class="text-primary">{{ vehicle.vin }}</code>
+                <code class="text-primary small fw-bold">{{ vehicle.vin }}</code>
               </td>
               <td>
                 <strong>{{ vehicle.brand }}</strong> {{ vehicle.model }}
@@ -237,24 +237,3 @@ onMounted(() => {
   loadVehicles()
 })
 </script>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-
-tr:hover {
-  background-color: rgba(0, 0, 0, 0.02);
-}
-
-code {
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.badge {
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 0.4rem 0.8rem;
-}
-</style>

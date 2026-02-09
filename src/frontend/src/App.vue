@@ -72,11 +72,7 @@
       <main class="flex-grow-1 p-4 overflow-y-scroll">
          <!-- Use container-fluid to maximize width but keep bootstrap grid available -->
          <div class="container-fluid p-0"> 
-            <router-view v-slot="{ Component }">
-              <transition name="fade" mode="out-in">
-                <component :is="Component" />
-              </transition>
-            </router-view>
+            <router-view></router-view>
          </div>
       </main>
 
@@ -95,30 +91,3 @@
 <script setup lang="ts">
 // App layout with fixed Sidebar and Header
 </script>
-
-<style scoped>
-.nav-link {
-  color: rgba(255, 255, 255, 0.85);
-  transition: all 0.2s;
-}
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  padding-left: 1.25rem;
-}
-.nav-link.active {
-  background-color: var(--bs-primary);
-  color: white;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
