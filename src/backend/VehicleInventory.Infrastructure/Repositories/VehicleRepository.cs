@@ -29,7 +29,9 @@ public class VehicleRepository : IVehicleRepository
 
     public async Task<Vehicle?> GetByVinAsync(string vin, CancellationToken cancellationToken = default)
     {
-        return await _context.Vehicles.FirstOrDefaultAsync(v => v.VIN.Value.Equals(vin, StringComparison.OrdinalIgnoreCase), cancellationToken);
+        // VINs are stored in uppercase, so normalize input for comparison
+        var normalizedVin = vin.ToUpper();
+        return await _context.Vehicles.FirstOrDefaultAsync(v => v.VIN.Value == normalizedVin, cancellationToken);
     }
 
     public async Task<(IEnumerable<Vehicle> Items, int TotalCount)> GetAllAsync(
@@ -39,7 +41,7 @@ public class VehicleRepository : IVehicleRepository
         var query = _context.Vehicles.AsQueryable();
         
         if (!string.IsNullOrWhiteSpace(brand))
-            query = query.Where(v => v.Brand.Contains(brand, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(v => EF.Functions.ILike(v.Brand, $"%{brand}%"));
             
         if (!string.IsNullOrWhiteSpace(status) && Enum.TryParse<VehicleStatus>(status, true, out var statusEnum))
             query = query.Where(v => v.Status == statusEnum);
@@ -60,6 +62,8 @@ public class VehicleRepository : IVehicleRepository
 
     public async Task<bool> ExistsAsync(string vin, CancellationToken cancellationToken = default)
     {
-        return await _context.Vehicles.AnyAsync(v => v.VIN.Value.Equals(vin, StringComparison.OrdinalIgnoreCase), cancellationToken);
+        // VINs are stored in uppercase, so normalize input for comparison
+        var normalizedVin = vin.ToUpper();
+        return await _context.Vehicles.AnyAsync(v => v.VIN.Value == normalizedVin, cancellationToken);
     }
 }
