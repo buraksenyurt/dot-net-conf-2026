@@ -65,21 +65,26 @@ public class AddVehicleCommandHandler : IRequestHandler<AddVehicleCommand, Resul
             return Result<Guid>.Failure($"Invalid transmission type: {request.TransmissionType}");
         }
 
-        // Create Vehicle entity
-        var vehicleResult = Vehicle.Create(
-            vinResult.Value!,
+        // Create Vehicle specification
+        var specification = new VehicleSpecification(
             request.Brand,
             request.Model,
             request.Year,
             engineType,
             request.Mileage,
             request.Color,
-            purchasePriceResult.Value!,
-            suggestedPriceResult.Value!,
             transmissionType,
             request.FuelConsumption,
             request.EngineCapacity,
             request.Features
+        );
+
+        // Create Vehicle entity
+        var vehicleResult = Vehicle.Create(
+            vinResult.Value!,
+            specification,
+            purchasePriceResult.Value!,
+            suggestedPriceResult.Value!
         );
 
         if (vehicleResult.IsFailure)

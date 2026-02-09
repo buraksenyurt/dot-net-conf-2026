@@ -42,33 +42,26 @@ public sealed class Vehicle
     private Vehicle(
         Guid id,
         VIN vin,
-        string brand,
-        string model,
-        int year,
-        EngineType engineType,
-        int mileage,
-        string color,
+        VehicleSpecification specification,
         Money purchasePrice,
-        Money suggestedPrice,
-        TransmissionType transmissionType,
-        decimal fuelConsumption,
-        int engineCapacity,
-        List<string> features)
+        Money suggestedPrice)
     {
         Id = id;
         VIN = vin;
-        Brand = brand;
-        Model = model;
-        Year = year;
-        EngineType = engineType;
-        Mileage = mileage;
-        Color = color;
+        Brand = specification.Brand.Trim();
+        Model = specification.Model.Trim();
+        Year = specification.Year;
+        EngineType = specification.EngineType;
+        Mileage = specification.Mileage;
+        Color = specification.Color.Trim();
         PurchasePrice = purchasePrice;
         SuggestedPrice = suggestedPrice;
-        TransmissionType = transmissionType;
-        FuelConsumption = fuelConsumption;
-        EngineCapacity = engineCapacity;
-        Features = features ?? new List<string>();
+        TransmissionType = specification.TransmissionType;
+        FuelConsumption = specification.FuelConsumption;
+        EngineCapacity = specification.EngineCapacity;
+        Features = specification.Features is null
+            ? new List<string>()
+            : new List<string>(specification.Features);
         Status = VehicleStatus.InStock;
         CreatedAt = DateTime.UtcNow;
     }
@@ -78,36 +71,27 @@ public sealed class Vehicle
     /// </summary>
     public static Result<Vehicle> Create(
         VIN vin,
-        string brand,
-        string model,
-        int year,
-        EngineType engineType,
-        int mileage,
-        string color,
+        VehicleSpecification specification,
         Money purchasePrice,
-        Money suggestedPrice,
-        TransmissionType transmissionType,
-        decimal fuelConsumption,
-        int engineCapacity,
-        List<string>? features = null)
+        Money suggestedPrice)
     {
         // Validate business rules
-        if (string.IsNullOrWhiteSpace(brand))
+        if (string.IsNullOrWhiteSpace(specification.Brand))
             return Result<Vehicle>.Failure("Brand is required");
 
-        if (string.IsNullOrWhiteSpace(model))
+        if (string.IsNullOrWhiteSpace(specification.Model))
             return Result<Vehicle>.Failure("Model is required");
 
-        if (year > DateTime.UtcNow.Year)
+        if (specification.Year > DateTime.UtcNow.Year)
             return Result<Vehicle>.Failure($"Year cannot be greater than {DateTime.UtcNow.Year}");
 
-        if (year < 1900)
+        if (specification.Year < 1900)
             return Result<Vehicle>.Failure("Year must be 1900 or later");
 
-        if (mileage < 0)
+        if (specification.Mileage < 0)
             return Result<Vehicle>.Failure("Mileage cannot be negative");
 
-        if (string.IsNullOrWhiteSpace(color))
+        if (string.IsNullOrWhiteSpace(specification.Color))
             return Result<Vehicle>.Failure("Color is required");
 
         // Business Rule: Suggested price must be greater than or equal to purchase price
@@ -117,28 +101,19 @@ public sealed class Vehicle
         if (suggestedPrice.Amount < purchasePrice.Amount)
             return Result<Vehicle>.Failure("Suggested price cannot be less than purchase price");
 
-        if (fuelConsumption < 0)
+        if (specification.FuelConsumption < 0)
             return Result<Vehicle>.Failure("Fuel consumption cannot be negative");
 
         // Engine capacity must be > 0 for non-electric vehicles
-        if (engineType != EngineType.Electric && engineCapacity <= 0)
+        if (specification.EngineType != EngineType.Electric && specification.EngineCapacity <= 0)
             return Result<Vehicle>.Failure("Engine capacity must be greater than zero for non-electric vehicles");
 
         var vehicle = new Vehicle(
             Guid.NewGuid(),
             vin,
-            brand.Trim(),
-            model.Trim(),
-            year,
-            engineType,
-            mileage,
-            color.Trim(),
+            specification,
             purchasePrice,
-            suggestedPrice,
-            transmissionType,
-            fuelConsumption,
-            engineCapacity,
-            features ?? new List<string>()
+            suggestedPrice
         );
 
         return Result<Vehicle>.Success(vehicle);
