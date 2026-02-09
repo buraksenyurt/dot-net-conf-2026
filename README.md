@@ -145,11 +145,11 @@ gibi.
 
 ```bash
 # Token oluşturduktan sonra aşağıdaki komutla tarama yapılabilir
-dotnet sonarscanner begin /k:"VehicleInventory-Backend" /d:sonar.host.url="http://localhost:9001"  /d:sonar.token="sqa_c8e7ede75be2f86931287b8d907a16c7a9027615"
+dotnet sonarscanner begin /k:"VehicleInventory-Backend" /d:sonar.host.url="http://localhost:9001" /d:sonar.token="${SONAR_TOKEN}"
 
 dotnet build
 
-dotnet sonarscanner end /d:sonar.token="sqa_c8e7ede75be2f86931287b8d907a16c7a9027615"
+dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
 ```
 
 ### Çalışma Sırasında Arada Yazılan Yardımcı Araçlar
