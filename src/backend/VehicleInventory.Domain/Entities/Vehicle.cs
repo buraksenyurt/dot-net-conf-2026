@@ -48,12 +48,12 @@ public sealed class Vehicle
     {
         Id = id;
         VIN = vin;
-        Brand = specification.Brand;
-        Model = specification.Model;
+        Brand = specification.Brand.Trim();
+        Model = specification.Model.Trim();
         Year = specification.Year;
         EngineType = specification.EngineType;
         Mileage = specification.Mileage;
-        Color = specification.Color;
+        Color = specification.Color.Trim();
         PurchasePrice = purchasePrice;
         SuggestedPrice = suggestedPrice;
         TransmissionType = specification.TransmissionType;
