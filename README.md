@@ -127,6 +127,20 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 - Küresel bir standartta olmayan bazı alanlarda detaylı **spec** dokümanları olmadığında tutarlı sonuçlar elde etmekte zorlandık. Örneğin özel bileşenlerden oluşan **UI** kütüphanelerinde, yapay zeka asistanlarının doğru kod parçalarını üretmesi için detaylı örnekler ve kullanım şekilleri sunmak gerekti. Bu amaçla bileşen setleri için nasıl kullanıldığına dair dokümanlar hazırlandı ve örnek kod parçaları sunuldu. Bu aslında bir **RAG** *(Retrieval Augmented Generation)* yaklaşımı için de bize yol gösterici oldu. *(RAG yaklaşımı ile domain'e özgü bilgi ve dokümanların yapay zeka asistanlarına sunulması, daha doğru ve tutarlı sonuçlar elde edilmesini sağlayabilir)*
 - **Sonarqube** ilk bulguları agent bazlı geliştirmelerde kod tabanları hatasız derlense de bir takım teknik borçların ortaya çıktığını gösterdi. Dolayısıyla insan denetimi ve müdahalesi olmadan tamamen hatasız bir sürecin işletilmesinin şu an için mümkün olmadığı gözlemlendi. Ancak, **Sonarqube MCP Server** ile entegrasyon sayesinde, yapay zeka asistanlarının bu bulguları analiz ederek düzeltme önerileri sunması ve hatta bazı düzeltmeleri otomatik olarak yapması sağlandı. Bu da sürecin hızlanmasına ve kod kalitesinin artırılmasına katkıda bulundu.
 
+Demo projesinde oldukça küçük bir kod tabanı ile çalışırken Sonarqube'un ilk tarama sonuçları aşağıdaki gibidir.
+
+![Sonarqube İlk Tarama Sonuçları](sq_initial_scan.png)
+
+ve ilk taramadaki bazı bulgulara ait başlıklar;
+
+- Constructor has 14 parameters, which is greater than the 7 authorized.
+- Method has 13 parameters, which is greater than the 7 authorized.
+- Rename class 'VIN' to match pascal case naming rules, consider using 'Vin'.
+- Prefer using 'string.Equals(string, StringComparison)' to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'
+- Await RunAsync instead.
+
+gibi.
+
 ### Çalışma Sırasında Arada Yazılan Yardımcı Araçlar
 
 Bu çalışma sırasında geliştirme hızımızın önemli ölçüde arttığını fark ettik ve birkaç yardımcı araç da yazdık:

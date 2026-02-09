@@ -423,3 +423,11 @@ FodyWeavers.xsd
 **/Migrations/
 src/frontend/.vite/deps/_metadata.json
 src/frontend/.vite/deps/package.json
+
+# SonarQube
+.sonarqube/
+.sonar/
+.scannerwork/
+**/.sonarqube/
+**/.sonar/
+**/.scannerwork/
