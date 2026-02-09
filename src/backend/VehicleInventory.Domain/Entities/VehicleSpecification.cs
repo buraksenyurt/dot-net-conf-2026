@@ -1,8 +1,6 @@
 using VehicleInventory.Domain.Enums;
-using VehicleInventory.Domain.ValueObjects;
 
 namespace VehicleInventory.Domain.Entities;
-
 /// <summary>
 /// Value object that encapsulates vehicle specifications.
 /// Reduces parameter count in Vehicle entity constructor.
