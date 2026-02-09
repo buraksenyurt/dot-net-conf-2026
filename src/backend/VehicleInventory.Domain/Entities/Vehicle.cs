@@ -59,7 +59,9 @@ public sealed class Vehicle
         TransmissionType = specification.TransmissionType;
         FuelConsumption = specification.FuelConsumption;
         EngineCapacity = specification.EngineCapacity;
-        Features = specification.Features ?? new List<string>();
+        Features = specification.Features is null
+            ? new List<string>()
+            : new List<string>(specification.Features);
         Status = VehicleStatus.InStock;
         CreatedAt = DateTime.UtcNow;
     }
