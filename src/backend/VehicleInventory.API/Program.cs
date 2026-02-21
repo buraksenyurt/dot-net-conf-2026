@@ -42,6 +42,7 @@ try
     // Repositories
     builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
     builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+    builder.Services.AddScoped<IVehicleOptionRepository, VehicleOptionRepository>();
 
     // CORS - Allow ANY origin for debugging
     builder.Services.AddCors(options =>

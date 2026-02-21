@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Araç Opsiyonlama — Wireframe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <style>
+        body { background: #f8f9fa; }
+        .wireframe-note { border: 1px dashed #adb5bd; background: #fff3cd; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; }
+        .status-badge-reserved { background: #ffc107; color: #212529; }
+        .status-badge-instock   { background: #0dcaf0; color: #212529; }
+        .status-badge-onsale    { background: #198754; color: #fff; }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+            <li class="breadcrumb-item"><a href="#">Araç Envanteri</a></li>
+            <li class="breadcrumb-item active">Araç Opsiyonlama</li>
+        </ol>
+    </nav>
+
+    <h2 class="mb-1">Araç Opsiyonlama</h2>
+    <p class="text-muted mb-4">Seçilen aracı bir müşteri adına satın alma opsiyonu ile rezerve edin.</p>
+
+    <div class="row g-4">
+
+        <!-- Sol - Form -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-semibold">Opsiyon Bilgileri</div>
+                <div class="card-body">
+                    <form>
+                        <!-- Araç Seçimi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Araç <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" placeholder="Marka, Model veya VIN ile ara…" />
+                            <div class="mt-2">
+                                <!-- Arama sonucu örneği -->
+                                <div class="list-group">
+                                    <button type="button" class="list-group-item list-group-item-action active">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Toyota Corolla 2024</strong>
+                                                <small class="d-block text-white-50">VIN: JT2BF22K1W0123456 · 0 km</small>
+                                            </div>
+                                            <span class="badge status-badge-onsale">Satışta</span>
+                                        </div>
+                                    </button>
+                                    <button type="button" class="list-group-item list-group-item-action">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Honda Civic 2023</strong>
+                                                <small class="d-block text-muted">VIN: 19XFC1F39NE001234 · 5.200 km</small>
+                                            </div>
+                                            <span class="badge status-badge-instock">Stokta</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="wireframe-note mt-1">
+                                NOT: Sadece InStock ve OnSale araçlar listelenir. Reserved/Sold araçlar gösterilmez.
+                            </div>
+                        </div>
+
+                        <!-- Müşteri Seçimi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Müşteri <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ad, Soyad veya e-posta ile ara…" />
+                            <div class="mt-2">
+                                <div class="list-group">
+                                    <button type="button" class="list-group-item list-group-item-action active">
+                                        <strong>Ahmet Yılmaz</strong>
+                                        <small class="d-block text-white-50">ahmet.yilmaz@example.com · Bireysel</small>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opsiyon Süresi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Opsiyon Süresi (Gün) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" min="1" max="30" value="7" placeholder="1–30" />
+                            <div class="form-text">Opsiyonun bitiş tarihi: <strong>28 Şubat 2026</strong></div>
+                            <div class="wireframe-note mt-1">NOT: 1–30 gün arası geçerli. Bitiş tarihi seçim anında hesaplanır.</div>
+                        </div>
+
+                        <!-- Opsiyon Ücreti -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Opsiyon Ücreti (Depozito)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" min="0" step="100" value="5000" placeholder="0" />
+                                <select class="form-select" style="max-width:100px">
+                                    <option selected>TRY</option>
+                                    <option>USD</option>
+                                    <option>EUR</option>
+                                </select>
+                            </div>
+                            <div class="form-text">Sıfır (0) değer girilebilir (ücretsiz opsiyon).</div>
+                        </div>
+
+                        <!-- Notlar -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Notlar</label>
+                            <textarea class="form-control" rows="3" placeholder="Opsiyonla ilgili notlar…"></textarea>
+                        </div>
+
+                        <!-- Butonlar -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">Opsiyonla</button>
+                            <button type="button" class="btn btn-outline-secondary">İptal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ - Aktif Opsiyonlar Özeti -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold">Seçilen Araç Bilgisi</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-5">Araç</dt>
+                        <dd class="col-7">Toyota Corolla 2024</dd>
+                        <dt class="col-5">VIN</dt>
+                        <dd class="col-7"><code>JT2BF22K1W0123456</code></dd>
+                        <dt class="col-5">Satış Fiyatı</dt>
+                        <dd class="col-7">950.000 TRY</dd>
+                        <dt class="col-5">Durum</dt>
+                        <dd class="col-7"><span class="badge status-badge-onsale">Satışta</span></dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-semibold d-flex justify-content-between">
+                    <span>Bu Araca Ait Önceki Opsiyonlar</span>
+                    <span class="badge bg-secondary">2</span>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Müşteri</th>
+                                <th>Bitiş</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Fatma Kaya</td>
+                                <td>15 Şub 2026</td>
+                                <td><span class="badge bg-secondary">İptal</span></td>
+                            </tr>
+                            <tr>
+                                <td>Mehmet Demir</td>
+                                <td>10 Oca 2026</td>
+                                <td><span class="badge bg-warning text-dark">Süresi Doldu</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /row -->
+</div>
+</body>
+</html>
