@@ -29,6 +29,21 @@
               Yeni Araç Ekle
             </router-link>
           </li>
+          <li class="nav-item mt-2">
+            <div class="text-white-50 px-2 mb-1" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.05em">Opsiyonlama</div>
+          </li>
+          <li class="nav-item">
+            <router-link to="/vehicle-options" class="nav-link text-white d-flex align-items-center" active-class="active">
+              <i class="bi bi-bookmark-star me-2"></i>
+              Opsiyonlar
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/vehicle-options/new" class="nav-link text-white d-flex align-items-center" active-class="active">
+              <i class="bi bi-bookmark-plus me-2"></i>
+              Yeni Opsiyon
+            </router-link>
+          </li>
         </ul>
       </div>
       
@@ -54,6 +69,8 @@
                <span v-if="$route.path === '/'">Dashboard</span>
                <span v-else-if="$route.path === '/vehicles'">Araç Listesi</span>
                <span v-else-if="$route.path === '/vehicles/new'">Yeni Araç Ekle</span>
+               <span v-else-if="$route.path === '/vehicle-options'">Opsiyonlar</span>
+               <span v-else-if="$route.path === '/vehicle-options/new'">Yeni Opsiyon</span>
                <span v-else>Araç Envanter Sistemi</span>
              </h5>
              
