@@ -35,7 +35,9 @@ public class GetVehicleOptionsByCustomerQueryHandler
             o.Status.ToString(),
             o.IsExpired(),
             o.CreatedAt,
-            o.UpdatedAt));
+            o.UpdatedAt,
+            o.ServiceAdvisorId,
+            o.ServiceAdvisor?.GetDisplayName()));
 
         return Result<IEnumerable<VehicleOptionDto>>.Success(dtos);
     }

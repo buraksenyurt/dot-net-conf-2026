@@ -35,8 +35,15 @@ public class VehicleOptionConfiguration : IEntityTypeConfiguration<VehicleOption
                .HasForeignKey(o => o.CustomerId)
                .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(o => o.ServiceAdvisor)
+               .WithMany()
+               .HasForeignKey(o => o.ServiceAdvisorId)
+               .IsRequired(false)
+               .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasIndex(o => o.VehicleId);
         builder.HasIndex(o => o.CustomerId);
+        builder.HasIndex(o => o.ServiceAdvisorId);
         builder.HasIndex(o => o.Status);
     }
 }

@@ -17,5 +17,7 @@ public record VehicleOptionDto(
     string Status,
     bool IsExpired,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    Guid? ServiceAdvisorId,
+    string? ServiceAdvisorDisplayName
 );

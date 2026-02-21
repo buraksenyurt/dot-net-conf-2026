@@ -1,5 +1,9 @@
 <template>
-  <div class="d-flex min-vh-100">
+  <!-- Login sayfası: tam ekran, sidebar yok -->
+  <router-view v-if="$route.path === '/login'" />
+
+  <!-- Ana layout: sidebar + header + content -->
+  <div v-else class="d-flex min-vh-100">
     <!-- Sidebar -->
     <aside class="bg-dark text-white d-flex flex-column flex-shrink-0" style="width: 260px;">
       <div class="p-3 border-bottom border-secondary">
@@ -9,7 +13,7 @@
         </router-link>
       </div>
       
-      <div class="p-3">
+      <div class="p-3 flex-grow-1 overflow-y-auto">
         <ul class="nav nav-pills flex-column mb-auto gap-2">
           <li class="nav-item">
             <router-link to="/" class="nav-link text-white d-flex align-items-center" active-class="active">
@@ -29,6 +33,8 @@
               Yeni Araç Ekle
             </router-link>
           </li>
+
+          <!-- Opsiyonlama bölümü -->
           <li class="nav-item mt-2">
             <div class="text-white-50 px-2 mb-1" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.05em">Opsiyonlama</div>
           </li>
@@ -44,19 +50,53 @@
               Yeni Opsiyon
             </router-link>
           </li>
+
+          <!-- Servis Danışmanı bölümü -->
+          <li class="nav-item mt-2">
+            <div class="text-white-50 px-2 mb-1" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.05em">Servis Danışmanı</div>
+          </li>
+          <li v-if="isLoggedIn" class="nav-item">
+            <router-link to="/advisor/dashboard" class="nav-link text-white d-flex align-items-center" active-class="active">
+              <i class="bi bi-bar-chart-line me-2"></i>
+              Danışman Panosu
+            </router-link>
+          </li>
+          <li v-if="!isLoggedIn" class="nav-item">
+            <router-link to="/login" class="nav-link text-white d-flex align-items-center" active-class="active">
+              <i class="bi bi-box-arrow-in-right me-2"></i>
+              Danışman Girişi
+            </router-link>
+          </li>
         </ul>
       </div>
       
-      <div class="mt-auto p-3 border-top border-secondary bg-black bg-opacity-25">
-         <div class="d-flex align-items-center">
-            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white me-2" style="width: 32px; height: 32px;">
+      <!-- Sidebar Alt: Kullanıcı Bilgisi -->
+      <div class="p-3 border-top border-secondary bg-black bg-opacity-25">
+        <!-- Danışman oturumu açıksa -->
+        <div v-if="isLoggedIn" class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center text-white me-2" style="width: 32px; height: 32px;">
               <i class="bi bi-person-fill"></i>
             </div>
             <div>
-              <div class="small fw-bold">Admin User</div>
-              <div class="small text-white-50" style="font-size: 0.75rem;">Yönetici</div>
+              <div class="small fw-bold">{{ advisor?.firstName }} {{ advisor?.lastName }}</div>
+              <div class="small text-white-50" style="font-size: 0.7rem;">{{ advisor?.department }}</div>
             </div>
-         </div>
+          </div>
+          <button class="btn btn-sm btn-outline-danger border-0 p-1" title="Çıkış" @click="handleLogout">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+        </div>
+        <!-- Standart admin bilgisi -->
+        <div v-else class="d-flex align-items-center">
+          <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white me-2" style="width: 32px; height: 32px;">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <div>
+            <div class="small fw-bold">Admin User</div>
+            <div class="small text-white-50" style="font-size: 0.75rem;">Yönetici</div>
+          </div>
+        </div>
       </div>
     </aside>
 
@@ -71,6 +111,7 @@
                <span v-else-if="$route.path === '/vehicles/new'">Yeni Araç Ekle</span>
                <span v-else-if="$route.path === '/vehicle-options'">Opsiyonlar</span>
                <span v-else-if="$route.path === '/vehicle-options/new'">Yeni Opsiyon</span>
+               <span v-else-if="$route.path === '/advisor/dashboard'">Danışman Panosu</span>
                <span v-else>Araç Envanter Sistemi</span>
              </h5>
              
@@ -87,7 +128,6 @@
 
       <!-- Main Content -->
       <main class="flex-grow-1 p-4 overflow-y-scroll">
-         <!-- Use container-fluid to maximize width but keep bootstrap grid available -->
          <div class="container-fluid p-0"> 
             <router-view></router-view>
          </div>
@@ -106,5 +146,14 @@
 </template>
 
 <script setup lang="ts">
-// App layout with fixed Sidebar and Header
+import { useRouter } from 'vue-router'
+import { useAuth } from './composables/useAuth'
+
+const router = useRouter()
+const { advisor, isLoggedIn, logout } = useAuth()
+
+function handleLogout() {
+  logout()
+  router.push('/login')
+}
 </script>

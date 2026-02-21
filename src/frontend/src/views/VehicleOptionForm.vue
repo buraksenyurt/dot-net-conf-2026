@@ -270,10 +270,12 @@ import { useRouter } from 'vue-router'
 import { vehicleApi } from '../api/vehicle'
 import { customerApi } from '../api/customer'
 import { vehicleOptionApi } from '../api/vehicleOption'
+import { useAuth } from '../composables/useAuth'
 import type { Vehicle } from '../types/vehicle'
 import type { Customer, CreateVehicleOptionRequest } from '../types/vehicleOption'
 
 const router = useRouter()
+const { advisor } = useAuth()
 
 // ------ State ------
 const submitting = ref(false)
@@ -389,6 +391,7 @@ const submitForm = async () => {
       validityDays: form.validityDays,
       optionFeeAmount: form.optionFeeAmount,
       optionFeeCurrency: form.optionFeeCurrency,
+      serviceAdvisorId: advisor.value?.id || undefined,
       notes: form.notes || undefined
     })
     successMessage.value = `Araç başarıyla opsiyonlandı! ${expiresAtFormatted.value} tarihine kadar rezerve edildi.`

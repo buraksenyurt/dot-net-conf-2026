@@ -50,6 +50,7 @@ public class CreateVehicleOptionCommandHandler : IRequestHandler<CreateVehicleOp
             customer,
             request.ValidityDays,
             moneyResult.Value!,
+            request.ServiceAdvisorId,
             request.Notes);
 
         if (optionResult.IsFailure)

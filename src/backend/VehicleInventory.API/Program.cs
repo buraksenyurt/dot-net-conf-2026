@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using VehicleInventory.Application.Abstractions;
 using VehicleInventory.Application.Commands;
 using VehicleInventory.Domain.Interfaces;
 using VehicleInventory.Infrastructure.Persistence;
 using VehicleInventory.Infrastructure.Repositories;
+using VehicleInventory.Infrastructure.Security;
+using VehicleInventory.API.Extensions;
 using FluentValidation;
 using Serilog;
 
@@ -43,6 +46,10 @@ try
     builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
     builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
     builder.Services.AddScoped<IVehicleOptionRepository, VehicleOptionRepository>();
+    builder.Services.AddScoped<IServiceAdvisorRepository, ServiceAdvisorRepository>();
+
+    // Security
+    builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
     // CORS - Allow ANY origin for debugging
     builder.Services.AddCors(options =>
@@ -72,6 +79,9 @@ try
 
     app.UseAuthorization();
     app.MapControllers();
+
+    // Seed demo service advisors on first run
+    await app.SeedServiceAdvisorsAsync();
 
     await app.RunAsync();
 }

@@ -34,6 +34,8 @@ export interface VehicleOption {
   isExpired: boolean
   createdAt: string
   updatedAt?: string
+  serviceAdvisorId?: string
+  serviceAdvisorDisplayName?: string
 }
 
 export interface CreateVehicleOptionRequest {
@@ -42,5 +44,6 @@ export interface CreateVehicleOptionRequest {
   validityDays: number
   optionFeeAmount: number
   optionFeeCurrency: string
+  serviceAdvisorId?: string
   notes?: string
 }

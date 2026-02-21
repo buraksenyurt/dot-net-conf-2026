@@ -22,6 +22,8 @@ public sealed class VehicleOption
     public Vehicle Vehicle { get; private set; } = null!;
     public Guid CustomerId { get; private set; }
     public Customer Customer { get; private set; } = null!;
+    public Guid? ServiceAdvisorId { get; private set; }
+    public ServiceAdvisor? ServiceAdvisor { get; private set; }
     public DateTime ExpiresAt { get; private set; }
     public Money OptionFee { get; private set; } = null!;
     public string? Notes { get; private set; }
@@ -38,6 +40,7 @@ public sealed class VehicleOption
         Customer customer,
         DateTime expiresAt,
         Money optionFee,
+        Guid? serviceAdvisorId,
         string? notes)
     {
         Id = id;
@@ -45,6 +48,7 @@ public sealed class VehicleOption
         Vehicle = vehicle;
         CustomerId = customer.Id;
         Customer = customer;
+        ServiceAdvisorId = serviceAdvisorId;
         ExpiresAt = expiresAt;
         OptionFee = optionFee;
         Notes = notes?.Trim();
@@ -60,6 +64,7 @@ public sealed class VehicleOption
         Customer customer,
         int validityDays,
         Money optionFee,
+        Guid? serviceAdvisorId = null,
         string? notes = null)
     {
         if (vehicle.Status == VehicleStatus.Reserved)
@@ -85,6 +90,7 @@ public sealed class VehicleOption
             customer,
             DateTime.UtcNow.AddDays(validityDays),
             optionFee,
+            serviceAdvisorId,
             notes);
 
         return Result<VehicleOption>.Success(option);

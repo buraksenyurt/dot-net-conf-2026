@@ -43,7 +43,9 @@ public class VehicleOptionRepository : IVehicleOptionRepository
     public async Task<IEnumerable<VehicleOption>> GetByVehicleIdAsync(Guid vehicleId, CancellationToken cancellationToken = default)
     {
         return await _context.VehicleOptions
+            .Include(o => o.Vehicle)
             .Include(o => o.Customer)
+            .Include(o => o.ServiceAdvisor)
             .Where(o => o.VehicleId == vehicleId)
             .OrderByDescending(o => o.CreatedAt)
             .ToListAsync(cancellationToken);
@@ -53,7 +55,20 @@ public class VehicleOptionRepository : IVehicleOptionRepository
     {
         return await _context.VehicleOptions
             .Include(o => o.Vehicle)
+            .Include(o => o.Customer)
+            .Include(o => o.ServiceAdvisor)
             .Where(o => o.CustomerId == customerId)
+            .OrderByDescending(o => o.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<VehicleOption>> GetByServiceAdvisorIdAsync(Guid advisorId, CancellationToken cancellationToken = default)
+    {
+        return await _context.VehicleOptions
+            .Include(o => o.Vehicle)
+            .Include(o => o.Customer)
+            .Include(o => o.ServiceAdvisor)
+            .Where(o => o.ServiceAdvisorId == advisorId)
             .OrderByDescending(o => o.CreatedAt)
             .ToListAsync(cancellationToken);
     }
