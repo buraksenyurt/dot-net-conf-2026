@@ -199,6 +199,34 @@ Bu çalışma kapsamında elde edilen başlıca sonuçlar aşağıdaki gibi öze
 
 ---
 
+## Güncel Durum
+
+Bu kapsamlı çalışmada güncel olarak uygulanan metodoloji aşağıdaki grafikte özetlenmiştir.
+
+İlk olarak legacy sistemin uygulanabilir küçük bir parçası senaryoya dahil edilmiştir. Burada dış entegrasyon bağımlılıklarının minimum seviyede tutulmasına özen gösterilmiştir. Amaç klasik yazılım geliştirme yaşam döngüsünü *(SDLC)* kullanarak sıfırdan bir DMS prototipinin hazırlanmasıdır. Bu süreçte projeye yeniden yazılmış domain bazlı framework ve görsel komponent bileşenleri eklenmiştir. Ayrıca api üretimi için daha önceki projelerde denenmiş olan Source Generator'lar da dahil edilmiştir. Bu çalışmada sürecin yeni nesil framework ve bileşen setleri ile başarılı şekilde icra edilmesi en önemli hedeftir. **Prototype** safhası olarak ele alınan bu süreç sonlandığında yapay zekan modellerinden tersine mühendislik yöntemleri ile var olan mimariyi analiz etmesi ve standartları birer **spec** dokümanı olarak oluşturması istenmiştir. **Define** olarak belirlediğimiz bu aşamada amaç, sonraki üretimler için yapay zeka araçlarına verilebilecek standartların ortaya çıkartılmasıdır. Sonuç olarak domain kuralları, nesneler arası ilişkiler, mimari kararlar ve kodun semantik bağlamlarının yer aldığı şablonlar *(templates)* ortaya çıkmıştır.
+
+Bu notkadan itibaren **Implementation** safhasına geçilmiştir. Söz konusu safhada paralel olarak iki ayrı hat üstünde ilerlenmiştir. Maliyet açısından görece daha ucuz olan hatta **Github Copilot** üzerinden yapay zeka rolleri tanımlanmıştır. İş analisti, yazılım geliştirici, test mühendisi gibi rollerden aşağıdakilerine benzer görevler icra etmeleri istenmiştir.
+
+- Birkaç cümle ile tariflenen bir sürecin analiz dokümanının hazırlanması.
+- Hazırlanan analiz dokümanına istinaden API ve backend kodlarının yazılması.
+- Domain modellerinin kurgulanması ve migration planlarının işletilmesi.
+- Wireframe tasarımlarına göre önyüzlerin geliştirilmesi ve API noktalarına bağlanması.
+
+Paralel olarak yüretilen diğer süreçte ise dil modellerinin domain sınırları içerisinde kalarak görevler icra etmesi ve asistan hizmet desteği sağlaması için bir RAG *(Retreival Augmented Generation)* hattı oluşturulmuştur. Burada **text embedding** ve **vector** veritabanları için farklı ürünler kullanılmıştır. Ayrıca denemelerin çoğu local ortamlarda çalıştırılan dil modelleri üzerinden gerçekleştirilmiştir. Bu çalışmalar sırasında özellikle görev icrası öncesi prompt alan istemci uygulamalarda **Microsoft.SemanticKernel** çatısı ve bileşenlerinden yararlanılmıştır.
+
+![Current State](stage_diagram.png)
+
+Çalışma sonucu elde ettiğimiz kriterler baktığımızda avantaj ve dezavantaj noktalarını aşağıdaki gibi özetleyebiliriz.
+
+|Pros|Cons|
+|------------------|------------------|
+|Artan development hızı(%70)|Sarp anlama eğrisi|
+|"Up to date" dokümantasyon|Token/dolayı enerji maliyeti|
+|Proaktif düzenleme fırsatları|İdeal senaryoda belirsiz kurgu(setup) maliyeti|
+|Yenilenen domain kültürü||
+
+---
+
 ## Yardımcı Diagramlar
 
 > Bu bölümde dokümanı destekleyici bazı diagramlar yer almaktadır.
