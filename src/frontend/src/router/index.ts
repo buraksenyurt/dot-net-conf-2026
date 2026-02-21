@@ -11,17 +11,17 @@ import { useAuth } from '../composables/useAuth'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/',                     name: 'home',               component: Home },
-    { path: '/vehicles',             name: 'vehicles',           component: VehicleList },
-    { path: '/vehicles/new',         name: 'vehicle-new',        component: VehicleForm },
-    { path: '/vehicle-options',      name: 'vehicle-options',    component: VehicleOptionList },
-    { path: '/vehicle-options/new',  name: 'vehicle-option-new', component: VehicleOptionForm },
     { path: '/login',                name: 'login',              component: AdvisorLogin },
-    { path: '/advisor/dashboard',    name: 'advisor-dashboard',  component: AdvisorDashboard, meta: { requiresAuth: true } }
+    { path: '/',                     name: 'home',               component: Home,               meta: { requiresAuth: true } },
+    { path: '/vehicles',             name: 'vehicles',           component: VehicleList,        meta: { requiresAuth: true } },
+    { path: '/vehicles/new',         name: 'vehicle-new',        component: VehicleForm,        meta: { requiresAuth: true } },
+    { path: '/vehicle-options',      name: 'vehicle-options',    component: VehicleOptionList,  meta: { requiresAuth: true } },
+    { path: '/vehicle-options/new',  name: 'vehicle-option-new', component: VehicleOptionForm,  meta: { requiresAuth: true } },
+    { path: '/advisor/dashboard',    name: 'advisor-dashboard',  component: AdvisorDashboard,   meta: { requiresAuth: true } }
   ]
 })
 
-// Navigation guard — protect advisor routes
+// Navigation guard — every route except /login requires an authenticated advisor
 router.beforeEach((to) => {
   if (to.meta.requiresAuth) {
     const { isLoggedIn } = useAuth()

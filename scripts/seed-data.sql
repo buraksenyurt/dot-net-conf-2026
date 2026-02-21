@@ -132,10 +132,23 @@ VALUES
 ON CONFLICT DO NOTHING;
 
 -- -----------------------------------------------------------------------------
+-- SERVICE ADVISORS — demo servis danışmanları (şifre: Demo1234!)
+-- PBKDF2-SHA256 / 100.000 iterasyon / format: base64(salt):base64(hash)
+-- -----------------------------------------------------------------------------
+INSERT INTO "ServiceAdvisors" ("Id","FirstName","LastName","Email","PasswordHash","Department","IsActive","CreatedAt")
+VALUES
+  ('d1000001-0000-0000-0000-000000000001','Wendy','Klorp',  'w.klorp@aio-demo.com', 'FXWTAxIyiJA4arUcOMmnEA==:FFmenqOHyHOfxRJo72ehRZt9cXK77iNIjD5hco9rB5w=','Satış',                   TRUE, NOW() AT TIME ZONE 'UTC'),
+  ('d1000002-0000-0000-0000-000000000002','Rex',  'Dunbar', 'r.dunbar@aio-demo.com','Ry1tPuFg7v1tq6EOIDlXTg==:YQJGoPfgUNJWe4dbq3j9yr7+wax3ctYlYok/F7qWcLg=','Teknik Servis',            TRUE, NOW() AT TIME ZONE 'UTC'),
+  ('d1000003-0000-0000-0000-000000000003','Jill', 'Sprock', 'j.sprock@aio-demo.com','YWa9gkHbQBg0gYLSDamQTA==:N407AtuFoDdtVpFqWNPmHyuR/IC9N5BSh9JduPEsKhs=','VIP Müşteri Hizmetleri', TRUE, NOW() AT TIME ZONE 'UTC')
+ON CONFLICT ("Email") DO NOTHING;
+
+-- -----------------------------------------------------------------------------
 -- Özet kontrol sorgusu
 -- -----------------------------------------------------------------------------
-SELECT 'Vehicles'    AS tablo, COUNT(*) AS kayit FROM "Vehicles"
+SELECT 'Vehicles'        AS tablo, COUNT(*) AS kayit FROM "Vehicles"
 UNION ALL
-SELECT 'Customers'   AS tablo, COUNT(*) AS kayit FROM "Customers"
+SELECT 'Customers'       AS tablo, COUNT(*) AS kayit FROM "Customers"
 UNION ALL
-SELECT 'VehicleOptions' AS tablo, COUNT(*) AS kayit FROM "VehicleOptions";
+SELECT 'VehicleOptions'  AS tablo, COUNT(*) AS kayit FROM "VehicleOptions"
+UNION ALL
+SELECT 'ServiceAdvisors' AS tablo, COUNT(*) AS kayit FROM "ServiceAdvisors";
