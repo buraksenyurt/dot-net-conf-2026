@@ -223,7 +223,7 @@ Paralel olarak yüretilen diğer süreçte ise dil modellerinin domain sınırla
 |Artan development hızı(%70)|Sarp anlama eğrisi|
 |"Up to date" dokümantasyon|Token/dolayı enerji maliyeti|
 |Proaktif düzenleme fırsatları|İdeal senaryoda belirsiz kurgu(setup) maliyeti|
-|Yenilenen domain kültürü||
+|Yenilenen domain kültürü|Olası teknik borçlanma|
 
 ---
 

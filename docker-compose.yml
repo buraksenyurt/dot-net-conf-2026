@@ -42,6 +42,7 @@ services:
   sonarqube:
     image: sonarqube:latest
     container_name: aio-sonarqube
+    hostname: aio-sonarqube
     environment:
       SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
     ports:
