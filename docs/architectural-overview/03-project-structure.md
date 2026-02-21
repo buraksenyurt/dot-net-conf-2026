@@ -12,20 +12,26 @@ VehicleManagement/
 │   ├── VehicleManagement.Domain/              # Domain Layer
 │   │   ├── Entities/
 │   │   │   ├── Vehicle.cs
+│   │   │   ├── Customer.cs
 │   │   │   └── Dealer.cs
 │   │   ├── ValueObjects/
 │   │   │   ├── VIN.cs
 │   │   │   ├── Money.cs
+│   │   │   ├── Email.cs
 │   │   │   └── Address.cs
 │   │   ├── Aggregates/
 │   │   │   └── VehicleInventory.cs
+│   │   ├── Enums/
+│   │   │   ├── CustomerType.cs
+│   │   │   └── VehicleStatus.cs
 │   │   ├── Events/
 │   │   │   ├── VehicleAddedEvent.cs
 │   │   │   └── VehicleSoldEvent.cs
 │   │   ├── Exceptions/
 │   │   │   └── VehicleDomainException.cs
 │   │   └── Interfaces/
-│   │       └── IVehicleRepository.cs
+│   │       ├── IVehicleRepository.cs
+│   │       └── ICustomerRepository.cs
 │   │
 │   ├── VehicleManagement.Application/         # Application Layer
 │   │   ├── Commands/
@@ -33,6 +39,9 @@ VehicleManagement/
 │   │   │   │   ├── AddVehicleCommand.cs
 │   │   │   │   ├── AddVehicleCommandHandler.cs
 │   │   │   │   └── AddVehicleCommandValidator.cs
+│   │   │   ├── CreateCustomer/
+│   │   │   │   ├── CreateCustomerCommand.cs
+│   │   │   │   └── CreateCustomerCommandHandler.cs
 │   │   │   └── UpdateVehicleStatus/
 │   │   │       ├── UpdateVehicleStatusCommand.cs
 │   │   │       └── UpdateVehicleStatusCommandHandler.cs
@@ -41,9 +50,16 @@ VehicleManagement/
 │   │   │   │   ├── GetVehiclesQuery.cs
 │   │   │   │   ├── GetVehiclesQueryHandler.cs
 │   │   │   │   └── VehicleDto.cs
-│   │   │   └── GetVehicleByVin/
-│   │   │       ├── GetVehicleByVinQuery.cs
-│   │   │       └── GetVehicleByVinQueryHandler.cs
+│   │   │   ├── GetVehicleByVin/
+│   │   │   │   ├── GetVehicleByVinQuery.cs
+│   │   │   │   └── GetVehicleByVinQueryHandler.cs
+│   │   │   ├── GetCustomers/
+│   │   │   │   ├── GetCustomersQuery.cs
+│   │   │   │   ├── GetCustomersQueryHandler.cs
+│   │   │   │   └── CustomerDto.cs
+│   │   │   └── GetCustomerById/
+│   │   │       ├── GetCustomerByIdQuery.cs
+│   │   │       └── GetCustomerByIdQueryHandler.cs
 │   │   ├── Mappings/
 │   │   │   └── VehicleProfile.cs
 │   │   ├── Validators/
@@ -58,6 +74,7 @@ VehicleManagement/
 │   │   │   │   └── VehicleRepository.cs
 │   │   │   ├── Configurations/
 │   │   │   │   └── VehicleConfiguration.cs
+│   │   │   │   └── CustomerConfiguration.cs
 │   │   │   └── Migrations/
 │   │   ├── ExternalServices/
 │   │   │   └── KeycloakAuthService.cs
@@ -67,7 +84,8 @@ VehicleManagement/
 │   │
 │   └── VehicleManagement.Api/                  # Presentation Layer
 │       ├── Controllers/
-│       │   └── VehiclesController.cs
+│       │   ├── VehiclesController.cs
+│       │   └── CustomersController.cs
 │       ├── Filters/
 │       │   ├── GlobalExceptionFilter.cs
 │       │   └── ValidationFilter.cs
