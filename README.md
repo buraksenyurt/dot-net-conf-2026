@@ -2,6 +2,25 @@
 
 Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yararlanıyoruz, ne gibi zorluklarla karşılaşıyoruz ve vardığımız sonuçlar...
 
+- [Giriş](#yapay-zeka-yılların-koduna-karşı-ai-tabanlı-legacy-modernizasyonu)
+  - [Kendime Notlar](#kendime-notlar)
+  - [Legacy System](#legacy-system)
+    - [Metriklerle Legacy Sistemimiz](#metriklerle-legacy-sistemimiz)
+    - [Teknoloji Altyapısı](#teknoloji-altyapısı)
+    - [Sistemdeki Genel Problemler (2020 Öncesi)](#sistemdeki-genel-problemler-2020-öncesi)
+    - [İlk Modernizasyon Çalışmaları (2020 - 2024)](#ilk-modernizasyon-çalışmaları-2020---2024)
+    - [Motivasyon](#motivasyon)
+    - [Riskler](#riskler)
+    - [Level 0: Birinci Aşama](#level-0-birinci-aşama)
+      - [Geliştirme Süreci](#geliştirme-süreci)
+      - [Deneyimler](#deneyimler)
+        - [Sonarqube Taramaları](#sonarqube-taramaları)
+        - [Sonarqube Taraması için Notlar](#sonarqube-taraması-için-notlar)
+      - [Çalışma Sırasında Arada Yazılan Yardımcı Araçlar](#çalışma-sırasında-arada-yazılan-yardımcı-araçlar)
+      - [Teknik Özet](#teknik-özet)
+    - [Sonuçlar](#sonuçlar)
+    - [Sonraki Planlar ve Hedefler](#sonraki-planlar-ve-hedefler)
+
 ## Kendime Notlar
 
 - Tersine mühendislikten bahsettik mi? Çalışır bir solution oluşturup sayfa tasarımları, doküman şablonları gibi içerikleri geriye dönük hazırladık ve beklenen çıktılara yakın üretimler için standarları bu taktik ile belirledik.
@@ -61,7 +80,7 @@ Var olan sistem yüksek müşteri memnuniyet sağlamasına ve ihtiyaçlar tam ol
 - Modüller arası sıkı bağımlılıklar ve zayıf soyutlamalar
 - Yüksek lisanslama maliyetleri
 
-### İlk Modernizasyon Çalışmaları (2020 - 2024)
+### ilk Modernizasyon Çalışmaları (2020 - 2024)
 
 Modernizasyon ihtiyaçlarının netleştirilmesi için 2020 öncesinde birçok **fizibilite** çalışması gerçekleştirilmiş ve var olan durum detaylı raporlarla açıklanmıştır. Yeni mimari modellere geçmek ve modüllerin bağımsız olarak çalıştırılabilmesi stratejik hedef olarak belirlenmiştir. Bu kapsamda ilk uzun soluklu **IT4IT** çalışması 2020 yılında başlatılmıştır. Bu çalışmada bir yol haritası çıkartılmış ve aşağıdaki ana adımlar atılmıştır.
 
@@ -127,9 +146,15 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 - Küresel bir standartta olmayan bazı alanlarda detaylı **spec** dokümanları olmadığında tutarlı sonuçlar elde etmekte zorlandık. Örneğin özel bileşenlerden oluşan **UI** kütüphanelerinde, yapay zeka asistanlarının doğru kod parçalarını üretmesi için detaylı örnekler ve kullanım şekilleri sunmak gerekti. Bu amaçla bileşen setleri için nasıl kullanıldığına dair dokümanlar hazırlandı ve örnek kod parçaları sunuldu. Bu aslında bir **RAG** *(Retrieval Augmented Generation)* yaklaşımı için de bize yol gösterici oldu. *(RAG yaklaşımı ile domain'e özgü bilgi ve dokümanların yapay zeka asistanlarına sunulması, daha doğru ve tutarlı sonuçlar elde edilmesini sağlayabilir)*
 - **Sonarqube** ile yapılan ilk taramalar, agent bazlı geliştirmelerde kod tabanı hatasız derlense dahi bir takım teknik borçların ortaya çıktığını gösterdi. Dolayısıyla insan denetimi ve müdahalesi olmadan tamamen hatasız bir sürecin işletilmesinin şu an için pek mümkün olmadığı gözlemlendi. Ancak, **Sonarqube MCP Server** ile entegrasyon sayesinde, yapay zeka asistanlarının bu bulguları analiz ederek düzeltme önerileri sunması ve hatta bazı düzeltmeleri otomatik olarak yapması sağlandı. Bu da sürecin hızlanmasına ve kod kalitesinin artırılmasına katkıda bulundu.
 
+#### Sonarqube Taramaları
+
 Demo projesinde oldukça küçük bir kod tabanı ile çalışırken Sonarqube'un ilk tarama sonuçları aşağıdaki gibidir.
 
 ![Sonarqube İlk Tarama Sonuçları](sq_initial_scan.png)
+
+ikinci tarama sonuçlar;
+
+![Sonarqube İkinci Tarama Sonuçları](sq_second_scan.png)
 
 ve ilk taramadaki bazı bulgulara ait başlıklar;
 
