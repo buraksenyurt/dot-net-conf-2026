@@ -6,22 +6,24 @@
 
 ## Özellikler
 
-| Alan              | Tip                  | Açıklama                                          |
-|-------------------|----------------------|---------------------------------------------------|
-| `Id`              | `Guid`               | Benzersiz tanımlayıcı                             |
-| `VehicleId`       | `Guid`               | İlişkili araç (FK → Vehicle)                      |
-| `CustomerId`      | `Guid`               | Opsiyon sahibi müşteri (FK → Customer)            |
-| `ExpiresAt`       | `DateTime`           | Opsiyonun bitiş tarihi (UTC)                      |
-| `OptionFee`       | `Money`              | Opsiyon/depozito ücreti                           |
-| `Notes`           | `string?`            | Opsiyonel satış notu                              |
-| `Status`          | `VehicleOptionStatus`| Opsiyonun anlık durumu                            |
-| `CreatedAt`       | `DateTime`           | Oluşturulma tarihi (UTC)                          |
-| `UpdatedAt`       | `DateTime?`          | Son güncelleme tarihi                             |
+| Alan                | Tip                  | Açıklama                                          |
+|---------------------|----------------------|---------------------------------------------------|
+| `Id`                | `Guid`               | Benzersiz tanımlayıcı                             |
+| `VehicleId`         | `Guid`               | İlişkili araç (FK → Vehicle)                      |
+| `CustomerId`        | `Guid`               | Opsiyon sahibi müşteri (FK → Customer)            |
+| `ServiceAdvisorId`  | `Guid?`              | Opsiyonu oluşturan servis danışmanı (FK → ServiceAdvisor, nullable) |
+| `ExpiresAt`         | `DateTime`           | Opsiyonun bitiş tarihi (UTC)                      |
+| `OptionFee`         | `Money`              | Opsiyon/depozito ücreti                           |
+| `Notes`             | `string?`            | Opsiyonel satış notu                              |
+| `Status`            | `VehicleOptionStatus`| Opsiyonun anlık durumu                            |
+| `CreatedAt`         | `DateTime`           | Oluşturulma tarihi (UTC)                          |
+| `UpdatedAt`         | `DateTime?`          | Son güncelleme tarihi                             |
 
 ## İlişkiler
 
 - `Vehicle` → Navigation property (bir opsiyonun bir aracı var)
 - `Customer` → Navigation property (bir opsiyonun bir müşterisi var)
+- `ServiceAdvisor?` → Navigation property (nullable, opsiyonu bağlayan danışman)
 
 ## Durum Makinesi (VehicleOptionStatus)
 
@@ -56,8 +58,9 @@ Active ──── Cancel() ──→ Cancelled
 VehicleOption.Create(
     vehicle: Vehicle,
     customer: Customer,
-    validityDays: int,       // 1-30
-    optionFee: Money,        // Amount >= 0
+    validityDays: int,          // 1-30
+    optionFee: Money,           // Amount >= 0
+    serviceAdvisorId: Guid?,    // nullable
     notes: string?
 ) → Result<VehicleOption>
 ```
@@ -68,15 +71,16 @@ VehicleOption.Create(
 
 ## Veritabanı Tablosu: `VehicleOptions`
 
-| Kolon             | Tip             | Kısıtlamalar                      |
-|-------------------|-----------------|------------------------------------|
-| `Id`              | `uuid`          | PK                                 |
-| `VehicleId`       | `uuid`          | FK → Vehicles(Id), NOT NULL        |
-| `CustomerId`      | `uuid`          | FK → Customers(Id), NOT NULL       |
-| `ExpiresAt`       | `timestamp`     | NOT NULL                           |
-| `OptionFeeAmount` | `decimal(18,2)` | NOT NULL                           |
-| `OptionFeeCurrency`| `varchar(3)`   | NOT NULL                           |
-| `Notes`           | `varchar(500)`  | NULL                               |
-| `Status`          | `varchar(20)`   | NOT NULL                           |
-| `CreatedAt`       | `timestamp`     | NOT NULL                           |
-| `UpdatedAt`       | `timestamp`     | NULL                               |
+| Kolon               | Tip             | Kısıtlamalar                              |
+|---------------------|-----------------|-------------------------------------------|
+| `Id`                | `uuid`          | PK                                        |
+| `VehicleId`         | `uuid`          | FK → Vehicles(Id), NOT NULL               |
+| `CustomerId`        | `uuid`          | FK → Customers(Id), NOT NULL              |
+| `ServiceAdvisorId`  | `uuid`          | FK → ServiceAdvisors(Id), NULL            |
+| `ExpiresAt`         | `timestamp`     | NOT NULL                                  |
+| `OptionFeeAmount`   | `decimal(18,2)` | NOT NULL                                  |
+| `OptionFeeCurrency` | `varchar(3)`    | NOT NULL                                  |
+| `Notes`             | `varchar(500)`  | NULL                                      |
+| `Status`            | `int`           | NOT NULL                                  |
+| `CreatedAt`         | `timestamp`     | NOT NULL                                  |
+| `UpdatedAt`         | `timestamp`     | NULL                                      |

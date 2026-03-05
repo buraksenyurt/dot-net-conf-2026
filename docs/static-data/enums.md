@@ -5,22 +5,20 @@
 ```csharp
 public enum VehicleStatus
 {
-    Available = 1,    // Stokta
-    Reserved = 2,     // Rezerve
-    Sold = 3,         // Satıldı
-    InService = 4,    // Serviste
-    InTransit = 5     // Transfer Aşamasında
+    InStock   = 1,  // Stokta (yeni eklenen araç)
+    OnSale    = 2,  // Satışa açık
+    Sold      = 3,  // Satıldı
+    Reserved  = 4   // Rezerve (aktif opsiyon var)
 }
 ```
 
 ### UI Gösterimi
 ```typescript
 export const VEHICLE_STATUS_LABELS = {
-  Available: { label: 'Stokta', color: 'green', icon: 'check-circle' },
-  Reserved: { label: 'Rezerve', color: 'yellow', icon: 'clock' },
-  Sold: { label: 'Satıldı', color: 'gray', icon: 'check' },
-  InService: { label: 'Serviste', color: 'blue', icon: 'tool' },
-  InTransit: { label: 'Transfer', color: 'purple', icon: 'truck' }
+  InStock:  { label: 'Stokta',   color: 'secondary', icon: 'box-seam' },
+  OnSale:   { label: 'Satışta',  color: 'success',   icon: 'tag' },
+  Sold:     { label: 'Satıldı',  color: 'dark',      icon: 'check-circle' },
+  Reserved: { label: 'Rezerve',  color: 'warning',   icon: 'clock' }
 };
 ```
 
@@ -29,22 +27,20 @@ export const VEHICLE_STATUS_LABELS = {
 ```csharp
 public enum EngineType
 {
-    Petrol = 1,     // Benzin
-    Diesel = 2,     // Dizel
-    Electric = 3,   // Elektrik
-    Hybrid = 4,     // Hibrit
-    PlugInHybrid = 5 // Şarj Edilebilir Hibrit
+    Gasoline = 1,  // Benzin
+    Diesel   = 2,  // Dizel
+    Electric = 3,  // Elektrik
+    Hybrid   = 4   // Hibrit
 }
 ```
 
 ### UI Gösterimi
 ```typescript
 export const ENGINE_TYPE_LABELS = {
-  Petrol: { label: 'Benzin', icon: '⛽' },
-  Diesel: { label: 'Dizel', icon: '🚗' },
+  Gasoline: { label: 'Benzin',   icon: '⛽' },
+  Diesel:   { label: 'Dizel',    icon: '🚗' },
   Electric: { label: 'Elektrik', icon: '🔋' },
-  Hybrid: { label: 'Hibrit', icon: '♻️' },
-  PlugInHybrid: { label: 'Şarj Edilebilir Hibrit', icon: '🔌' }
+  Hybrid:   { label: 'Hibrit',   icon: '♻️' }
 };
 ```
 
@@ -68,25 +64,41 @@ export const TRANSMISSION_TYPE_LABELS = {
 };
 ```
 
-## Currency (Para Birimi)
+## CustomerType (Müşteri Tipi)
 
 ```csharp
-public enum Currency
+public enum CustomerType
 {
-    TRY = 1,  // Türk Lirası
-    USD = 2,  // US Dollar
-    EUR = 3,  // Euro
-    GBP = 4   // British Pound
+    Individual = 1,  // Bireysel
+    Corporate  = 2   // Kurumsal
 }
 ```
 
 ### UI Gösterimi
 ```typescript
-export const CURRENCY_SYMBOLS = {
-  TRY: '₺',
-  USD: '$',
-  EUR: '€',
-  GBP: '£'
+export const CUSTOMER_TYPE_LABELS = {
+  Individual: { label: 'Bireysel', icon: 'person' },
+  Corporate:  { label: 'Kurumsal', icon: 'building' }
+};
+```
+
+## VehicleOptionStatus (Opsiyon Durumu)
+
+```csharp
+public enum VehicleOptionStatus
+{
+    Active    = 1,  // Aktif (geçerli)
+    Expired   = 2,  // Süresi dolmuş
+    Cancelled = 3   // İptal edilmiş
+}
+```
+
+### UI Gösterimi
+```typescript
+export const VEHICLE_OPTION_STATUS_LABELS = {
+  Active:    { label: 'Aktif',     color: 'success', icon: 'check-circle' },
+  Expired:   { label: 'Süresi Doldu', color: 'secondary', icon: 'calendar-x' },
+  Cancelled: { label: 'İptal',     color: 'danger',  icon: 'x-circle' }
 };
 ```
 
@@ -138,54 +150,21 @@ export const FEATURE_CATEGORIES = {
 
 ## DealerType (Bayi Tipi)
 
-```csharp
-public enum DealerType
-{
-    Authorized = 1,     // Yetkili Bayi
-    SubDealer = 2,      // Alt Bayi
-    ServicePoint = 3    // Servis Noktası
-}
-```
+> ⚠️ Bu enum mevcut PoC kapsamında henüz implemente edilmemiştir.
 
 ## UserRole (Kullanıcı Rolleri)
 
-```csharp
-public enum UserRole
-{
-    Admin = 1,              // Sistem Yöneticisi
-    DealerManager = 2,      // Bayi Yöneticisi
-    SalesConsultant = 3,    // Satış Danışmanı
-    ServiceAdvisor = 4,     // Servis Danışmanı
-    RegionManager = 5,      // Bölge Müdürü
-    InventoryManager = 6    // Stok Yöneticisi
-}
-```
+> ⚠️ Bu enum mevcut PoC kapsamında henüz implemente edilmemiştir. Kimlik doğrulama için Keycloak entegrasyonu planlanmaktadır.
 
-### Yetki Matrisi
-```typescript
-export const ROLE_PERMISSIONS = {
-  Admin: ['*'],  // Tüm yetkiler
-  DealerManager: ['vehicle.view', 'vehicle.add', 'vehicle.edit', 'vehicle.delete', 'report.view'],
-  SalesConsultant: ['vehicle.view', 'vehicle.reserve'],
-  ServiceAdvisor: ['vehicle.view', 'service.manage'],
-  RegionManager: ['vehicle.view', 'report.view', 'dealer.view'],
-  InventoryManager: ['vehicle.view', 'vehicle.add', 'vehicle.edit', 'inventory.manage']
-};
-```
+## Para Birimi (Currency)
 
-## API Response Format
+`Money` value object'te para birimi bir enum değil, **ISO 4217 string kodu** olarak tutulur.
 
-```json
-GET /api/v1/static-data/enums?type=VehicleStatus
-
-{
-  "enumName": "VehicleStatus",
-  "values": [
-    { "id": 1, "name": "Available", "displayName": "Stokta" },
-    { "id": 2, "name": "Reserved", "displayName": "Rezerve" },
-    { "id": 3, "name": "Sold", "displayName": "Satıldı" },
-    { "id": 4, "name": "InService", "displayName": "Serviste" },
-    { "id": 5, "name": "InTransit", "displayName": "Transfer" }
-  ]
-}
-```
+| Kod | Para Birimi |
+|-----|-------------|
+| `TRY` | Türk Lirası |
+| `USD` | US Dollar |
+| `EUR` | Euro |
+| `GBP` | British Pound |
+| `JPY` | Japon Yeni |
+| `CHF` | İsviçre Frangı |
