@@ -47,3 +47,13 @@ export interface CreateVehicleOptionRequest {
   serviceAdvisorId?: string
   notes?: string
 }
+
+export interface CreateCustomerRequest {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  customerType: string
+  companyName?: string
+  taxNumber?: string
+}

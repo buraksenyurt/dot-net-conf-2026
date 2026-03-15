@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Customer, PagedResult } from '../types/vehicleOption'
+import type { Customer, PagedResult, CreateCustomerRequest } from '../types/vehicleOption'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5280/api'
 
@@ -33,6 +33,11 @@ export const customerApi = {
     if (filters?.customerType) params.append('customerType', filters.customerType)
 
     const response = await api.get<PagedResult<Customer>>(`/v1/customers?${params}`)
+    return response.data
+  },
+
+  async createCustomer(request: CreateCustomerRequest): Promise<{ id: string }> {
+    const response = await api.post<{ id: string }>('/v1/customers', request)
     return response.data
   }
 }
