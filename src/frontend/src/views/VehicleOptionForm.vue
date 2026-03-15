@@ -98,6 +98,9 @@
                   <button v-if="customerSearch" class="btn btn-outline-secondary" type="button" @click="clearCustomer">
                     <i class="bi bi-x"></i>
                   </button>
+                  <button class="btn btn-outline-success" type="button" @click="openNewCustomerModal" title="Yeni müşteri ekle">
+                    <i class="bi bi-person-plus me-1"></i>Yeni Müşteri
+                  </button>
                 </div>
 
                 <!-- Müşteri Arama Sonuçları -->
@@ -261,18 +264,155 @@
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Yeni Müşteri Ekle Modal -->
+    <div
+      class="modal fade"
+      id="newCustomerModal"
+      ref="newCustomerModalRef"
+      tabindex="-1"
+      aria-labelledby="newCustomerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="newCustomerModalLabel">
+              <i class="bi bi-person-plus me-2 text-success"></i>Yeni Müşteri Ekle
+            </h5>
+            <button type="button" class="btn-close" @click="closeNewCustomerModal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <div v-if="newCustomerError" class="alert alert-danger py-2 mb-3" role="alert">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ newCustomerError }}
+            </div>
+            <div class="mb-3">
+              <label for="ncFirstName" class="form-label fw-semibold">Ad <span class="text-danger">*</span></label>
+              <input
+                id="ncFirstName"
+                v-model="newCustomerForm.firstName"
+                type="text"
+                class="form-control"
+                required
+                maxlength="100"
+                placeholder="Müşteri adı"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="ncLastName" class="form-label fw-semibold">Soyad <span class="text-danger">*</span></label>
+              <input
+                id="ncLastName"
+                v-model="newCustomerForm.lastName"
+                type="text"
+                class="form-control"
+                required
+                maxlength="100"
+                placeholder="Müşteri soyadı"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="ncEmail" class="form-label fw-semibold">E-posta <span class="text-danger">*</span></label>
+              <input
+                id="ncEmail"
+                v-model="newCustomerForm.email"
+                type="email"
+                class="form-control"
+                required
+                placeholder="ornek@email.com"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="ncPhone" class="form-label fw-semibold">Telefon <span class="text-danger">*</span></label>
+              <input
+                id="ncPhone"
+                v-model="newCustomerForm.phone"
+                type="tel"
+                class="form-control"
+                required
+                placeholder="+90 5XX XXX XX XX"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Müşteri Tipi <span class="text-danger">*</span></label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    v-model="newCustomerForm.customerType"
+                    value="Individual"
+                    id="ncTypeIndividual"
+                  />
+                  <label class="form-check-label" for="ncTypeIndividual">Bireysel</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    v-model="newCustomerForm.customerType"
+                    value="Corporate"
+                    id="ncTypeCorporate"
+                  />
+                  <label class="form-check-label" for="ncTypeCorporate">Kurumsal</label>
+                </div>
+              </div>
+            </div>
+            <div v-if="newCustomerForm.customerType === 'Corporate'" class="mb-3">
+              <label for="ncCompanyName" class="form-label fw-semibold">Firma Adı <span class="text-danger">*</span></label>
+              <input
+                id="ncCompanyName"
+                v-model="newCustomerForm.companyName"
+                type="text"
+                class="form-control"
+                :required="newCustomerForm.customerType === 'Corporate'"
+                maxlength="200"
+                placeholder="Firma adı"
+              />
+            </div>
+            <div v-if="newCustomerForm.customerType === 'Corporate'" class="mb-3">
+              <label for="ncTaxNumber" class="form-label fw-semibold">Vergi No <span class="text-danger">*</span></label>
+              <input
+                id="ncTaxNumber"
+                v-model="newCustomerForm.taxNumber"
+                type="text"
+                class="form-control"
+                :required="newCustomerForm.customerType === 'Corporate'"
+                maxlength="50"
+                placeholder="Vergi numarası"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" @click="closeNewCustomerModal">
+              <i class="bi bi-x-circle me-1"></i>Vazgeç
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              @click="submitNewCustomer"
+              :disabled="newCustomerSubmitting"
+            >
+              <span v-if="newCustomerSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+              <i v-else class="bi bi-person-check me-1"></i>
+              {{ newCustomerSubmitting ? 'Kaydediliyor...' : 'Müşteriyi Ekle' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { Modal } from 'bootstrap'
 import { useRouter } from 'vue-router'
 import { vehicleApi } from '../api/vehicle'
 import { customerApi } from '../api/customer'
 import { vehicleOptionApi } from '../api/vehicleOption'
 import { useAuth } from '../composables/useAuth'
 import type { Vehicle } from '../types/vehicle'
-import type { Customer, CreateVehicleOptionRequest } from '../types/vehicleOption'
+import type { Customer, CreateVehicleOptionRequest, CreateCustomerRequest } from '../types/vehicleOption'
 
 const router = useRouter()
 const { advisor } = useAuth()
@@ -298,6 +438,21 @@ const showCustomerDropdown = ref(false)
 const selectedCustomer = ref<Customer | null>(null)
 let customerSearchTimer: ReturnType<typeof setTimeout> | null = null
 
+// New customer modal
+const newCustomerModalRef = ref<HTMLElement | null>(null)
+let newCustomerModal: Modal | null = null
+const newCustomerSubmitting = ref(false)
+const newCustomerError = ref('')
+const newCustomerForm = reactive<CreateCustomerRequest>({
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  customerType: 'Individual',
+  companyName: '',
+  taxNumber: ''
+})
+
 // Form
 const form = reactive<Omit<CreateVehicleOptionRequest, 'vehicleId' | 'customerId'>>({
   validityDays: 7,
@@ -311,6 +466,12 @@ const expiresAtFormatted = computed(() => {
   const d = new Date()
   d.setDate(d.getDate() + (form.validityDays || 0))
   return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+})
+
+onMounted(() => {
+  if (newCustomerModalRef.value) {
+    newCustomerModal = new Modal(newCustomerModalRef.value)
+  }
 })
 
 // ------ Vehicle search ------
@@ -374,6 +535,75 @@ const clearCustomer = () => {
   selectedCustomer.value = null
   customerResults.value = []
   showCustomerDropdown.value = false
+}
+
+// ------ New customer modal ------
+const openNewCustomerModal = () => {
+  Object.assign(newCustomerForm, {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    customerType: 'Individual',
+    companyName: '',
+    taxNumber: ''
+  })
+  newCustomerError.value = ''
+  newCustomerModal?.show()
+}
+
+const closeNewCustomerModal = () => {
+  newCustomerModal?.hide()
+}
+
+const submitNewCustomer = async () => {
+  newCustomerSubmitting.value = true
+  newCustomerError.value = ''
+
+  // Validate Corporate-specific required fields
+  if (newCustomerForm.customerType === 'Corporate') {
+    if (!newCustomerForm.companyName?.trim()) {
+      newCustomerError.value = 'Kurumsal müşteri için firma adı zorunludur'
+      newCustomerSubmitting.value = false
+      return
+    }
+    if (!newCustomerForm.taxNumber?.trim()) {
+      newCustomerError.value = 'Kurumsal müşteri için vergi numarası zorunludur'
+      newCustomerSubmitting.value = false
+      return
+    }
+  }
+
+  try {
+    const isCorporate = newCustomerForm.customerType === 'Corporate'
+    const request: CreateCustomerRequest = {
+      firstName: newCustomerForm.firstName.trim(),
+      lastName: newCustomerForm.lastName.trim(),
+      email: newCustomerForm.email.trim(),
+      phone: newCustomerForm.phone.trim(),
+      customerType: newCustomerForm.customerType,
+      companyName: isCorporate ? newCustomerForm.companyName?.trim() : undefined,
+      taxNumber: isCorporate ? newCustomerForm.taxNumber?.trim() : undefined
+    }
+    const { id } = await customerApi.createCustomer(request)
+    const newCustomer: Customer = {
+      id,
+      firstName: newCustomerForm.firstName.trim(),
+      lastName: newCustomerForm.lastName.trim(),
+      email: newCustomerForm.email.trim(),
+      phone: newCustomerForm.phone.trim(),
+      customerType: newCustomerForm.customerType,
+      companyName: isCorporate ? newCustomerForm.companyName?.trim() : undefined,
+      taxNumber: isCorporate ? newCustomerForm.taxNumber?.trim() : undefined,
+      createdAt: new Date().toISOString()
+    }
+    selectCustomer(newCustomer)
+    closeNewCustomerModal()
+  } catch (e: any) {
+    newCustomerError.value = e.response?.data?.error || e.message || 'Müşteri eklenirken hata oluştu'
+  } finally {
+    newCustomerSubmitting.value = false
+  }
 }
 
 // ------ Submit ------
