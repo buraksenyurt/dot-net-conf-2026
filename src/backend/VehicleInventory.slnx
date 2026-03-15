@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="../../tests/VehicleInventory.Application.Tests/VehicleInventory.Application.Tests.csproj" />
+  <Project Path="../../tests/VehicleInventory.Domain.Tests/VehicleInventory.Domain.Tests.csproj" />
   <Project Path="VehicleInventory.API/VehicleInventory.API.csproj" />
   <Project Path="VehicleInventory.Application/VehicleInventory.Application.csproj" />
   <Project Path="VehicleInventory.Domain/VehicleInventory.Domain.csproj" />
