@@ -24,6 +24,14 @@
 - [ ] Bir araca ait tüm opsiyon geçmişi listelenebilmeli
 - [ ] Bir müşteriye ait tüm opsiyonlar listelenebilmeli
 
+### AC-4: Opsiyonlama Sırasında Yeni Müşteri Oluşturma
+- [ ] Müşteri arama alanı yanında "Yeni Müşteri" butonu bulunmalı
+- [ ] Butona tıklandığında sayfayı terk etmeden bir Bootstrap 5 modal açılmalı
+- [ ] Modal; Ad, Soyad, E-posta, Telefon alanlarını ve Müşteri Tipi (Bireysel / Kurumsal) radio seçimini içermeli
+- [ ] Kurumsal seçildiğinde Firma Adı ve Vergi No alanları koşullu olarak görünmeli
+- [ ] API hatası (örn. 409 Conflict — e-posta zaten kayıtlı) modal içinde inline olarak gösterilmeli
+- [ ] Müşteri başarıyla oluşturulduğunda modal kapanmalı ve yeni müşteri forma otomatik olarak seçilmeli
+
 ## İş Kuralları
 
 ### BR-1: Araç Uygunluğu
@@ -37,6 +45,9 @@ Opsiyon ücreti (depozito), araçla aynı para biriminde girilmelidir. Sıfır d
 
 ### BR-4: Tekil Aktif Opsiyon
 Bir araç için aynı anda yalnızca bir aktif opsiyon bulunabilir.
+
+### BR-5: Hızlı Müşteri Kaydı
+Opsiyonlama formu üzerinden yeni bir müşteri oluşturulabilir. Bu işlem aynı iş kurallarını uygular: e-posta adresi sistem genelinde benzersiz olmalıdır (409 Conflict); bireysel müşteri için ad, soyad, e-posta ve telefon zorunludur; kurumsal müşteri için ek olarak firma adı ve vergi numarası gereklidir. Başarılı kayıt sonrası yeni müşteri, sayfayı terk etmeden otomatik olarak forma seçilir.
 
 ## Teknik Notlar
 
@@ -87,7 +98,9 @@ GET    /api/vehicle-options/customer/{customerId}
 
 ## UI/UX Notları
 - Araç seçimi için mevcut `InStock`/`OnSale` araçlar listelenmeli
-- Müşteri seçimi için arama desteklenmeli
+- Müşteri arama alanının yanında **"Yeni Müşteri"** butonu (Bootstrap `btn-outline-success`, `bi-person-plus` ikon) bulunmalı
+- Butona tıklandığında Bootstrap 5 modal açılarak ad, soyad, e-posta, telefon ve müşteri tipi (Bireysel / Kurumsal) alanları gösterilmeli; Kurumsal seçilince firma adı ve vergi no alanları koşullu olarak görünmeli
+- Müşteri oluşturma sırasında oluşabilecek API hataları (örn. 409 Conflict) modal içinde inline alert olarak gösterilmeli
 - Opsiyonun bitiş tarihi kullanıcıya gösterilmeli
 
 ## Ekran Mockup Referansı
@@ -105,4 +118,5 @@ Sprint 2
 ## Bağımlı Story'ler
 - US-001: Araç Ekleme
 - US-002: Araç Listeleme
-- US-Customer: Müşteri Oluşturma
+- US-004: Müşteri Yönetimi
+- US-006: Araç Opsiyonlama Sırasında Hızlı Müşteri Kaydı
