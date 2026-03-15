@@ -48,7 +48,7 @@ Aşağıdaki tabloda sistemimizin bazı metriklerini özetlemektedir:
 |----------------------------|---------------------|
 | Kod Satırı Sayısı          | 5,000,000+          |
 | Ekran Sayısı               | 1,000+              |
-| Stored Procedure Sayısı    | 1,000+              |
+| Stored Procedure Sayısı    | 10,000+             |
 | Veri Tabanı Boyutu         | >30 TB              |
 | Entegre Uygulama Sayısı    | 50+                 |
 | Kullanıcı Sayısı           | 10,000+             |
