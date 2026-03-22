@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="EXAMPLE-QUERIES.md" />
+  </Folder>
+  <Project Path="DocChunker/DocChunker.csproj" />
+</Solution>
