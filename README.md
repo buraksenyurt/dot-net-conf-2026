@@ -152,10 +152,6 @@ Demo projesinde oldukça küçük bir kod tabanı ile çalışırken Sonarqube'u
 
 ![Sonarqube İlk Tarama Sonuçları](sq_initial_scan.png)
 
-ikinci tarama sonuçlar;
-
-![Sonarqube İkinci Tarama Sonuçları](sq_second_scan.png)
-
 ve ilk taramadaki bazı bulgulara ait başlıklar;
 
 - Constructor has 14 parameters, which is greater than the 7 authorized.
@@ -165,6 +161,10 @@ ve ilk taramadaki bazı bulgulara ait başlıklar;
 - Await RunAsync instead.
 
 gibi.
+
+ikinci tarama sonuçlar;
+
+![Sonarqube İkinci Tarama Sonuçları](sq_second_scan.png)
 
 #### Sonarqube Taraması için Notlar
 
