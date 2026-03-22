@@ -49,9 +49,22 @@ services:
       - "9001:9000"
     networks:
       - aio-network
+    
+  qdrant:
+    image: qdrant/qdrant
+    container_name: aio-qdrant
+    ports:
+      - "6333:6333" # REST API Portu
+      - "6334:6334" # GRPC Portu
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    restart: always
+    networks:
+      - aio-network
 
 volumes:
   postgres_data:
+  qdrant_storage:
 
 networks:
   aio-network:
