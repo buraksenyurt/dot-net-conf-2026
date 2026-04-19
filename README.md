@@ -24,19 +24,19 @@ Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yar
 
 Milenyum başında geliştirilmeye başlanmış olan bayi yönetimi sistemi *(Dealer Management System - DMS)*, tamamen **Microsoft .NET** teknolojileri üzerine kurgulanmıştır. Bu nedenle .NET Framework'ün zaman içerisindeki değişimine bağlı olarak yer yer modernize edilmiş ve güncellenmiştir. Şu anda **.NET Framework 4.8** sürümünü kullanmaktadır. Sistem, bayi operasyonlarını yönetmek için kritik öneme sahip birçok modül içermektedir. Tabii Microsoft'un .NET Framework için olan desteği 2029 yılında sona erecektir. Bu nedenle, sistemin gelecekteki sürdürülebilirliği için modernizasyon kaçınılmazdır.
 
-Genel olarak katmanlı mimari *(Layered Architecture)* modeline göre düzenlenmiş bir sistemdir. Presentation, Business Logic Layer ve Data Acces Layer olmak üzere üç ana katmandan oluşan bir mimari üzerine kurgulanmıştır. Daha önceden var olan Façade katmanı ilk modernizasyon çalışması kapsamında kaldırılmıştır. Sistem Microsoft SQL Server veritabanı kullanmaktadır. İş kuralları ve süreçleri modül bazında son derece karmaşık ve içiçe geçmiş olabilir. Bu noktada SQL Server'ın stored procedure avantajları gözetilerek iş kuralları ve süreçlerin bir kısmı veritabanı katmanında da uygulanmıştır. Dolayısıyla kod ve veritabanına yayılmış iş kuralları ve süreçleri mevcuttur.
+Genel olarak katmanlı mimari *(Layered Architecture)* modeline göre düzenlenmiş bir sistemdir. Presentation, Business Logic Layer ve **Data Access Layer** olmak üzere üç ana katmandan oluşan bir mimari üzerine kurgulanmıştır. Daha önceden var olan Façade katmanı ilk modernizasyon çalışması kapsamında kaldırılmıştır. Sistem Microsoft SQL Server veritabanı kullanmaktadır. İş kuralları ve süreçleri modül bazında son derece karmaşık ve içiçe geçmiş olabilir. Bu noktada SQL Server'ın stored procedure avantajları gözetilerek iş kuralları ve süreçlerin bir kısmı veritabanı katmanında da uygulanmıştır. Dolayısıyla kod ve veritabanına yayılmış iş kuralları ve süreçleri mevcuttur.
 
 Onlarca yıllık bir uygulama söz konusu olduğundan altı milyon satırdan fazla bir kod tabanı söz konusudur. Binlerce ekran, yüzlerce stored procedure, tera baytlarca veri, onlarca servis beş ana modül etrafında birleşir. Bu modüller finansal hizmetler, araç, satış sonrası hizmetler, yedek parça, müşteri olarak sıralanabilir. Sistem, yüzlerce bayi tarafından kullanılmakta olup, milyonlarca müşteriye hizmet vermektedir.
 
-Sistemle entegre çalışan birçok uygulama vardır. Örneğin ayrı bir raporlama sistemi bulunmaktadır. Bu sistem Data Warehouse mimarisi üzerine kurulmuş olup, ETL süreçleriyle ana sistemden veri çekmektedir. Raporların hazırlanması için planlanmış işler *(Scheduled Jobs)* kullanılır. 200den fazla Job vardır ve bunların bazılarının çalışma süresi saatler mertebesindedir. Job'ların çoğu doğrudan Stored Procedure işletmekle kimisi de Microsoft'un SSIS *(Sql Server Integration Services)* hizmetleri şeklinde çalıştırılmaktadır. Bazı raporlar anlık üretilebilen türdedir ve bunlar için Liquid rapor şablonları kullanılmaktadır. Daha önceki dönemlerde Microsoft'un SSRS *(Microsoft SQL Server Reporting Services)* raporları da kullanılmıştır.
+Sistemle entegre çalışan birçok uygulama vardır. Örneğin ayrı bir raporlama sistemi bulunmaktadır. Bu sistem Data Warehouse mimarisi üzerine kurulmuş olup, ETL süreçleriyle ana sistemden veri çekmektedir. Raporların hazırlanması için planlanmış işler *(Scheduled Jobs)* kullanılır. 200'den fazla Job vardır ve bunların bazılarının çalışma süresi saatler mertebesindedir. Job'ların çoğu doğrudan Stored Procedure işletmekle kimisi de Microsoft'un **SSIS** *(SQL Server Integration Services)* hizmetleri şeklinde çalıştırılmaktadır. Bazı raporlar anlık üretilebilen türdedir ve bunlar için Liquid rapor şablonları kullanılmaktadır. Daha önceki dönemlerde Microsoft'un SSRS *(Microsoft SQL Server Reporting Services)* raporları da kullanılmıştır.
 
-Sistem aynı zamanda regülasyonlar içeren dış servislere de bağımlılıklar içerir. Örneğin, elektronik faturlama ve irsaliye sistemleri, POS tabanlı ödeme cihazları, kurum için yazılmış yeni nesil uygulamalar vb. Bu sistemlerde haberleşme için ağırlıklı olarak SOAP ve REST tabanlı web servisleri kullanılmaktadır. Ana sistemden dışarıya açılan fonksiyonellikler içinse  XML Web Servisler ve WCF servisleri mevcuttur. Ayrıca yeni nesil uygulamaların ihtiyaç duyduğu veya karşılıklı olarak dahil olunması gereken süreçlerde asenkron mesajlaşma altyapısı bulunmaktadır. Bunun için Rabbit MQ tercih edilmiştir. Modüller de kendi aralarında kullandığı ortak süreçlere sahiptir. Ortak ve tek bir veritabanı sistemi olduğundan modüller arası veri paylaşımı doğrudan veritabanı katmanından ve iş nesneleri üzerinden yapılmaktadır.
+Sistem aynı zamanda regülasyonlar içeren dış servislere de bağımlılıklar içerir. Örneğin, elektronik faturalama ve irsaliye sistemleri, POS tabanlı ödeme cihazları, kurum için yazılmış yeni nesil uygulamalar vb. Bu sistemlerde haberleşme için ağırlıklı olarak SOAP ve REST tabanlı web servisleri kullanılmaktadır. Ana sistemden dışarıya açılan fonksiyonellikler içinse  XML Web Servisler ve WCF servisleri mevcuttur. Ayrıca yeni nesil uygulamaların ihtiyaç duyduğu veya karşılıklı olarak dahil olunması gereken süreçlerde asenkron mesajlaşma altyapısı bulunmaktadır. Bunun için **RabbitMQ** tercih edilmiştir. Modüller de kendi aralarında kullandığı ortak süreçlere sahiptir. Ortak ve tek bir veritabanı sistemi olduğundan modüller arası veri paylaşımı doğrudan veritabanı katmanından ve iş nesneleri üzerinden yapılmaktadır.
 
-Uygulamanın dağıtımı ilk zamanlarda kurum içi geliştirilmiş bir uygulama tarafından zaman bazlı planlamalara bağlı kalınarak yapılmaktaydı. Son yıllarda yapılan modernizasyon çalışmaları kapsamında DevOps prensiplerine uygun olarak Azure DevOps üzerinden yürütülmektedir. Git tabanlı repolar kullanılmakta ve CI/CD süreçleri Azure DevOps Pipelines ile yönetilmektedir. Branch stratejisi olarak Git Flow tercih edilmiştir. Buna göre feature bazlı geliştirmeler yapılmakta, sprint bazlı release'ler oluşturulmakta ve ana branch'lere merge edilmektedir.
+Uygulamanın dağıtımı ilk zamanlarda kurum içi geliştirilmiş bir uygulama tarafından zaman bazlı planlamalara bağlı kalınarak yapılmaktaydı. Son yıllarda yapılan modernizasyon çalışmaları kapsamında DevOps prensiplerine uygun olarak Azure DevOps üzerinden yürütülmektedir. Git tabanlı repolar kullanılmakta ve CI/CD süreçleri Azure DevOps Pipelines ile yönetilmektedir. Branch stratejisi olarak **Git Flow** tercih edilmiştir. Buna göre feature bazlı geliştirmeler yapılmakta, sprint bazlı release'ler oluşturulmakta ve ana branch'lere merge edilmektedir.
 
 ### Metriklerle Legacy Sistemimiz
 
-Aşağıdaki tabloda sistemimizin bazı metriklerini özetlemektedir:
+Aşağıdaki tablo sistemimizin bazı metriklerini özetlemektedir:
 
 | **Metrik** | **Değer** |
 | --- | --- |
@@ -59,7 +59,7 @@ Aşağıdaki tabloda sistemimizin bazı metriklerini özetlemektedir:
 | **Veri Erişim Katmanı** | ADO.NET |
 | **Veritabanı** | Microsoft SQL Server |
 | **Entegrasyon** | WCF, SOAP, REST |
-| **Mesajlaşma** | Rabbit MQ |
+| **Mesajlaşma** | RabbitMQ |
 | **Raporlama** | SSRS, Liquid Rapor |
 | **Dağıtım** | Azure DevOps |
 
@@ -82,7 +82,7 @@ Modernizasyon ihtiyaçlarının netleştirilmesi için 2020 öncesinde birçok *
 - **Teknik borçlar** 1000 kişi gün maliyetinden 100 kişi gün altına düşürülmüş yer yer sıfıra indirilmiştir.
 - **Façade** katmanı kaldırılmıştır.
 - **CBL** katmanındaki fonksiyonellikler soyutlanmış ve ayrı bir katmana taşınmıştır.
-- Tüm bileşenler için **dependency injection** altyapısı kurulmuştur *(Windsor Castle)*.
+- Tüm bileşenler için **dependency injection** altyapısı kurulmuştur *(**Windsor Castle**)*.
 - **Unit testler** yazılmaya başlanmış ve **code coverage** değerlerinin kabul edilebilir seviyelere gelmesi sağlanmıştır.
 - **CI/CD** süreçleri iyileştirilmiş ve otomasyon oranı artırılmıştır.
 
@@ -185,6 +185,19 @@ Kurum için geliştirilen PoC çalışması sırasında geliştirme hızımızı
 
 > Güncelleme: Yapay Zeka araçlarındaki yeni gelişmeler sonrası buradaki araçlar rafa kaldırılmıştır.
 
+## RAG *(Retrieval Augmented Generation)* Düzeneği
+
+Bu demo projesinde basit bir RAG düzeneği vardır. Sadece domain ile ilgili sorulara cevap vermesi planlanan türden bir chatbot senaryosu içerir. **RAG** isimli solution içerisinde bu amaçla iki projeye yer verilmektedir.
+
+- **DocChunker:** Bu proje, domain'e özgü dokümanları parçalara ayırarak vektörleştirmek ve bir koleksiyona kaydetmek için kullanılan araçları içerir. Bu sayede yapay zeka asistanlarının bu dokümanlara erişerek daha doğru ve tutarlı cevaplar üretmesi sağlanır.
+- **RAGChatbot:** Bu proje, kullanıcıların domain'e özgü sorular sormasına ve yapay zeka asistanlarının bu sorulara cevap vermesine olanak tanır. Yapay zeka asistanları, **DocChunker** tarafından oluşturulan vektör koleksiyonunu kullanarak ilgili dokümanlara erişir ve bu dokümanlardan yararlanarak cevaplar üretir.
+
+Düzenekte local dil modelleri kullanılmaktadır. Bu amaçla **LM Studio** üzerinden text embedding için `text-embedding-nomic-embed-text-v1.5` ve muhakeme *(reasoning)* için `meta-llama-3-8b-instruct` modelleri tercih edilmiştir. Vektör veritabanı olarak **QDrant** kullanılmıştır.
+
+Chatbot uygulamasına ait örnek bir çalışma zamanını aşağıda görebilirsiniz.
+
+![RAG based ChatBot Sample](chatbot_sample.png)
+
 ### Teknik Özet
 
 Yukarıdaki süreçte kullanılan başlıca teknolojiler ve araçlara ait özet bilgileri aşağıdaki tabloda bulabilirsiniz:
@@ -233,14 +246,14 @@ Bu kapsamlı çalışmada güncel olarak uygulanan metodoloji aşağıdaki grafi
 
 Bu çalışmada sürecin yeni nesil framework ve bileşen setleri ile başarılı şekilde icra edilmesi en önemli hedeftir. **Prototype** safhası olarak ele alınan bu süreç sonlandığında yapay zeka modellerinden tersine mühendislik yöntemleri ile var olan mimariyi analiz etmesi ve standartları birer **spec** dokümanı olarak oluşturması istenmiştir. **Define** olarak belirlediğimiz bu aşamada amaç, sonraki üretimler için yapay zeka araçlarına verilebilecek standartların ortaya çıkartılmasıdır. Sonuç olarak domain kuralları, nesneler arası ilişkiler, mimari kararlar ve kodun semantik bağlamlarının yer aldığı şablonlar *(templates)* ortaya çıkmıştır.
 
-Bu notkadan itibaren **Implementation** safhasına geçilmiştir. Söz konusu safhada paralel olarak iki ayrı hat üstünden ilerlenmiştir. Maliyet açısından görece daha ucuz olan hatta **Github Copilot** üzerinden yapay zeka rolleri tanımlanmıştır. İş analisti, yazılım geliştirici, test mühendisi gibi rollerden aşağıdakilerine benzer görevler icra etmeleri istenmiştir.
+Bu noktadan itibaren **Implementation** safhasına geçilmiştir. Söz konusu safhada paralel olarak iki ayrı hat üstünden ilerlenmiştir. Maliyet açısından görece daha ucuz olan hatta **GitHub Copilot** üzerinden yapay zeka rolleri tanımlanmıştır. İş analisti, yazılım geliştirici, test mühendisi gibi rollerden aşağıdakilerine benzer görevler icra etmeleri istenmiştir.
 
 - Birkaç cümle ile tariflenen bir sürecin analiz dokümanının hazırlanması.
 - Hazırlanan analiz dokümanına istinaden API ve backend kodlarının yazılması.
 - Domain modellerinin kurgulanması ve migration planlarının işletilmesi.
 - Wireframe tasarımlarına göre önyüzlerin geliştirilmesi ve API noktalarına bağlanması.
 
-Paralel olarak yürütülen diğer süreçte ise dil modellerinin domain sınırları içerisinde kalarak görevler icra etmesi ve asistan hizmet desteği sağlaması için bir RAG *(Retreival Augmented Generation)* hattı oluşturulmuştur. Burada **text embedding** ve **vector** veritabanları için farklı ürünler kullanılmıştır. Ayrıca denemelerin çoğu local ortamlarda çalıştırılan dil modelleri üzerinden gerçekleştirilmiştir. Bu çalışmalar sırasında özellikle görev icrası öncesi prompt alan istemci uygulamalarda **Microsoft.SemanticKernel** çatısı ve bileşenlerinden yararlanılmıştır.
+Paralel olarak yürütülen diğer süreçte ise dil modellerinin domain sınırları içerisinde kalarak görevler icra etmesi ve asistan hizmet desteği sağlaması için bir **RAG** *(Retrieval Augmented Generation)* hattı oluşturulmuştur. Burada **text embedding** ve **vector** veritabanları için farklı ürünler kullanılmıştır. Ayrıca denemelerin çoğu local ortamlarda çalıştırılan dil modelleri üzerinden gerçekleştirilmiştir. Bu çalışmalar sırasında özellikle görev icrası öncesi prompt alan istemci uygulamalarda **Microsoft.SemanticKernel** çatısı ve bileşenlerinden yararlanılmıştır.
 
 ![Current State](stage_diagram.png)
 
@@ -252,6 +265,14 @@ Paralel olarak yürütülen diğer süreçte ise dil modellerinin domain sınır
 | "Up to date" dokümantasyon | Token/dolayı enerji maliyeti |
 | Proaktif düzenleme fırsatları | İdeal senaryoda belirsiz kurgu(setup) maliyeti |
 | Yenilenen domain kültürü | Olası teknik borçlanma |
+
+## Güncelleme: 2026 - Nisan
+
+- Modüller kendi repolarında geliştirmelere başlamış durumdadır.
+- Uçtan uca feature geliştirebilen ajan eklenmiştir.
+- Ajanların sorumlulukları netleştirilmiş ve görev tanımları güncellenmiştir.
+- Tüm vekil ajanlara gerekli yetkinlikler *(SKILLS)* yüklenmiştir.
+- Prompt odaklı bazı geliştirme ihtiyaçlarında **plan** modunda ilerlenmiştir.
 
 ---
 
