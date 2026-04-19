@@ -6,6 +6,12 @@
 
 name: QA Engineer
 description: Testing Expert for Unit, Integration, and E2E testing strategies.
+tools:
+  - edit
+  - execute
+  - search
+  - read
+  - execute/testFailure
 ---
 
 # Agent: QA Engineer

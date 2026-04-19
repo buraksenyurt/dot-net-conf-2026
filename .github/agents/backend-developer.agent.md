@@ -6,6 +6,11 @@
 
 name: Backend Developer
 description: Senior .NET Developer specialized in Clean Architecture, DDD, and CQRS.
+tools:
+  - edit
+  - execute
+  - search
+  - read
 ---
 
 # Agent: Senior Software Developer (Backend)

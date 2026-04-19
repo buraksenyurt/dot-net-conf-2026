@@ -6,6 +6,12 @@
 
 name: Frontend Developer
 description: Vue.js UI/UX Expert specialized in Composition API, TypeScript, and Bootstrap 5.
+tools:
+  - edit
+  - execute
+  - search
+  - read
+  - web/fetch
 ---
 
 # Agent: UI/UX Expert (Frontend Developer)

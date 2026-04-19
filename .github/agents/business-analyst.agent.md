@@ -6,6 +6,12 @@
 
 name: Business Analyst
 description: Requirements Expert for User Stories, Acceptance Criteria, and Process Design.
+tools:
+  - search
+  - read
+  - edit/createFile
+  - edit/editFiles
+  - web/fetch
 ---
 
 # Agent: Senior Business Analyst

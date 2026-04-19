@@ -6,6 +6,11 @@
 
 name: DevOps Engineer
 description: CI/CD Specialist focused on GitHub Actions, Docker, and Kubernetes.
+tools:
+  - edit
+  - execute
+  - search
+  - web/fetch
 ---
 
 # Agent: DevOps Engineer
