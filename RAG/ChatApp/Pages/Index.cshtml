@@ -1,0 +1,364 @@
+@page
+@model ChatApp.Pages.IndexModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RAG Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f5;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem 1rem;
+        }
+
+        .message-row {
+            display: flex;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+
+        .message-row.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            align-self: flex-end;
+        }
+
+        .avatar.bot {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .avatar.user {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .bubble {
+            max-width: 72%;
+            padding: 0.65rem 1rem;
+            border-radius: 1rem;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .bubble.bot {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .bubble.user {
+            background: #0d6efd;
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .cursor::after {
+            content: '▋';
+            animation: blink 0.9s step-end infinite;
+        }
+
+        @@keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        #input-area {
+            background: white;
+            border-top: 1px solid #dee2e6;
+            padding: 0.875rem 1rem;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+        }
+
+        .sources-toggle {
+            font-size: 0.78rem;
+            color: #6c757d;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0.15rem 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .sources-toggle:hover { color: #0d6efd; }
+
+        .source-item {
+            font-size: 0.78rem;
+            padding: 0.3rem 0.5rem;
+            border-left: 2px solid #0d6efd;
+            margin-bottom: 0.3rem;
+            background: #f8f9fa;
+        }
+
+        .example-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .example-btn {
+            font-size: 0.78rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 2rem;
+        }
+
+        #status-bar {
+            font-size: 0.78rem;
+            min-height: 1.1rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-primary py-2">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 fw-semibold">
+                <i class="bi bi-robot me-2"></i>RAG Chatbot
+            </span>
+            <span class="text-white-50 small">
+                <i class="bi bi-cpu me-1"></i><span id="model-label">@Model.ChatModel</span>
+                &nbsp;&bull;&nbsp;
+                <i class="bi bi-collection me-1"></i>@Model.CollectionName
+            </span>
+        </div>
+    </nav>
+
+    <!-- Chat area -->
+    <div id="chat-container">
+        <div id="messages">
+
+            <!-- Welcome -->
+            <div class="message-row">
+                <div class="avatar bot"><i class="bi bi-robot"></i></div>
+                <div>
+                    <div class="bubble bot">
+                        Merhaba! <strong>docs_knowledge_base</strong> koleksiyonundaki belgeler üzerinde sorularınızı yanıtlayabilirim.
+                        <br /><br />
+                        Mimari kararlar, domain modeli, iş gereksinimleri, teknoloji altyapısı ve daha fazlası hakkında Türkçe yanıt alabilirsiniz.
+                    </div>
+                    <div class="example-questions">
+                        <button class="btn btn-sm btn-outline-secondary example-btn" onclick="fillExample(this)">Clean Architecture neden seçildi?</button>
+                        <button class="btn btn-sm btn-outline-secondary example-btn" onclick="fillExample(this)">VIN numarası nasıl doğrulanıyor?</button>
+                        <button class="btn btn-sm btn-outline-secondary example-btn" onclick="fillExample(this)">EF Core ile Dapper birlikte neden kullanılıyor?</button>
+                        <button class="btn btn-sm btn-outline-secondary example-btn" onclick="fillExample(this)">Yeni bir API endpoint nasıl oluşturulur?</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Input area -->
+    <div id="input-area">
+        <div class="container-fluid px-0">
+            <div class="input-group">
+                <input type="text" id="query-input" class="form-control"
+                       placeholder="Sorunuzu yazın... (Enter ile gönderin)"
+                       autocomplete="off" style="border-radius: 2rem 0 0 2rem;" />
+                <button id="send-btn" class="btn btn-primary px-4" type="button"
+                        style="border-radius: 0 2rem 2rem 0;">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </div>
+            <div id="status-bar" class="mt-1 ps-1"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const messagesEl = document.getElementById('messages');
+        const queryInput = document.getElementById('query-input');
+        const sendBtn = document.getElementById('send-btn');
+        const statusBar = document.getElementById('status-bar');
+        const chatContainer = document.getElementById('chat-container');
+
+        let activeEventSource = null;
+
+        /* ── helpers ── */
+
+        function scrollBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function setUiEnabled(enabled) {
+            queryInput.disabled = !enabled;
+            sendBtn.disabled = !enabled;
+            sendBtn.innerHTML = enabled
+                ? '<i class="bi bi-send-fill"></i>'
+                : '<span class="spinner-border spinner-border-sm"></span>';
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function fillExample(btn) {
+            queryInput.value = btn.textContent.trim();
+            queryInput.focus();
+        }
+
+        /* ── message builders ── */
+
+        function addUserBubble(text) {
+            const row = document.createElement('div');
+            row.className = 'message-row user';
+            row.innerHTML = `
+                <div class="avatar user"><i class="bi bi-person-fill"></i></div>
+                <div class="bubble user">${escapeHtml(text)}</div>`;
+            messagesEl.appendChild(row);
+            scrollBottom();
+        }
+
+        function addBotBubble() {
+            const row = document.createElement('div');
+            row.className = 'message-row';
+            row.innerHTML = `<div class="avatar bot"><i class="bi bi-robot"></i></div><div></div>`;
+
+            const wrapper = row.querySelector('div:last-child');
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble bot cursor';
+            wrapper.appendChild(bubble);
+
+            messagesEl.appendChild(row);
+            scrollBottom();
+            return { bubble, wrapper };
+        }
+
+        function addSources(wrapper, sources) {
+            if (!sources || sources.length === 0) return;
+
+            const collapseId = 'src-' + Date.now();
+            const sourcesEl = document.createElement('div');
+            sourcesEl.className = 'mt-1';
+            sourcesEl.innerHTML = `
+                <button class="sources-toggle" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#${collapseId}">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                    ${sources.length} kaynak
+                    <i class="bi bi-chevron-down" style="font-size:0.7rem;"></i>
+                </button>
+                <div class="collapse" id="${collapseId}">
+                    <div class="mt-1">
+                        ${sources.map(s => `
+                            <div class="source-item">
+                                <span class="badge bg-primary me-1" style="font-size:0.68rem;">${escapeHtml(s.category)}</span>
+                                <strong>${escapeHtml(s.file)}</strong>
+                                ${s.section ? `<span class="text-muted"> &rsaquo; ${escapeHtml(s.section)}</span>` : ''}
+                            </div>`).join('')}
+                    </div>
+                </div>`;
+            wrapper.appendChild(sourcesEl);
+            scrollBottom();
+        }
+
+        /* ── send logic ── */
+
+        function sendMessage() {
+            const query = queryInput.value.trim();
+            if (!query || activeEventSource) return;
+
+            queryInput.value = '';
+            setUiEnabled(false);
+            statusBar.textContent = 'Vektör araması yapılıyor...';
+
+            addUserBubble(query);
+            const { bubble, wrapper } = addBotBubble();
+
+            const url = '/api/chat/stream?q=' + encodeURIComponent(query);
+            activeEventSource = new EventSource(url);
+
+            activeEventSource.onmessage = (event) => {
+                let data;
+                try { data = JSON.parse(event.data); }
+                catch { return; }
+
+                if (data.type === 'token') {
+                    bubble.classList.remove('cursor');
+                    bubble.textContent += data.content;
+                    statusBar.textContent = 'Yanıt üretiliyor...';
+                    scrollBottom();
+
+                } else if (data.type === 'sources') {
+                    addSources(wrapper, data.items);
+
+                } else if (data.type === 'done') {
+                    bubble.classList.remove('cursor');
+                    closeStream();
+
+                } else if (data.type === 'error') {
+                    bubble.classList.remove('cursor');
+                    bubble.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-triangle me-1"></i>${escapeHtml(data.message)}</span>`;
+                    closeStream();
+                }
+            };
+
+            activeEventSource.onerror = () => {
+                bubble.classList.remove('cursor');
+                if (!bubble.textContent.trim()) {
+                    bubble.innerHTML = `<span class="text-danger"><i class="bi bi-wifi-off me-1"></i>Bağlantı hatası. LM Studio ve Qdrant çalışıyor mu?</span>`;
+                }
+                closeStream();
+            };
+        }
+
+        function closeStream() {
+            if (activeEventSource) {
+                activeEventSource.close();
+                activeEventSource = null;
+            }
+            setUiEnabled(true);
+            statusBar.textContent = '';
+            queryInput.focus();
+        }
+
+        /* ── events ── */
+
+        sendBtn.addEventListener('click', sendMessage);
+        queryInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        queryInput.focus();
+    </script>
+</body>
+</html>

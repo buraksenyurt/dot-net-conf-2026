@@ -4,4 +4,5 @@
     <File Path="EXAMPLE-QUERIES.md" />
   </Folder>
   <Project Path="DocChunker/DocChunker.csproj" />
+  <Project Path="ChatApp/ChatApp.csproj" />
 </Solution>
