@@ -53,6 +53,25 @@ The README follows this narrative structure:
 - **MCP (Model Context Protocol)** - Custom MCP server for domain-specific interactions
 - **Template-based generation** - dotnet templates and CLI tools for project scaffolding
 
+## Agent-Skill Relationship Matrix
+
+Özelleştirilmiş ajanlardan birine görev verildiğinde, önce görev niyeti belirlenmeli ve aşağıdaki eşleşmeye göre ilgili skill(ler) doğrudan kullanılmalıdır.
+
+| Custom Agent | Primary Skills | Secondary Skills |
+|---|---|---|
+| `backend-developer` | `create-api-endpoint`, `create-ef-migration` | `run-and-analyze-tests` |
+| `frontend-developer` | `create-vue-component` | `run-and-analyze-tests` |
+| `business-analyst` | `write-user-story` | None |
+| `devops-engineer` | `configure-cicd-pipeline` | `run-and-analyze-tests` |
+| `qa-engineer` | `run-and-analyze-tests` | `write-user-story` |
+
+### Skill Invocation Rules for Custom Agents
+
+1. Agent, kullanıcı isteğini aldıktan sonra önce intent sınıflandırması yapar (backend, frontend, test, CI/CD, analiz/dokümantasyon).
+2. İstek ile ilişkili bir skill varsa, agent başka çözüm üretmeden önce ilgili skill'i çağırır.
+3. Birden fazla skill gerekiyorsa, önce birincil skill, ardından destekleyici skill çalıştırılır.
+4. İstek hiçbir skill ile doğrudan eşleşmiyorsa agent normal akışla ilerler; ancak ilgili context dosyalarını (`docs/business`, `docs/domain-model`, `docs/ui`) önceliklendirir.
+
 ## Editing Guidelines
 
 ### When updating metrics/statistics:
