@@ -61,7 +61,7 @@ The README follows this narrative structure:
 |---|---|---|
 | `backend-developer` | `create-api-endpoint`, `create-ef-migration` | `run-and-analyze-tests` |
 | `frontend-developer` | `create-vue-component` | `run-and-analyze-tests` |
-| `business-analyst` | `write-user-story` | - |
+| `business-analyst` | `write-user-story` | None |
 | `devops-engineer` | `configure-cicd-pipeline` | `run-and-analyze-tests` |
 | `qa-engineer` | `run-and-analyze-tests` | `write-user-story` |
 
