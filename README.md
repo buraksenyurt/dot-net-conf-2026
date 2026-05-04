@@ -17,19 +17,39 @@ Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yar
   - [Birincil Modernizasyon Çalışmaları (2020 - 2024)](#birincil-modernizasyon-çalışmaları-2020---2024)
   - [Motivasyon](#motivasyon)
   - [Riskler](#riskler)
-  - [PoC Çalışma Stratejisi](#poc-çalışma-stratejisi)
-    - [Geliştirme Süreci](#geliştirme-süreci)
-    - [Deneyimler](#deneyimler)
-      - [Sonarqube Taramaları](#sonarqube-taramaları)
-      - [Sonarqube Taraması için Notlar](#sonarqube-taraması-için-notlar)
-    - [Çalışma Sırasında Arada Yazılan Yardımcı Araçlar](#çalışma-sırasında-arada-yazılan-yardımcı-araçlar)
-    - [Teknik Özet](#teknik-özet)
-  - [Sonuçlar](#sonuçlar)
-  - [Sonraki Planlar ve Hedefler](#sonraki-planlar-ve-hedefler)
+- [Level 0: Birinci Aşama](#level-0-birinci-aşama)
+  - [Geliştirme Süreci](#geliştirme-süreci)
+  - [Deneyimler](#deneyimler)
+    - [Sonarqube Taramaları](#sonarqube-taramaları)
+    - [Sonarqube Taraması için Notlar](#sonarqube-taraması-için-notlar)
+- [RAG (Retrieval Augmented Generation) Düzeneği](#rag-retrieval-augmented-generation-düzeneği)
+- [MCP (Model Context Protocol) Düzeneği](#mcp-model-context-protocol-düzeneği)
+- [Teknik Özet](#teknik-özet)
+- [Sonuçlar](#sonuçlar)
+- [Sonraki Planlar ve Hedefler](#sonraki-planlar-ve-hedefler)
+- [PoC Çalışma Stratejisi](#poc-çalışma-stratejisi)
+- [Güncelleme: 2026 - Nisan](#güncelleme-2026---nisan)
+- [Yardımcı Diagramlar](#yardımcı-diagramlar)
+  - [Legacy Sistem Mimarisi](#legacy-sistem-mimarisi)
+  - [Modernizasyon Yol Haritası](#modernizasyon-yol-haritası)
+  - [PoC Modernizasyon Stack Karşılaştırması](#poc-modernizasyon-stack-karşılaştırması)
+  - [Spec-Oriented Development İş Akışı](#spec-oriented-development-iş-akışı)
+- [Sözlük](#sözlük)
+  - [Teknoloji Terimleri](#teknoloji-terimleri)
+  - [İş ve Süreç Terimleri](#iş-ve-süreç-terimleri)
+  - [Araçlar ve Platformlar](#araçlar-ve-platformlar)
+- [Demo Simülasyonu](#demo-simülasyonu)
+  - [Repo Yapısı](#repo-yapısı)
+  - [Dokümanlar](#dokümanlar)
+  - [GitHub Copilot Ajanları](#github-copilot-ajanları)
+  - [Skill'ler](#skilller)
+  - [Ajan-Skill İlişki Matrisi](#ajan-skill-i̇lişki-matrisi)
+  - [Kullanım](#kullanım)
+  - [Not](#not)
 
 ## Hızlı Başlangıç
 
-Bu bölüm, repository'deki tüm projeleri yerel ortamda ayağa kaldırmak için gereken adımları içermektedir. Doküman içinde oyalanmadan doğrudan aksiyona geçmek isteyen geliştiricilerin buradan başlamasını öneririm :D
+Bu bölüm, repository'deki tüm projeleri yerel ortamda ayağa kaldırmak için gereken adımları içermektedir. Doküman içinde kaybolmayıp doğrudan aksiyona geçmek isteyen geliştiricileri buradan başlamasını öneririm :D
 
 ### Ön Gereksinimler
 
@@ -275,7 +295,7 @@ Sistem aynı zamanda regülasyonlar içeren dış servislere de bağımlılıkla
 
 Uygulamanın dağıtımı ilk zamanlarda kurum içi geliştirilmiş bir uygulama tarafından zaman bazlı planlamalara bağlı kalınarak yapılmaktaydı. Son yıllarda yapılan modernizasyon çalışmaları kapsamında DevOps prensiplerine uygun olarak Azure DevOps üzerinden yürütülmektedir. Git tabanlı repolar kullanılmakta ve CI/CD süreçleri Azure DevOps Pipelines ile yönetilmektedir. Branch stratejisi olarak **Git Flow** tercih edilmiştir. Buna göre feature bazlı geliştirmeler yapılmakta, sprint bazlı release'ler oluşturulmakta ve ana branch'lere merge edilmektedir.
 
-### Metriklerle Legacy Sistem
+### Metriklerle Legacy Sistemimiz
 
 Aşağıdaki tablo sistemimizin bazı metriklerini özetlemektedir:
 
@@ -283,7 +303,7 @@ Aşağıdaki tablo sistemimizin bazı metriklerini özetlemektedir:
 | --- | --- |
 | **Kod Satırı Sayısı** | 6,000,000+ |
 | **Ekran Sayısı** | 1,000+ |
-| **Stored Procedure Sayısı** | 30,000+ |
+| **Stored Procedure Sayısı** | 10,000+ |
 | **Veri Tabanı Boyutu** | >30 TB |
 | **Entegre Uygulama Sayısı** | 50+ |
 | **Kullanıcı Sayısı** | 10,000+ |
@@ -409,22 +429,12 @@ ikinci tarama sonuçlar;
 
 ```bash
 # Token oluşturduktan sonra aşağıdaki komutla tarama yapılabilir
-dotnet sonarscanner begin /k:"VehicleInventory-Backend" /d:sonar.host.url="http://localhost:9001" /d:sonar.token="${SONAR_TOKEN}"
+dotnet sonarscanner begin /k:"Vehicle-Inventory-POC" /d:sonar.host.url="http://localhost:9001"  /d:sonar.token="sqp_dba8e2522e3056a2f41ccb3780cdcc4918891a9a"
 
 dotnet build
 
-dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
+dotnet sonarscanner end /d:sonar.token="sqp_dba8e2522e3056a2f41ccb3780cdcc4918891a9a"
 ```
-
-### Çalışma Sırasında Arada Yazılan Yardımcı Araçlar
-
-Kurum için geliştirilen PoC çalışması sırasında geliştirme hızımızın önemli ölçüde arttığını fark ettik ve birkaç yardımcı araç daha yazdık:
-
-- **Domain Sözlüğü:** Ürün paydaşlarının ortak bir terminoloji kullanmasını sağlamak için bir domain sözlüğü aracı geliştirdik. Bu araç, yapay zeka asistanlarının doğru terimleri kullanmasını kolaylaştırdı ancak daha da önemlisi paydaşların ortak domain dili *(Ubiquitous Language)* oluşturmasında rol oynayabileceğini gösterdi.
-- **MCP *(Model Context Protocol)*:** Template kullanımı haricinde kullanıcı hikayeleri *(User Story)* ve iş kurallarını barındıran analiz dokümanlarını minimum hatada oluşturmak için bir **MCP** sunucusu ve gerekli **API** endpoint'leri geliştirildi. İlgili **MCP server** **VS Code** ortamlarına da adapte edildi ve böylece analist veya yazılım geliştiricilerin, yapay zeka asistanlarıyla bu **domain** özelinde konuşabilmeleri ve domain kurallarına uygun çıktılar alabilmeleri için deneysel bir ortam sağlanmış oldu.
-- **Tersine Mühendislik Aracı:** Var olan **legacy** sistemdeki belirli kod parçalarının analiz edilerek, iş kurallarının ve süreçlerin çıkarılmasını sağlayan bir tersine mühendislik aracı geliştirildi. Bu araç ile var olan bazı iş kuralları için doküman hazırlanması, gözden geçirilmek kaydıyla yeni sisteme adapte edilmeleri ile ilgili test ortamları sağlanmış oldu.
-
-> Güncelleme: Yapay Zeka araçlarındaki yeni gelişmeler sonrası buradaki araçlar rafa kaldırılmıştır.
 
 ## RAG *(Retrieval Augmented Generation)* Düzeneği
 
@@ -439,43 +449,72 @@ Chatbot uygulamasına ait örnek bir çalışma zamanını aşağıda görebilir
 
 ![RAG based ChatBot Sample](chatbot_sample.png)
 
-### Teknik Özet
+## MCP *(Model Context Protocol)* Düzeneği
 
-Yukarıdaki süreçte kullanılan başlıca teknolojiler ve araçlara ait özet bilgileri aşağıdaki tabloda bulabilirsiniz:
+**MCP**, yapay zeka modellerine harici araçlar *(tools)* aracılığıyla gerçek sistem işlemleri yaptırma imkânı sunan açık bir protokoldür. Bu demo projesinde `MCP/DmsMcpServer/` klasöründe, Microsoft'un resmi `ModelContextProtocol` NuGet paketi ile geliştirilmiş bir **.NET konsol uygulaması** yer alır. `stdio` transport üzerinden çalışır ve `VehicleInventory.API`'ye bağlı **11 tool** sunar: araç/müşteri sorgulama ve işlem tool'larının yanı sıra RAG altyapısı gerektirmeden `docs/` klasöründen user story ve ADR okuyabilen **Developer Productivity tool'ları** da içerir.
+
+**Örnek Akış;**
+
+```text
+Kullanıcı → AI:
+  "Envanterden satışta olan bir aracı al, Burak Selim adlı müşteri için
+   7 günlük opsiyon oluştur."
+
+AI (sırasıyla tool çağrıları):
+  1. list_vehicles(status="OnSale")          → araç listesi
+  2. list_customers(search="Burak Selim")   → [] (bulunamadı)
+  3. register_customer(name="Burak Selim")  → yeni müşteri kaydı
+  4. create_option(vehicleId, customerId, validityDays=7)
+     → "Opsiyon oluşturuldu. Araç 'Reserved' durumuna geçti."
+```
+
+Tool kataloğu, proje yapısı ve entegrasyon detayları için: [`MCP/Overivew.md`](MCP/Overivew.md)
+
+---
+
+## Teknik Özet
+
+Çalışmada kullanılan başlıca teknolojiler ve araçlara ait özet bilgileri aşağıdaki tabloda bulabilirsiniz.
 
 | **Kategori** | **Teknoloji / Araç** |
 | --- | --- |
 | **Yapay Zeka Modelleri** | Anthropic Claude Sonnet, OpenAI GPT, Google Gemini, Grok |
-| **YZ Asistanları** | GitHub Copilot |
-| **Metodoloji** | Spec-Oriented Development, RAG *(Deneme Aşamasında)* |
-| **Front-End Teknolojileri** | Nuxt, Vite, Vue Router |
-| **Back-End Teknolojileri** | .NET Core, C# |
-| **Veri Tabanı** | PostgreSQL/Microsoft SQL Server |
-| **ORM** | Entity Framework, Dapper |
+| **YZ Asistanları / Ajanlar** | GitHub Copilot, Özelleştirilmiş Copilot Agent'ları *(Backend Developer, Frontend Developer, Business Analyst, DevOps Engineer, QA Engineer)* |
+| **Metodoloji** | Spec-Oriented Development, Agent + Skill tabanlı geliştirme, RAG, MCP |
+| **Front-End Teknolojileri** | Vue 3 Composition API, Vite, Vue Router, TypeScript, Bootstrap 5 |
+| **Back-End Teknolojileri** | .NET 10, C#, Clean Architecture, CQRS / MediatR, FluentValidation |
+| **Veri Tabanı** | PostgreSQL |
+| **ORM** | Entity Framework Core, Dapper |
+| **Mesajlaşma** | RabbitMQ |
 | **Auth/Authorization** | Keycloak |
 | **CI/CD** | GitHub Actions |
-| **Kod Kalitesi ve Güvenlik** | Sonarqube *(MCP Server ile birlikte)*, Copilot |
+| **Kod Kalitesi ve Güvenlik** | SonarQube *(SonarQube MCP Server ile birlikte)* |
+| **Loglama** | Serilog |
+| **RAG Altyapısı** | Microsoft Semantic Kernel, Qdrant, LM Studio *(nomic-embed-text-v1.5, meta-llama-3-8b-instruct)* |
+| **MCP** | ModelContextProtocol *(Microsoft)*, `stdio` transport, DmsMcpServer |
+| **Altyapı** | Docker Compose *(PostgreSQL, pgAdmin, RabbitMQ, SonarQube, Qdrant)* |
+
+---
 
 ## Sonuçlar
 
 Bu çalışma kapsamında elde edilen başlıca sonuçlar aşağıdaki gibi özetlenebilir:
 
-- Yapay zeka tabanlı modernizasyon süreci, geleneksel yöntemlere kıyasla geliştirme süresini %40 oranında azalttı.
-- Üretilen kodların kalitesi, manuel olarak yazılan kodlarla karşılaştırıldığında benzer seviyelerde bulundu.
+- Yapay zeka tabanlı modernizasyon sürecinde, geleneksel yöntemlere kıyasla geliştirme süresinin neredeyse %40 oranında azaldığı gözlemlendi.
+- Üretilen kodların kalitesi, manuel olarak yazılan kodlarla karşılaştırıldığında benzer seviyelerde bulundu ancak karmaşık senaryolarda daha uzun review süreleri gerekti.
 - Teknik borçların azaltılması ve kodun daha modüler hale getirilmesi sağlandı.
-- Yapay zeka asistanlarının doğru şekilde yönlendirilmesi ve etkileşimde bulunulması, sürecin başarısında kritik rol oynadı.
-- Ancak, bazı durumlarda yapay zeka asistanlarının ürettiği kodların gözden geçirilmesi ve manuel müdahale gerektirdiği görüldü.
+- Yapay zeka asistanlarının doğru şekilde yönlendirilmesi ve etkileşimde bulunulması, sürecin başarısında kritik rol oynadı.Ancak, bazı durumlarda yapay zeka asistanlarının ürettiği kodların gözden geçirilmesi ve manuel müdahale gerektirdiği görüldü.
 - Şu an ve yakın vadede mutlak suretle insan denetimli bir sürecin işletilmesi gerektiği gözlemlendi.
+- Mutlak suretle çıktıların maliyeti ölçümlenmeli ve insan denetimi için gereken kaynaklar optimize edilmelidir.
+- Hassas bilgilerin korunması, vekil ajanların güvenliğinin sağlanması ve olası veri sızıntılarının önlenmesi için ek güvenlik önlemleri alınmalıdır. *(GuardRail, Red Team gibi yaklaşımlar değerlendirilmektedir)*
 
 ## Sonraki Planlar ve Hedefler
 
 - **PoC** çalışmasının başarıyla tamamlanmasının ardından, yapay zeka tabanlı modernizasyon sürecinin diğer modüllere de genişletilmesi planlanmakta *(Güncelleme: Tüm modüller geliştirmelerine başlamış durumda)*
 - Yapay zeka asistanlarının eğitiminde kullanılacak veri setlerinden hareketle daha küçük ve **domain**'e özgü dil modelleri *(Custom LLM)* oluşturulması değerlendirilmekte.
-- **RAG** *(Retrieval Augmented Generation)* yaklaşımının daha etkin kullanılması için doküman yönetim sistemlerinin entegrasyonu planlanabilir. *(Güncelleme: RAG yaklaşımı için gerekli altyapı ve süreçlerin oluşturulması için çalışmalara başlandı)*
-- Süreçte kullanılan **prompt**'ların sürekli iyileştirilmesi ve optimize edilmesi için bir geri bildirim mekanizması oluşturulması faydalı olacaktır.
-- **MCP** tabanlı etkileşimlerin daha da geliştirilmesi ve yaygınlaştırılması düşünülebilir.
-- Mutlak suretle çıktıların maliyeti ölçümlenmeli ve insan denetimi için gereken kaynaklar optimize edilmelidir.
-- Hassas bilgilerin korunması, vekil ajanların güvenliğinin sağlanması ve olası veri sızıntılarının önlenmesi için ek güvenlik önlemleri alınmalıdır. *(GuardRail, Red Team gibi yaklaşımlar değerlendirilmektedir)*
+- **RAG** *(Retrieval Augmented Generation)* yaklaşımının daha etkin kullanılması için doküman yönetim sistemlerinin entegrasyonu planlanabilir. *(Güncelleme: RAG yaklaşımı için gerekli altyapı ve süreçlerin oluşturulması için çalışmalara başlandı ve Graph RAG tabanlı bir senaryo da geliştirilmekte)*
+- Süreçte kullanılan **prompt**'ların sürekli iyileştirilmesi ve optimize edilmesi için bir geri bildirim mekanizması oluşturulması planlanmaktadır.
+- **MCP** tabanlı etkileşimlerin daha da geliştirilmesi ve yaygınlaştırılması üzerinde çalışılmaktadır.
 
 ---
 
@@ -668,7 +707,7 @@ graph LR
     style AI4 fill:#e1bee7
 ```
 
-### Spec-Oriented Development İş Akışı
+### Spec-Oriented Development Iş Akışı
 
 ```mermaid
 flowchart TD
@@ -756,7 +795,7 @@ flowchart TD
 - **Vue.js**: Progressive JavaScript framework, kullanıcı arayüzleri geliştirmek için kullanılır
 - **WCF (Windows Communication Foundation)**: Microsoft'un servis tabanlı uygulamalar için framework'ü
 
-### İş ve Süreç Terimleri
+### Iş ve Süreç Terimleri
 
 - **Bayi Yönetimi Sistemi (DMS)**: Otomotiv sektöründe bayi operasyonlarını yöneten kapsamlı yazılım sistemi
 - **Code Coverage**: Test kodlarının kaynak kodunun ne kadarını kapsadığını gösteren metrik
@@ -793,36 +832,100 @@ flowchart TD
 
 Bu repoda, sunumda anlatılan **Spec-Oriented Development** yaklaşımını göstermek için basitleştirilmiş bir **Araç Envanter Yönetimi** modülü simülasyonu bulunmaktadır.
 
-### Doküman Yapısı
+### Repo Yapısı
 
 ```text
+.github/
+├── agents/                          # Özelleştirilmiş Copilot Agent tanımları
+│   ├── backend-developer.agent.md
+│   ├── frontend-developer.agent.md
+│   ├── business-analyst.agent.md
+│   ├── devops-engineer.agent.md
+│   ├── qa-engineer.agent.md
+│   └── QUICK-START.md               # Agent kullanım kılavuzu
+├── skills/                          # Agent'lara bağlı Skill tanımları
+│   ├── create-api-endpoint/
+│   ├── create-ef-migration/
+│   ├── create-vue-component/
+│   ├── run-and-analyze-tests/
+│   ├── write-user-story/
+│   └── configure-cicd-pipeline/
+└── copilot-instructions.md          # Copilot genel talimatları
 docs/
-├── architectural-overview/     # Teknoloji stack, kodlama standartları, proje yapısı
-├── business/                   # User story'ler (US-001, US-002)
-├── domain-model/               # Entity ve Value Object tanımları
-├── ui/                         # HTML mockup'lar
-├── static-data/                # Enum'lar, marka/model listeleri
-└── prompts/                    # AI asistanlarına kullandırılacak prompt'lar
+├── adr/                             # Architectural Decision Records (13 ADR)
+├── architectural-overview/          # Teknoloji stack, kodlama standartları, proje yapısı
+├── business/                        # User story'ler (US-001 – US-006)
+├── domain-model/                    # Entity ve Value Object tanımları
+├── ui/                              # HTML wireframe'ler
+├── static-data/                     # Enum'lar, marka/model listeleri
+└── prompts/                         # AI prompt şablon dosyaları
 ```
 
-### İçerik
+### Dokümanlar
 
-- **2 User Story**: Araç ekleme ve listeleme
-- **3 Domain Model**: Vehicle (Entity), VIN ve Money (Value Objects)
-- **2 UI Mockup**: Araç ekleme formu ve liste sayfası
-- **3 AI Prompt Template**: API endpoint, EF Migration, Vue component geliştirme
-- **Coding Standards**: C# ve TypeScript/Vue için detaylı standartlar
+| **Kategori** | **İçerik** |
+| --- | --- |
+| **User Story** | 6 senaryo: araç ekleme, listeleme, araç opsiyonu, müşteri yönetimi, servis danışmanı panosu, hızlı müşteri kaydı |
+| **Entity** | 4 entity: Vehicle, VehicleOption, Customer, ServiceAdvisor |
+| **Value Object** | 3 value object: VIN, Money, Email |
+| **UI Wireframe** | 4 HTML mockup: dashboard, araç ekleme formu, araç liste sayfası, araç opsiyon formu |
+| **ADR** | 13 mimari karar: Clean Architecture, CQRS/MediatR, DDD, PostgreSQL, EF Core/Dapper, Keycloak, Vue 3, Serilog, FluentValidation, API Versioning, xUnit, GitHub Actions, SonarQube |
+| **AI Prompt** | 3 şablon: API endpoint, EF Migration, Vue component |
+
+### GitHub Copilot Ajanları
+
+`.github/agents/` klasöründe her biri ayrı bir yazılım geliştirme rolünü üstlenen **5 özel Copilot Agent** tanımlıdır:
+
+| **Agent** | **Rol** | **Birincil Sorumluluklar** |
+| --- | --- | --- |
+| `backend-developer` | Senior .NET Developer | Clean Architecture, CQRS, DDD, EF Migrations, API tasarımı |
+| `frontend-developer` | Vue.js UI/UX Expert | Vue 3 Composition API, TypeScript, Bootstrap 5, wireframe → component |
+| `business-analyst` | Requirements Expert | User Story, Acceptance Criteria, iş kuralları, domain terminolojisi |
+| `devops-engineer` | CI/CD Specialist | GitHub Actions, Docker, SonarQube pipeline entegrasyonu |
+| `qa-engineer` | Testing Expert | xUnit, Vitest, Playwright, test coverage analizi |
+
+Kullanım kılavuzu için: [`.github/agents/QUICK-START.md`](.github/agents/QUICK-START.md)
+
+### Skill'ler
+
+`.github/skills/` klasöründe Agent'ların görev icrasında çağırdığı **6 Skill** tanımlıdır. Her Skill; gerekli context dosyaları, proje yapısı ve adım adım üretim kurallarını içerir:
+
+| **Skill** | **Açıklama** |
+| --- | --- |
+| `create-api-endpoint` | Clean Architecture ile uçtan uca CQRS endpoint: Command/Query, Handler, Validator, Controller ve xUnit testi |
+| `create-ef-migration` | Fluent API entity configuration, owned type, index ve seed data içeren EF Core migration |
+| `create-vue-component` | HTML wireframe'den Vue 3 page/organism component, composable ve TypeScript type üretimi |
+| `run-and-analyze-tests` | Backend (`dotnet test`) ve frontend (`yarn test`) testleri çalıştırma, hata analizi ve coverage değerlendirmesi |
+| `write-user-story` | INVEST prensiplerine uygun US-XXX formatında user story, kabul kriterleri, iş kuralları ve test senaryoları |
+| `configure-cicd-pipeline` | GitHub Actions workflow: .NET build/test/publish, Vue build, Docker image ve SonarQube analiz adımları |
+
+### Ajan-Skill İlişki Matrisi
+
+Bir Agent'a görev verildiğinde önce niyet belirlenir ve aşağıdaki matrise göre ilgili Skill otomatik olarak çağrılır:
+
+| **Agent** | **Birincil Skill** | **Destekleyici Skill** |
+| --- | --- | --- |
+| `backend-developer` | `create-api-endpoint`, `create-ef-migration` | `run-and-analyze-tests` |
+| `frontend-developer` | `create-vue-component` | `run-and-analyze-tests` |
+| `business-analyst` | `write-user-story` | — |
+| `devops-engineer` | `configure-cicd-pipeline` | `run-and-analyze-tests` |
+| `qa-engineer` | `run-and-analyze-tests` | `write-user-story` |
 
 ### Kullanım
 
-Bu dokümanlar **GitHub Copilot** veya diğer **AI** asistanlarına context olarak verilerek:
+Agent ve Skill tanımları **GitHub Copilot Chat** üzerinden kullanılır:
 
-1. Backend API endpoint'leri geliştirilebilir
-2. Database migration'ları oluşturulabilir
-3. Frontend component'leri üretilebilir
-4. Test senaryoları yazılabilir
+1. VS Code'da **Copilot Chat** (`Ctrl+Shift+I`) açın ve bir Agent seçin (örn. `@Backend Developer`).
+2. İlgili `docs/business/US-XXX` ve `docs/domain-model/` dosyalarını context'e ekleyin.
+3. Görevi kısa bir cümleyle tanımlayın — Agent uygun Skill'i otomatik çağırır ve adım adım çıktı üretir.
 
-Detaylı kullanım için: [`docs/prompts/README.md`](docs/prompts/README.md)
+Örnek:
+
+```text
+US-001 senaryosu için AddVehicleCommand endpoint'ini geliştir.
+```
+
+Ayrıntılı prompt örnekleri için: [`docs/prompts/README.md`](docs/prompts/README.md)
 
 ### Not
 
