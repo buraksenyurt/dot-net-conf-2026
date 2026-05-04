@@ -2,23 +2,264 @@
 
 Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yararlanıyoruz, ne gibi zorluklarla karşılaşıyoruz ve vardığımız sonuçlar...
 
-- [Giriş](#yapay-zeka-yılların-koduna-karşı-ai-tabanlı-legacy-modernizasyonu)
-  - [Legacy System](#legacy-system)
-    - [Metriklerle Legacy Sistemimiz](#metriklerle-legacy-sistemimiz)
-    - [Teknoloji Altyapısı](#teknoloji-altyapısı)
-    - [Sistemdeki Genel Problemler (2020 Öncesi)](#sistemdeki-genel-problemler-2020-öncesi)
-    - [Birincil Modernizasyon Çalışmaları (2020 - 2024)](#birincil-modernizasyon-çalışmaları-2020---2024)
-    - [Motivasyon](#motivasyon)
-    - [Riskler](#riskler)
-    - [PoC Çalışma Stratejisi](#poc-çalışma-stratejisi)
-      - [Geliştirme Süreci](#geliştirme-süreci)
-      - [Deneyimler](#deneyimler)
-        - [Sonarqube Taramaları](#sonarqube-taramaları)
-        - [Sonarqube Taraması için Notlar](#sonarqube-taraması-için-notlar)
-      - [Çalışma Sırasında Arada Yazılan Yardımcı Araçlar](#çalışma-sırasında-arada-yazılan-yardımcı-araçlar)
-      - [Teknik Özet](#teknik-özet)
-    - [Sonuçlar](#sonuçlar)
-    - [Sonraki Planlar ve Hedefler](#sonraki-planlar-ve-hedefler)
+- [Hızlı Başlangıç](#hızlı-başlangıç)
+  - [Ön Gereksinimler](#ön-gereksinimler)
+  - [Hazırlıklar](#hazırlıklar)
+  - [Veritabanı Migration](#veritabanı-migration)
+  - [Vehicle Inventory Web Uygulaması](#vehicle-inventory-web-uygulaması)
+  - [RAG](#rag)
+  - [MCP](#mcp)
+  - [SonarQube](#sonarqube)
+- [Legacy System](#legacy-system)
+  - [Metriklerle Legacy Sistemimiz](#metriklerle-legacy-sistemimiz)
+  - [Teknoloji Altyapısı](#teknoloji-altyapısı)
+  - [Sistemdeki Genel Problemler (2020 Öncesi)](#sistemdeki-genel-problemler-2020-öncesi)
+  - [Birincil Modernizasyon Çalışmaları (2020 - 2024)](#birincil-modernizasyon-çalışmaları-2020---2024)
+  - [Motivasyon](#motivasyon)
+  - [Riskler](#riskler)
+  - [PoC Çalışma Stratejisi](#poc-çalışma-stratejisi)
+    - [Geliştirme Süreci](#geliştirme-süreci)
+    - [Deneyimler](#deneyimler)
+      - [Sonarqube Taramaları](#sonarqube-taramaları)
+      - [Sonarqube Taraması için Notlar](#sonarqube-taraması-için-notlar)
+    - [Çalışma Sırasında Arada Yazılan Yardımcı Araçlar](#çalışma-sırasında-arada-yazılan-yardımcı-araçlar)
+    - [Teknik Özet](#teknik-özet)
+  - [Sonuçlar](#sonuçlar)
+  - [Sonraki Planlar ve Hedefler](#sonraki-planlar-ve-hedefler)
+
+## Hızlı Başlangıç
+
+Bu bölüm, repository'deki tüm projeleri yerel ortamda ayağa kaldırmak için gereken adımları içermektedir. Doküman içinde oyalanmadan doğrudan aksiyona geçmek isteyen geliştiricilerin buradan başlamasını öneririm :D
+
+### Ön Gereksinimler
+
+Aşağıdaki araçların sisteminizde kurulu ve çalışır durumda olması gerekiyor:
+
+| **Araç** | **Sürüm** | **Açıklama** |
+| --- | --- | --- |
+| [.NET SDK](https://dotnet.microsoft.com/download) | 10.0+ | Backend ve araç projeleri |
+| [Node.js](https://nodejs.org/) | 22 LTS+ | Frontend derleme ortamı |
+| [Yarn](https://yarnpkg.com/) | 1.22+ | Frontend paket yöneticisi |
+| [Docker Desktop](https://www.docker.com/products/docker-desktop/) | 4.x+ | Altyapı servisleri (PostgreSQL, Qdrant, SonarQube vb.) |
+| [LM Studio](https://lmstudio.ai/) | Son sürüm | RAG ve Text Embedding için yerel LLM sunucusu |
+
+> **Not:** Ben Frontend tarafında Windows native binding uyumsuzluklarına takıldığım için `npm` yerine `yarn` kullanmayı tercih ettim.
+
+### Hazırlıklar
+
+**1. Repository'yi klonlayın:**
+
+```bash
+git clone https://github.com/<kullanici>/dot-net-conf-2026.git
+cd dot-net-conf-2026
+```
+
+**2. Docker ile altyapı servislerini başlatın:**
+
+Tüm altyapı servisleri *(PostgreSQL, pgAdmin, RabbitMQ, SonarQube, Qdrant)* tek komutla ayağa kaldırılabilir.
+
+```bash
+docker compose up -d
+```
+
+Başlatılan servisler ve erişim adresleri ise aşağıdaki gibidir.
+
+| **Servis** | **Adres** | **Kullanıcı / Şifre** |
+| --- | --- | --- |
+| **PostgreSQL** | `localhost:5433` | `johndoe` / `somew0rds` |
+| **pgAdmin** | `http://localhost:5052` | `scoth@tiger.com` / `123456` |
+| **RabbitMQ Management** | `http://localhost:15673` | `guest` / `guest` |
+| **SonarQube** | `http://localhost:9001` | `admin` / `admin` |
+| **Qdrant REST API** | `http://localhost:6333` | — |
+
+> PgAdmin arabirimi yerine DBeaver gibi bir araç da kullanılabilir.
+
+**3. Frontend bağımlılıklarını yükleyin:**
+
+```bash
+cd src/frontend
+yarn install
+```
+
+### Veritabanı Migration
+
+Veritabanı tarafındaki tabloların oluşturulması ve hatta örnek verilerin eklenmesi için bu adım gerekli. Migration işlemleri `VehicleInventory.API` projesinin bulunduğu klasörden ya da solution kök dizininde çalıştırılabilir.
+
+**ef** komutunu işletebilmek için sisteminizde `dotnet-ef` aracının kurulu olması gerekir. Eğer kurulu değilse aşağıdaki komutla global olarak kurabilirsiniz:
+
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+**Migration planı oluşturma:**
+
+```bash
+cd src/backend
+dotnet ef migrations add <MigrationAdi> --project VehicleInventory.Infrastructure --startup-project VehicleInventory.API
+```
+
+Örnek:
+
+```bash
+dotnet ef migrations add InitialCreate --project VehicleInventory.Infrastructure --startup-project VehicleInventory.API
+```
+
+**Mevcut migration'ları listeleme:**
+
+```bash
+dotnet ef migrations list --project VehicleInventory.Infrastructure --startup-project VehicleInventory.API
+```
+
+**Migration'ları veritabanına uygulama:**
+
+```bash
+dotnet ef database update --project VehicleInventory.Infrastructure --startup-project VehicleInventory.API
+```
+
+**Seed verilerini yükleme:**
+
+Migration tamamlandıktan sonra `scripts/seed-data.sql` dosyasını pgAdmin veya `psql` ile çalıştırabilirsiniz ya da dosya içerisinde yazdığı gibi doğrudan docker üzerinden de işletebilirsiniz.
+
+```bash
+psql -h localhost -p 5433 -U johndoe -d VehicleInventory -f scripts/seed-data.sql
+
+# Docker kullanarak ekletmek için
+# PowerShell
+Get-Content scripts/seed-data.sql | docker exec -i aio-postgres psql -U johndoe -d VehicleInventory
+
+# Linux/macOS
+docker exec -i aio-postgres psql -U johndoe -d VehicleInventory < scripts/seed-data.sql
+```
+
+### Vehicle Inventory Web Uygulaması
+
+Uygulama bir **.NET 10 backend API** ve bir **Vue 3 + Vite frontend**'den oluşmaktadır.
+
+**Backend API'yi başlatın:**
+
+```bash
+cd src/backend/VehicleInventory.API
+dotnet run
+```
+
+API şu adreste çalışır: `http://localhost:5280`
+Swagger UI: `http://localhost:5280/swagger`
+
+**Frontend geliştirme sunucusunu başlatın** (ayrı bir terminal):
+
+```bash
+cd src/frontend
+yarn dev
+```
+
+Frontend şu adreste çalışır: `http://localhost:5173`
+
+### RAG
+
+**RAG** çözümü iki ayrı uygulamadan oluşmaktadır: **DocChunker** (dokümanları vektör veritabanına yükler) ve **ChatApp** (Razor Pages tabanlı bir sohbet arayüzü sağlar).
+
+**Ön koşul — LM Studio:**
+
+Ben denemeleri gerçek API noktalarına gitmek yerine deneysel olduğu için yerel makinede çalışan LM Studio üzerinden gerçekleştirdim. Öncelikle LM Studio'yu başlatın ve aşağıdaki modelleri yerel sunucuya yükleyip aktif edin. Ancak bunlar şart değil, daha iyi ve etkin modeller seçebilirsiniz. Makinenizin gücüne bağlı olarak çok yüksek parametreleri modelleri de deneyebilirsiniz.
+
+- Embedding modeli: `text-embedding-nomic-embed-text-v1.5`
+- Chat modeli: `meta-llama-3-8b-instruct`
+
+Genelde **LM Studio** sunucusu `http://localhost:1234/v1` adresi üzerinden çalışır.
+
+**1. Adım — Dokümanları Qdrant'a yükleyin (DocChunker):**
+
+```bash
+cd RAG/DocChunker
+dotnet run
+```
+
+Bu komut `docs/` klasöründeki Markdown dosyalarını parçalara *(chunk)* böler, embedding oluşturur ve Qdrant koleksiyonuna (`docs_knowledge_base`) yazar.
+
+> Bu deneysel çalışmada Vector RAG mimarisi baz alınmıştır. Çok daha iyi bağlamlar sağlamak için Graph RAG konusuna bir bakın derim.
+
+**2. Adım — ChatApp'i başlatın:**
+
+```bash
+cd RAG/ChatApp
+dotnet run
+```
+
+ChatApp şu adresten ayağa kalkar: `http://localhost:5200`
+
+### MCP
+
+**DmsMcpServer**, VS Code GitHub Copilot Agent entegrasyonu için `stdio` transport üzerinden çalışan bir MCP sunucusudur. Backend API'ye bağlanır.
+
+**Ön koşul:** Backend API'nin çalışıyor olması gerekir (`http://localhost:5280`).
+
+**MCP sunucusunu çalıştırmak için** VS Code `.vscode/mcp.json` (veya Copilot ayarları) üzerinden aşağıdaki yapılandırma ayarlarının verilmesi gerekir.
+
+```json
+{
+  "servers": {
+    "dms-mcp-server": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": ["run", "--project", "MCP/DmsMcpServer/DmsMcpServer.csproj"]
+    }
+  }
+}
+```
+
+Manuel olarak test etmek için:
+
+```bash
+cd MCP/DmsMcpServer
+dotnet run
+```
+
+Sonrasında MCP Server başlatılır ve VS Code arabiriminde bir ajan seçilip örnek bir istekte bulunulur.
+
+```text
+Envanterden bir Satışta aracı al, Burak Selim adlı müşteri için 7 günlük opsiyon oluştur.
+```
+
+### SonarQube
+
+Projelerdeki teknik borçlanmaya ölçümlemek için kullanılan SonarQube, `docker compose up -d` komutuyla otomatik olarak başlatılır ve `http://localhost:9001` adresinden çalışır.
+
+**İlk giriş:** `admin` / `admin` *(ilk girişte şifre değişikliği istenir)*
+
+**Proje oluşturma ve analiz token'ı alma:**
+
+1. `http://localhost:9001` adresine gidin ve oturum açın.
+2. **Projects → Create Project → Manually** yolunu izleyin.
+3. Proje adı olarak `VehicleInventory` girin.
+4. **Locally** seçeneğini seçin ve bir token oluşturun (örn. `sqa_...`).
+
+**Backend projesini analiz etme (.NET Scanner):**
+
+```bash
+cd src/backend
+
+# SonarQube scanner'ı başlat
+dotnet sonarscanner begin \
+  /k:"VehicleInventory" \
+  /d:sonar.host.url="http://localhost:9001" \
+  /d:sonar.token="<SONARQUBE_TOKEN>"
+
+# Projeyi derle
+dotnet build VehicleInventory.slnx
+
+# Analizi tamamla ve sonuçları yükle
+dotnet sonarscanner end /d:sonar.token="<SONARQUBE_TOKEN>"
+```
+
+> `<SONARQUBE_TOKEN>` değerini SonarQube arayüzünden oluşturduğunuz token ile değiştirin.
+
+**`dotnet-sonarscanner` global aracı kurulu değilse:**
+
+```bash
+dotnet tool install --global dotnet-sonarscanner
+```
+
+---
 
 ## Legacy System
 
@@ -34,7 +275,7 @@ Sistem aynı zamanda regülasyonlar içeren dış servislere de bağımlılıkla
 
 Uygulamanın dağıtımı ilk zamanlarda kurum içi geliştirilmiş bir uygulama tarafından zaman bazlı planlamalara bağlı kalınarak yapılmaktaydı. Son yıllarda yapılan modernizasyon çalışmaları kapsamında DevOps prensiplerine uygun olarak Azure DevOps üzerinden yürütülmektedir. Git tabanlı repolar kullanılmakta ve CI/CD süreçleri Azure DevOps Pipelines ile yönetilmektedir. Branch stratejisi olarak **Git Flow** tercih edilmiştir. Buna göre feature bazlı geliştirmeler yapılmakta, sprint bazlı release'ler oluşturulmakta ve ana branch'lere merge edilmektedir.
 
-### Metriklerle Legacy Sistemimiz
+### Metriklerle Legacy Sistem
 
 Aşağıdaki tablo sistemimizin bazı metriklerini özetlemektedir:
 
@@ -42,7 +283,7 @@ Aşağıdaki tablo sistemimizin bazı metriklerini özetlemektedir:
 | --- | --- |
 | **Kod Satırı Sayısı** | 6,000,000+ |
 | **Ekran Sayısı** | 1,000+ |
-| **Stored Procedure Sayısı** | 10,000+ |
+| **Stored Procedure Sayısı** | 30,000+ |
 | **Veri Tabanı Boyutu** | >30 TB |
 | **Entegre Uygulama Sayısı** | 50+ |
 | **Kullanıcı Sayısı** | 10,000+ |
