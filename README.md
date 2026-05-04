@@ -34,10 +34,6 @@ Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yar
   - [Modernizasyon Yol Haritası](#modernizasyon-yol-haritası)
   - [PoC Modernizasyon Stack Karşılaştırması](#poc-modernizasyon-stack-karşılaştırması)
   - [Spec-Oriented Development İş Akışı](#spec-oriented-development-iş-akışı)
-- [Sözlük](#sözlük)
-  - [Teknoloji Terimleri](#teknoloji-terimleri)
-  - [İş ve Süreç Terimleri](#iş-ve-süreç-terimleri)
-  - [Araçlar ve Platformlar](#araçlar-ve-platformlar)
 - [Demo Simülasyonu](#demo-simülasyonu)
   - [Repo Yapısı](#repo-yapısı)
   - [Dokümanlar](#dokümanlar)
@@ -756,76 +752,6 @@ flowchart TD
     style END fill:#c8e6c9
 ```
 
-## Sözlük
-
-> Dokümanda geçen terimlerin tanımları ve açıklamaları için bu bölüme bakabilirsiniz.
-
-### Teknoloji Terimleri
-
-- **AI Agent / Copilot Agent**: GitHub Copilot üzerinde tanımlanmış, belirli roller ve sorumluluklar verilen yapay zeka asistanları (örn: Senior Developer, QA Engineer)
-- **ADO.NET**: Microsoft'un veri erişim teknolojisi, veritabanı işlemleri için düşük seviyeli API sağlar
-- **Aggregate Root**: DDD'de bir entity kümesinin kök elemanı, tutarlılık sınırlarını belirler
-- **ASP.NET Web Forms**: Microsoft'un event-driven web uygulama geliştirme framework'ü
-- **Claude Sonnet**: Anthropic firması tarafından geliştirilen büyük dil modeli, kod üretme konusunda güçlü
-- **Cross-Cutting Concerns**: Loglama, güvenlik, transaction yönetimi gibi birçok katmanı ilgilendiren ortak fonksiyonellikler
-- **Dapper**: Hafif, yüksek performanslı .NET için micro-ORM
-- **DDD (Domain Driven Design)**: İş mantığını merkeze alan yazılım geliştirme yaklaşımı
-- **Dependency Injection**: Bağımlılıkların dışarıdan enjekte edildiği tasarım deseni
-- **Entity**: DDD'de benzersiz kimliği olan ve yaşam döngüsü takip edilen iş nesneleri
-- **Entity Framework (EF)**: Microsoft'un Object-Relational Mapping (ORM) framework'ü
-- **ETL (Extract, Transform, Load)**: Verilerin çekilmesi, dönüştürülmesi ve yüklenmesi süreci
-- **gRPC**: Google tarafından geliştirilen yüksek performanslı RPC framework'ü
-- **GitOps**: Git repository'sini infrastructure ve uygulama konfigürasyonları için tek doğruluk kaynağı olarak kullanan yaklaşım
-- **Halüsinasyon**: Yapay zeka modellerinin gerçek olmayan veya yanlış bilgi üretmesi
-- **Keycloak**: Açık kaynaklı Identity ve Access Management çözümü
-- **Legacy System**: Eski teknoloji veya mimarilerle geliştirilmiş, uzun süredir çalışan sistemler
-- **Liquid Template**: Shopify tarafından geliştirilen, güvenli ve esnek template dili
-- **MCP (Model Context Protocol)**: AI modellerinin harici veri kaynaklarına erişimini standartlaştıran protokol
-- **N-Tier Architecture**: Presentation, Business Logic, Data Access gibi katmanlara ayrılmış mimari
-- **Vite**: Yeni nesil frontend build tool, son derece hızlı HMR (Hot Module Replacement) ve modern JavaScript özelliklerini destekler
-- **Vue.js 3**: Progressive JavaScript framework, Composition API ve TypeScript ile modern kullanıcı arayüzleri geliştirmek için kullanılır
-- **ORM (Object-Relational Mapping)**: Nesne ve veritabanı tabloları arasında mapping sağlayan teknoloji
-- **PoC (Proof of Concept)**: Bir fikrin veya yaklaşımın uygulanabilirliğini test etmek için yapılan deneysel çalışma
-- **PostgreSQL**: Açık kaynaklı, güçlü ilişkisel veritabanı yönetim sistemi
-- **RAG (Retrieval Augmented Generation)**: AI modellerine harici bilgi kaynaklarından context sağlayan yaklaşım
-- **SSIS (SQL Server Integration Services)**: Microsoft'un ETL ve veri entegrasyonu aracı
-- **SSRS (SQL Server Reporting Services)**: Microsoft'un kurumsal raporlama platformu
-- **Stored Procedure**: Veritabanında saklanan ve çalıştırılabilen SQL kod blokları
-- **Value Object**: DDD'de kimliği olmayan, değerleriyle tanımlanan nesneler (örn: Money, Address)
-- **Vue.js**: Progressive JavaScript framework, kullanıcı arayüzleri geliştirmek için kullanılır
-- **WCF (Windows Communication Foundation)**: Microsoft'un servis tabanlı uygulamalar için framework'ü
-
-### Iş ve Süreç Terimleri
-
-- **Bayi Yönetimi Sistemi (DMS)**: Otomotiv sektöründe bayi operasyonlarını yöneten kapsamlı yazılım sistemi
-- **Code Coverage**: Test kodlarının kaynak kodunun ne kadarını kapsadığını gösteren metrik
-- **Cognitive Complexity**: Kodun anlaşılma zorluğunu ölçen metrik
-- **DevOps**: Yazılım geliştirme (Dev) ve IT operasyonlarını (Ops) birleştiren kültür ve pratikler
-- **Domain**: Yazılımın çözdüğü iş probleminin alanı ve konusu
-- **Feature Branch**: Yeni özellik geliştirmesi için açılan izole git dalı
-- **Fizibilite**: Bir projenin teknik ve ekonomik olarak gerçekleştirilebilirliğinin araştırılması
-- **IT4IT**: IT yönetimi için referans mimari framework'ü
-- **Modernizasyon**: Eski sistemlerin yeni teknolojilere ve mimarilere taşınması süreci
-- **Pull Request**: Kod değişikliklerinin review edilip ana branch'e alınması için yapılan istek
-- **Refaktörizasyon**: Kodun davranışını değiştirmeden iç yapısını iyileştirme
-- **Spec-Oriented Development**: Detaylı specification dokümanları ile yönlendirilen geliştirme yaklaşımı
-- **Sprint**: Agile metodolojide sabit sürede planlanan çalışma periyodu (genellikle 1-4 hafta)
-- **Technical Debt (Teknik Borç)**: Hızlı çözümler nedeniyle birikmiş, gelecekte düzeltilmesi gereken kod kalitesi problemleri
-- **User Story**: Kullanıcı bakış açısından yazılmış fonksiyonel gereksinim
-
-### Araçlar ve Platformlar
-
-- **Azure DevOps**: Microsoft'un DevOps için sunduğu bulut platform (CI/CD, repo, boards vb.)
-- **GitHub Actions**: GitHub'ın CI/CD automation servisi
-- **GitHub Copilot**: GitHub ve OpenAI'ın geliştirdiği AI kod asistanı
-- **Git Flow**: Git branching stratejisi (main, develop, feature, release, hotfix)
-- **NuGet**: .NET için paket yöneticisi
-- **npm**: Node.js ve JavaScript için paket yöneticisi
-- **RabbitMQ**: Açık kaynaklı message broker, asenkron mesajlaşma için kullanılır
-- **Sonarqube**: Kod kalitesi ve güvenlik analizi platformu
-- **Visual Studio Code (VS Code)**: Microsoft'un popüler, hafif code editor'ü
-- **Windsor Castle**: .NET için IoC container ve Dependency Injection framework'ü
-
 ---
 
 ## Demo Simülasyonu
@@ -930,3 +856,5 @@ Ayrıntılı prompt örnekleri için: [`docs/prompts/README.md`](docs/prompts/RE
 ### Not
 
 Bu simülasyon **eğitim ve sunum amaçlıdır**. Gerçek kurumsal uygulamanın kod ve verileri gizlilik nedeniyle paylaşılamamıştır.
+
+Dokümanda kullanılan tüm teknik ve iş terimleri için: [docs/MiniDictionary.md](MiniDictionary.md)
