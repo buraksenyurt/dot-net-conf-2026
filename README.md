@@ -370,7 +370,7 @@ Yapay zeka tabanlı teknolojilerin gelişimi ve vaat ettikleri çok cazip görü
 
 İlk etapta bir **PoC** çalışması ile başlanmasına karar verilmiş ve belli bir modülün orta karmaşıklıkta iş süreçleri barındıran bir alt bölümünün sıfırdan, lisansı alınmış yapay zeka modelleri kullanılarak yeniden geliştirilmesine karar verilmiştir.
 
-Ağırlıklı olarak **Anthropic**'in **Claude Sonnet** modeli tercih edilmiştir. Bunun en büyük sebebi diğer modellere göre daha tutarlı kodlar üretmesi ve **halüsinasyon** oranının daha düşük olduğunun gözlemlenmesidir *(Bu görüş tamamen izafidir. Zira yapay zeka tarafındaki çalışmalar hızlanarak devam etmekte, modeller her geçen gün daha az hata yapıp istenen sonuca daha hızlı ve kolay ulaşabilir hale gelmektedir)* 
+Ağırlıklı olarak **Anthropic**'in **Claude Sonnet** modeli tercih edilmiştir. Bunun en büyük sebebi diğer modellere göre daha tutarlı kodlar üretmesi ve **halüsinasyon** oranının daha düşük olduğunun gözlemlenmesidir *(Bu görüş tamamen izafidir. Zira yapay zeka tarafındaki çalışmalar hızlanarak devam etmekte, modeller her geçen gün daha az hata yapıp istenen sonuca daha hızlı ve kolay ulaşabilir hale gelmektedir)*
 
 PoC kapsamında **front-end** tarafında **Nuxt** ve **Vite**, **back-end** tarafında ise **.NET Core** kullanılmasına karar verilmiştir. Özellikle ön yüz tarafında kurum için geliştirilen özel komponentler tercih edilmiştir. Veri tabanı tarafında **PostgreSQL**'de karar kılınmış ve kod tarafında **Entity Framework** ile **Dapper** entegrasyonları tercih edilmiştir. **Authentication/Authorization** için halihazırda diğer yeni nesil kurum içi uygulamaların da kullandığı servisler tercih edilmiş ve **Keycloak** ile devam edilmiştir. Kod tabanı **GitHub**'a alınmış ve **CI/CD** hattında **GitOps** kullanılarak otomatikleştirilmiştir. Kod kalitesi ve güvenlik taramaları için **Sonarqube** entegre edilmiştir. **Backend** taraf ile **front-end** arası haberleşme yine **REST API** üzerinden sağlanmış ancak özel entegrasyon noktaları için gerekli soyutlamalar da yapılmıştır. Bu sayede örneğin **gRPC** tabanlı noktalarla entegre olunabilmiştir. **Backend** tarafta kurum içi geliştirilmiş ve **cross-cutting concern**'leri de ele alan bir framework kullanılmıştır. Burada bağımlılıkların yönetimi için **.NET**'in dahili **dependency injection** altyapısı kullanılmıştır. Yeni yazılan **PoC** uygulamasında **legacy** sistemden hiçbir parçanın yer almamasına ve her şeyin sıfırdan tasarlanmasına özellikle dikkat edilmiştir.
 
@@ -399,7 +399,7 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 - Yapay zeka asistanları ile etkileşim için **Copilot** üzerinde uzman **Agent**'lar tanımlandı: Senior Software Developer, UI/UX Expert, Senior Business Analyst, DevOps Engineer, QA Engineer gibi.
 - **Domain** odaklı geliştirilmiş **Framework** ve **Source Code Generator** kütüphaneleri kurum içi **NuGet** repolarına, benzer şekilde **Vue** bileşenleri de **npm** repolarına alındı.
 - Üretilen çözüm alt yapısı belirli bir olgunluğa ulaştıktan sonra, kod kalitesi ölçümü için **Sonarqube** ile entegrasyon sağlandı. Ayrıca **SonarSource Sonarqube MCP Server** ile entegre olundu ve **VS Code** arabiriminden çıkmadan yerleşik agent'lar yardımıyla, bulgu analizi, yorumlama, düzeltme *(issue çözdürme, cognitive complexity düşürme, code-coverage değerlerini yükseltme)* gibi işlemler yapıldı.
-- Geliştirme boyunca mimari dokümanlar, kodlama kılavuzları, önyüz standartları gibi kritip spec'ler sürekli iyileştirildi ve güncel tutuldu. 
+- Geliştirme boyunca mimari dokümanlar, kodlama kılavuzları, önyüz standartları gibi kritip spec'ler sürekli iyileştirildi ve güncel tutuldu.
 - PoC tamamlandıktan sonra oluşan ana şablon diğer modüllerin kullanılması için yaygınlaştırıldı. Bu safhada yapay zeka modellerinin kullanacağı tüm dokümantasyon desteği modül bazında özelleştirildi.
 
 ### Deneyimler
@@ -419,7 +419,7 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 
 Bu çalışmada mini POC olarak yer alan ve tamamen YZ araçları güdümünde ilerlenen bir proje söz konusu. Demo projesinde oldukça küçük bir kod tabanı ile çalışırken Sonarqube'un ilk tarama sonuçları aşağıdaki gibidir.
 
-![Sonarqube İlk Tarama Sonuçları](sq_initial_scan.png)
+![Sonarqube İlk Tarama Sonuçları](./images/sq_initial_scan.png)
 
 ve ilk taramadaki bazı bulgulara ait başlıklar;
 
@@ -433,7 +433,7 @@ gibi.
 
 ikinci tarama sonuçlar;
 
-![Sonarqube İkinci Tarama Sonuçları](sq_second_scan.png)
+![Sonarqube İkinci Tarama Sonuçları](./images/sq_second_scan.png)
 
 ### Sonarqube Taraması için Notlar
 
@@ -457,7 +457,7 @@ Düzenekte local dil modelleri kullanılmaktadır. Bu amaçla **LM Studio** üze
 
 Chatbot uygulamasına ait örnek bir çalışma zamanını aşağıda görebilirsiniz.
 
-![RAG based ChatBot Sample](chatbot_sample.png)
+![RAG based ChatBot Sample](./images/chatbot_sample.png)
 
 ## MCP *(Model Context Protocol)* Düzeneği
 
@@ -479,6 +479,8 @@ AI (sırasıyla tool çağrıları):
 ```
 
 Tool kataloğu, proje yapısı ve entegrasyon detayları için: [`MCP/Overivew.md`](MCP/Overivew.md)
+
+İşlenen önrek senaryolar için [McpScenarios.md](McpScenarios.md) dosyasına bakılabilir.
 
 ---
 
@@ -545,7 +547,7 @@ Bu noktadan itibaren **Implementation** safhasına geçilmiştir. Söz konusu sa
 
 Paralel olarak yürütülen diğer süreçte ise dil modellerinin domain sınırları içerisinde kalarak görevler icra etmesi ve asistan hizmet desteği sağlaması için bir **RAG** *(Retrieval Augmented Generation)* hattı oluşturulmuştur. Burada **text embedding** ve **vector** veritabanları için farklı ürünler kullanılmıştır. Ayrıca denemelerin çoğu local ortamlarda çalıştırılan dil modelleri üzerinden gerçekleştirilmiştir. Bu çalışmalar sırasında özellikle görev icrası öncesi prompt alan istemci uygulamalarda **Microsoft.SemanticKernel** çatısı ve bileşenlerinden yararlanılmıştır.
 
-![Current State](stage_diagram.png)
+![Current State](./images/stage_diagram.png)
 
 Çalışma sonucu elde ettiğimiz kriterler baktığımızda avantaj ve dezavantaj noktalarını aşağıdaki gibi özetleyebiliriz.
 
