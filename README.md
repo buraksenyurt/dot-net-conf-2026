@@ -478,7 +478,7 @@ AI (sırasıyla tool çağrıları):
      → "Opsiyon oluşturuldu. Araç 'Reserved' durumuna geçti."
 ```
 
-Tool kataloğu, proje yapısı ve entegrasyon detayları için: [`MCP/Overivew.md`](MCP/Overivew.md)
+Tool kataloğu, proje yapısı ve entegrasyon detayları için: [MCP Overivew ](./MCP/Overview.md)
 
 İşlenen önrek senaryolar için [McpScenarios.md](McpScenarios.md) dosyasına bakılabilir.
 

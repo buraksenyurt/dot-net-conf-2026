@@ -41,3 +41,29 @@ Bu seferki senaryoda ise sistemde kayıtlı olmayan bir müşteri için araç op
 ```text
 Spidi Gonzalez için bir araç opsiyonlamak istiyorum.
 ```
+
+Vekil ajan daha önceden olduğu gibi soruyu şıp diye anlar ve bu konuyla ilgili MCP Server'a başvurur.
+
+![Mcp Runtime 06](./images/mcp_runtime_06.png)
+
+İlk tespiti sistemde `Spidi Gonzalez` adında bir müşteri kaydı olmadığıdır. Bunun üzerine yeni bir müşteri kaydı oluşturmak veya hatalı bir isim yazıp yazmadığımızdan *(pek de becerikli)* emin olmak için iki seçenek sunar. *(Yapay zeka işimizi elimizden alacak diyenler 1' bassın, diğerleri 2'ye bassın :D)*
+
+Neyse neyse... Yeni müşteri kaydı aslında hızlı müşteri kaydı işlemidir. Kampanya bilgisi göndermek lazım olabilir zira ;) O yüzden en azından bir e-mail ve telefon bilgisi almak istenir. Vekil ajan bu bilgileri sırasıyla sorar. Hatta geliştirdiğimiz deneysel sistemde bireysel ve kurumsal müşteri ayrımı olduğu için müşteri tipi de sorulur.
+
+![Mcp Runtime 07](./images/mcp_runtime_07.png)
+
+![Mcp Runtime 08](./images/mcp_runtime_08.png)
+
+![Mcp Runtime 09](./images/mcp_runtime_09.png)
+
+Tabi burada da yapılmak istenen işlem bir dış API Post çağrısı ile müşteri kaydı oluşturmak olduğundan bir yetki talebinde de bulunulur.
+
+![Mcp Runtime 10](./images/mcp_runtime_10.png)
+
+Müşteri kaydı da başarılı şekilde oluşturulduktan sonra sırada araç opsiyonlama süreci vardır. Bu süreç de senaryo 1'deki gibi işler. Araç seçilir, süre ve kapora bilgisi alınır ve opsiyonlama işlemi tamamlanır.
+
+![Mcp Runtime 11](./images/mcp_runtime_11.png)
+
+![Mcp Runtime 12](./images/mcp_runtime_12.png)
+
+![Mcp Runtime 13](./images/mcp_runtime_13.png)
