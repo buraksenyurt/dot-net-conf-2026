@@ -52,6 +52,7 @@ public class CustomerRepository : ICustomerRepository
             query = query.Where(c =>
                 EF.Functions.ILike(c.FirstName, $"%{searchTerm}%") ||
                 EF.Functions.ILike(c.LastName, $"%{searchTerm}%") ||
+                EF.Functions.ILike(c.FirstName + " " + c.LastName, $"%{searchTerm}%") ||
                 EF.Functions.ILike(c.Email.Value, $"%{searchTerm}%") ||
                 (c.CompanyName != null && EF.Functions.ILike(c.CompanyName, $"%{searchTerm}%")));
 
