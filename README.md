@@ -10,6 +10,8 @@ Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yar
   - [RAG](#rag)
   - [MCP](#mcp)
   - [SonarQube](#sonarqube)
+    - [Backend projesini analiz etme (.NET Scanner)](#backend-projesini-analiz-etme-net-scanner)
+    - [Frontend projesini analiz etme (SonarScanner CLI)](#frontend-projesini-analiz-etme-sonarscanner-cli)
 - [Legacy System](#legacy-system)
   - [Metriklerle Legacy Sistemimiz](#metriklerle-legacy-sistemimiz)
   - [Teknoloji Altyapısı](#teknoloji-altyapısı)
@@ -26,15 +28,15 @@ Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yar
 - [RAG (Retrieval Augmented Generation) Düzeneği](#rag-retrieval-augmented-generation-düzeneği)
 - [MCP (Model Context Protocol) Düzeneği](#mcp-model-context-protocol-düzeneği)
 - [Teknik Özet](#teknik-özet)
+- [PoC Çalışma Stratejisi](#poc-çalışma-stratejisi)
 - [Sonuçlar](#sonuçlar)
 - [Sonraki Planlar ve Hedefler](#sonraki-planlar-ve-hedefler)
-- [PoC Çalışma Stratejisi](#poc-çalışma-stratejisi)
-- [Güncelleme: 2026 - Nisan](#güncelleme-2026---nisan)
+  - [Güncelleme: Nisan 2026](#güncelleme-nisan-2026)
 - [Yardımcı Diagramlar](#yardımcı-diagramlar)
   - [Legacy Sistem Mimarisi](#legacy-sistem-mimarisi)
   - [Modernizasyon Yol Haritası](#modernizasyon-yol-haritası)
   - [PoC Modernizasyon Stack Karşılaştırması](#poc-modernizasyon-stack-karşılaştırması)
-  - [Spec-Oriented Development İş Akışı](#spec-oriented-development-iş-akışı)
+  - [Spec-Oriented Development Akış Diyagramı](#spec-oriented-development-akış-diyagramı)
 - [Demo Simülasyonu](#demo-simülasyonu)
   - [Repo Yapısı](#repo-yapısı)
   - [Dokümanlar](#dokümanlar)
@@ -249,7 +251,7 @@ Projelerdeki teknik borçlanmaya ölçümlemek için kullanılan SonarQube, `doc
 3. Proje adı olarak `VehicleInventory` girin.
 4. **Locally** seçeneğini seçin ve bir token oluşturun (örn. `sqa_...`).
 
-**Backend projesini analiz etme (.NET Scanner):**
+#### Backend projesini analiz etme (.NET Scanner)
 
 ```bash
 cd src/backend
@@ -275,15 +277,59 @@ dotnet sonarscanner end /d:sonar.token="<SONARQUBE_TOKEN>"
 dotnet tool install --global dotnet-sonarscanner
 ```
 
+#### Frontend projesini analiz etme (SonarScanner CLI)
+
+Frontend (Vue 3 + TypeScript) projesini analiz etmek için SonarScanner CLI kullanılır. `src/frontend/` klasöründe `sonar-project.properties` dosyası mevcuttur; proje adı, kaynak dizin, SonarQube adresi ve token gibi tüm ayarlar bu dosyada tanımlıdır.
+
+```text
+# src/frontend/sonar-project.properties
+sonar.projectKey=Vehicle-Inventory-Frontend
+sonar.projectName=Vehicle Inventory Frontend
+sonar.host.url=http://localhost:9001
+sonar.token=<SONARQUBE_TOKEN>
+sonar.sources=src
+sonar.exclusions=**/node_modules/**,**/dist/**,**/*.spec.ts,**/*.test.ts
+sonar.javascript.lcov.reportPaths=coverage/lcov.info
+sonar.typescript.tsconfigPath=tsconfig.app.json
+```
+
+> `sonar.token` değerini SonarQube arayüzünden oluşturduğunuz token ile güncelleyin. Frontend için SonarQube'da `Vehicle-Inventory-Frontend` adıyla ayrı bir proje oluşturmanız gerekir.
+
+**`sonar-scanner` global aracı kurulu değilse:**
+
+```bash
+npm install -g sonarqube-scanner
+```
+
+**Analizi çalıştırın** (`src/frontend/` dizininden):
+
+```bash
+cd src/frontend
+sonar-scanner
+```
+
+`sonar-project.properties` dosyası sayesinde ek parametre vermek gerekmez; scanner tüm ayarları bu dosyadan okur.
+
+**Test coverage raporu dahil etmek için** (opsiyonel):
+
+Önce Vitest ile coverage raporu üretin, ardından analizi çalıştırın:
+
+```bash
+yarn test --coverage
+sonar-scanner
+```
+
+Bu sayede SonarQube kod kalitesinin yanı sıra test coverage değerlerini de raporlar.
+
 ---
 
 ## Legacy System
 
 Milenyum başında geliştirilmeye başlanmış olan bayi yönetimi sistemi *(Dealer Management System - DMS)*, tamamen **Microsoft .NET** teknolojileri üzerine kurgulanmıştır. Bu nedenle .NET Framework'ün zaman içerisindeki değişimine bağlı olarak yer yer modernize edilmiş ve güncellenmiştir. Şu anda **.NET Framework 4.8** sürümünü kullanmaktadır. Sistem, bayi operasyonlarını yönetmek için kritik öneme sahip birçok modül içermektedir. Tabii Microsoft'un .NET Framework için olan desteği 2029 yılında sona erecektir. Bu nedenle, sistemin gelecekteki sürdürülebilirliği için modernizasyon kaçınılmazdır.
 
-Genel olarak katmanlı mimari *(Layered Architecture)* modeline göre düzenlenmiş bir sistemdir. **Presentation**, **Business Logic Layer** ve **Data Access Layer** olmak üzere üç ana katmandan oluşan bir mimari üzerine kurgulanmıştır. Daha önceden var olan **Façade** katmanı ilk modernizasyon çalışması kapsamında kaldırılmıştır. Sistem **Microsoft SQL Server** veritabanını kullanmaktadır. İş kuralları ve süreçler modül bazında yer yer karmaşık ve içiçe geçmiştir. Bunun en büyük sebeplerinden birisi **stored procedure** performans avantajlarıdır. Kaldı ki raporlama ve planlı işlerin büyük çoğunluğu veri üzerinde işlediğinden SP'ler önenmli bir yere sahiptir. Dolayısıyla kod ve veritabanına yayılmış iş kuralları ve süreçleri mevcuttur.
+Genel olarak katmanlı mimari *(Layered Architecture)* modeline göre düzenlenmiş bir sistemdir. **Presentation**, **Business Logic Layer** ve **Data Access Layer** olmak üzere üç ana katmandan oluşan bir mimari üzerine kurgulanmıştır. Daha önceden var olan **Façade** katmanı ilk modernizasyon çalışması kapsamında kaldırılmıştır. Sistem **Microsoft SQL Server** veritabanını kullanmaktadır. İş kuralları ve süreçler modül bazında yer yer karmaşık ve içiçe geçmiştir. Bunun en büyük sebeplerinden birisi **stored procedure** performans avantajlarıdır. Kaldı ki raporlama ve planlı işlerin büyük çoğunluğu veri üzerinde işlediğinden SP'ler önemli bir yere sahiptir. Dolayısıyla kod ve veritabanına yayılmış iş kuralları ve süreçleri mevcuttur.
 
-Onlarca yıllık bir uygulama söz konusu olduğundan toplam satır sayısı neredeyse altı milyonu geçen bir kod tabanı söz konusudur. Binlerce ekran, yüzlerde stored procedure, tera baytlarca veri, onlarca servis beş ana modül etrafında birleşir. Bu modüller finansal hizmetler, araç yönetimi, satış sonrası hizmetler, yedek parça ve müşteri olarak sıralanabilir. Sistem, yüzlerce bayi tarafından kullanılmakta olup milyonlarca müşteriye hizmet vermektedir.
+Onlarca yıllık bir uygulama söz konusu olduğundan toplam satır sayısı neredeyse altı milyonu geçen bir kod tabanı söz konusudur. Binlerce ekran, yüzlerce stored procedure, tera baytlarca veri, onlarca servis beş ana modül etrafında birleşir. Bu modüller finansal hizmetler, araç yönetimi, satış sonrası hizmetler, yedek parça ve müşteri olarak sıralanabilir. Sistem, yüzlerce bayi tarafından kullanılmakta olup milyonlarca müşteriye hizmet vermektedir.
 
 Sistemle entegre çalışan birçok uygulama vardır. Örneğin ayrı bir raporlama sistemi bulunmaktadır. Bu sistem **Data Warehouse** mimarisi üzerine kurulmuş olup, **ETL** süreçleriyle ana sistemden veri çekmektedir. Raporların hazırlanması için planlanmış işler *(Scheduled Jobs)* kullanılır. Onlarca Job vardır ve bunlardan bazılarının çalışma süresi saatler mertebesindedir. Job'ların çoğu doğrudan **Stored Procedure** işletmekle kimisi de Microsoft'un **SSIS** *(SQL Server Integration Services)* hizmetleri şeklinde çalıştırılmaktadır. Bazı raporlar anlık üretilebilen türdedir ve bunlar için **Liquid rapor** motoru kullanılmaktadır. Daha önceki dönemlerde Microsoft'un SSRS *(Microsoft SQL Server Reporting Services)* raporları da kullanılmıştır.
 
@@ -373,11 +419,11 @@ Ağırlıklı olarak **Anthropic**'in **Claude Sonnet** modeli tercih edilmişti
 
 PoC kapsamında **front-end** tarafında **Nuxt** ve **Vite**, **back-end** tarafında ise **.NET Core** kullanılmasına karar verilmiştir. Özellikle ön yüz tarafında kurum için geliştirilen özel komponentler tercih edilmiştir. Veri tabanı tarafında **PostgreSQL**'de karar kılınmış ve kod tarafında **Entity Framework** ile **Dapper** entegrasyonları tercih edilmiştir. **Authentication/Authorization** için halihazırda diğer yeni nesil kurum içi uygulamaların da kullandığı servisler tercih edilmiş ve **Keycloak** ile devam edilmiştir. Kod tabanı **GitHub**'a alınmış ve **CI/CD** hattında **GitOps** kullanılarak otomatikleştirilmiştir. Kod kalitesi ve güvenlik taramaları için **Sonarqube** entegre edilmiştir. **Backend** taraf ile **front-end** arası haberleşme yine **REST API** üzerinden sağlanmış ancak özel entegrasyon noktaları için gerekli soyutlamalar da yapılmıştır. Bu sayede örneğin **gRPC** tabanlı noktalarla entegre olunabilmiştir. **Backend** tarafta kurum içi geliştirilmiş ve **cross-cutting concern**'leri de ele alan bir framework kullanılmıştır. Burada bağımlılıkların yönetimi için **.NET**'in dahili **dependency injection** altyapısı kullanılmıştır. Yeni yazılan **PoC** uygulamasında **legacy** sistemden hiçbir parçanın yer almamasına ve her şeyin sıfırdan tasarlanmasına özellikle dikkat edilmiştir.
 
-> Çalışma kapsamında kurulan takım bir ürün yöneticis, bir kıdemli analist, üç deneyimli yazılım geliştirici ve bir uzun dönem stajyer'den oluşturulmuştur.
+> Çalışma kapsamında kurulan takım bir ürün yöneticisi, bir kıdemli analist, üç deneyimli yazılım geliştirici ve bir uzun dönem stajyer'den oluşturulmuştur.
 
 ### Strateji
 
-Yapay zeka tabanlı geliştirmelerde context içeriği ve zenginleştirilmesi çok önemli. Modellerin belirlenen sınılar çerçevesinde belirlediğimiz şekilde ilerlemesi en büyük mücadele. Bu nedenle PoC çalışmasının ilk aşamasında klasik bir yazılım geliştirme metodolojisi benimsenerek hareket edildi. Tamamen yeni bir mimari, yeni kararlar üzerinden ilerlendi ve geliştirilmiş şirket için framework'ler kullanıldı. Burada amaç yapay zeka modelleri için gerekli standartların dokümante edilmesi için gerekli temel ve yalın kurgunun tasarlanmasıydı. Çalışır duruma getirilen sistem, tersine mühendislik yöntemleri ve yapay zeka dil modellerinden de yararlanılarak, yine yapay zeka dil modellerinin kullanacağı spec'lerin oluşturulmasında kullanıldı. Sonraki aşamada ağırlıklı olarak yapay zeka modelleri üzerinden geliştirilme yapıldı ve yol boyunca keşfedilenler düzenli olarak dokümante edildi.
+Yapay zeka tabanlı geliştirmelerde context içeriği ve zenginleştirilmesi çok önemli. Modellerin belirlenen sınırlar çerçevesinde belirlediğimiz şekilde ilerlemesi en büyük mücadele. Bu nedenle PoC çalışmasının ilk aşamasında klasik bir yazılım geliştirme metodolojisi benimsenerek hareket edildi. Tamamen yeni bir mimari, yeni kararlar üzerinden ilerlendi ve geliştirilmiş şirket için framework'ler kullanıldı. Burada amaç yapay zeka modelleri için gerekli standartların dokümante edilmesi için gerekli temel ve yalın kurgunun tasarlanmasıydı. Çalışır duruma getirilen sistem, tersine mühendislik yöntemleri ve yapay zeka dil modellerinden de yararlanılarak, yine yapay zeka dil modellerinin kullanacağı spec'lerin oluşturulmasında kullanıldı. Sonraki aşamada ağırlıklı olarak yapay zeka modelleri üzerinden geliştirilme yapıldı ve yol boyunca keşfedilenler düzenli olarak dokümante edildi.
 
 ### Geliştirme Süreci
 
@@ -398,7 +444,7 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 - Yapay zeka asistanları ile etkileşim için **Copilot** üzerinde uzman **Agent**'lar tanımlandı: Senior Software Developer, UI/UX Expert, Senior Business Analyst, DevOps Engineer, QA Engineer gibi.
 - **Domain** odaklı geliştirilmiş **Framework** ve **Source Code Generator** kütüphaneleri kurum içi **NuGet** repolarına, benzer şekilde **Vue** bileşenleri de **npm** repolarına alındı.
 - Üretilen çözüm alt yapısı belirli bir olgunluğa ulaştıktan sonra, kod kalitesi ölçümü için **Sonarqube** ile entegrasyon sağlandı. Ayrıca **SonarSource Sonarqube MCP Server** ile entegre olundu ve **VS Code** arabiriminden çıkmadan yerleşik agent'lar yardımıyla, bulgu analizi, yorumlama, düzeltme *(issue çözdürme, cognitive complexity düşürme, code-coverage değerlerini yükseltme)* gibi işlemler yapıldı.
-- Geliştirme boyunca mimari dokümanlar, kodlama kılavuzları, önyüz standartları gibi kritip spec'ler sürekli iyileştirildi ve güncel tutuldu.
+- Geliştirme boyunca mimari dokümanlar, kodlama kılavuzları, önyüz standartları gibi kritik spec'ler sürekli iyileştirildi ve güncel tutuldu.
 - PoC tamamlandıktan sonra oluşan ana şablon diğer modüllerin kullanılması için yaygınlaştırıldı. Bu safhada yapay zeka modellerinin kullanacağı tüm dokümantasyon desteği modül bazında özelleştirildi.
 
 ### Deneyimler
@@ -410,7 +456,7 @@ Geliştirme sırasında ağırlıklı olarak **Visual Studio Code** kullanılmı
 - Kod üretimi ve analiz çıkartılması **Copilot** ajanlarına alındıktan sonra daha tutarlı sonuçlar elde edildiği gözlemlendi. Taleplerin yeni **feature branch**'lerde oluşturulması, **review** için insan denetimine gönderilmesi, review sırasında verilen yorumlara karşılık ek düzeltmeler yapılması ve **Pull Request** süreci işletilerek ilerlenmesi daha güvenli hissetmemizi sağladı.
 - Özellikle **domain** içerisinde yer alacak **entity**, **value object**, **aggregate root** gibi yapıların doğru şekilde modellenerek dokümante edilmesi, belli standartlar çerçevesinde kod üretilmesi açısından faydalı oldu. Yapay zeka asistanları bu ilişkilerden yararlanarak genel senaryoları oluşturmakta *(örneğin, araç siparişi oluşturma, müşteri şikayeti alma, vb)* daha başarılı oldular.
 - Küresel bir standartta olmayan bazı alanlarda detaylı **spec** dokümanları olmadığında tutarlı sonuçlar elde etmekte zorlandık. Örneğin özel bileşenlerden oluşan **UI** kütüphanelerinde, yapay zeka asistanlarının doğru kod parçalarını üretmesi için detaylı örnekler ve kullanım şekilleri sunmak gerekiyor. Bu amaçla bileşen setleri için nasıl kullanıldığına dair dokümanlar hazırlandı ve örnek kod parçaları sunuldu. Bu aslında bir **RAG** *(Retrieval Augmented Generation)* yaklaşımı için de bize yol gösterici oldu. *(RAG yaklaşımı ile domain'e özgü bilgi ve dokümanların yapay zeka asistanlarına sunulması, daha doğru ve tutarlı sonuçlar elde edilmesini sağlar ancak burada Vector bazlı mı yoksa Graph bazlı mı gitmek gerekir iyice tartmak lazım)*
-- **Sonarqube** ile yapılan ilk taramalar, agent bazlı geliştirmelerde kod tabanı hatasız derlense dahi bir takım teknik borçların ortaya çıktığını gösterdi. Zira modeller istenen kod değişiklikleri sonrası çözümün başarılı şekilde build olması için hamleler yapıyor. Buna göre kod %99 olaslılıkla çalışıyor ancak bu teknik borç içermediği anlamına gelmiyor. Dolayısıyla insan denetimi ve müdahalesi olmadan tamamen hatasız bir sürecin işletilmesinin POC çalışmasının yapıldığı zaman itibariyle pek mümkün olmadığı gözlemlendi. Ancak, **Sonarqube MCP Server** ile entegrasyon sayesinde, yapay zeka asistanlarının bu bulguları analiz ederek düzeltme önerileri sunması ve hatta bazı düzeltmeleri otomatik olarak yapması sağlandı. Bu da sürecin hızlanmasına ve kod kalitesinin artırılmasına katkıda bulundu *(Yine de asıl kontroler için Code Review, Pull Request süreçlerini işletmek, ADR dokümanları ile donatılmış anajlar kullanmak, Guardrails ve Red Team konseptlerini dikkate almak önemli)*
+- **Sonarqube** ile yapılan ilk taramalar, agent bazlı geliştirmelerde kod tabanı hatasız derlense dahi bir takım teknik borçların ortaya çıktığını gösterdi. Zira modeller istenen kod değişiklikleri sonrası çözümün başarılı şekilde build olması için hamleler yapıyor. Buna göre kod %99 olaslılıkla çalışıyor ancak bu teknik borç içermediği anlamına gelmiyor. Dolayısıyla insan denetimi ve müdahalesi olmadan tamamen hatasız bir sürecin işletilmesinin POC çalışmasının yapıldığı zaman itibariyle pek mümkün olmadığı gözlemlendi. Ancak, **Sonarqube MCP Server** ile entegrasyon sayesinde, yapay zeka asistanlarının bu bulguları analiz ederek düzeltme önerileri sunması ve hatta bazı düzeltmeleri otomatik olarak yapması sağlandı. Bu da sürecin hızlanmasına ve kod kalitesinin artırılmasına katkıda bulundu *(Yine de asıl kontroller için Code Review, Pull Request süreçlerini işletmek, ADR dokümanları ile donatılmış anajlar kullanmak, Guardrails ve Red Team konseptlerini dikkate almak önemli)*
 
 ---
 
@@ -477,7 +523,7 @@ AI (sırasıyla tool çağrıları):
      → "Opsiyon oluşturuldu. Araç 'Reserved' durumuna geçti."
 ```
 
-Tool kataloğu, proje yapısı ve entegrasyon detayları için: [MCP Overivew ](./MCP/Overview.md)
+Tool kataloğu, proje yapısı ve entegrasyon detayları için: [MCP Genel Bakış](./MCP/Overivew.md)
 
 İşlenen önrek senaryolar için [McpScenarios.md](McpScenarios.md) dosyasına bakılabilir.
 
@@ -507,28 +553,6 @@ Tool kataloğu, proje yapısı ve entegrasyon detayları için: [MCP Overivew ](
 
 ---
 
-## Sonuçlar
-
-Bu çalışma kapsamında elde edilen başlıca sonuçlar aşağıdaki gibi özetlenebilir:
-
-- Yapay zeka tabanlı modernizasyon sürecinde, geleneksel yöntemlere kıyasla geliştirme süresinin neredeyse %40 oranında azaldığı gözlemlendi.
-- Üretilen kodların kalitesi, manuel olarak yazılan kodlarla karşılaştırıldığında benzer seviyelerde bulundu ancak karmaşık senaryolarda daha uzun review süreleri gerekti.
-- Teknik borçların azaltılması ve kodun daha modüler hale getirilmesi sağlandı.
-- Yapay zeka asistanlarının doğru şekilde yönlendirilmesi ve etkileşimde bulunulması, sürecin başarısında kritik rol oynadı.Ancak, bazı durumlarda yapay zeka asistanlarının ürettiği kodların gözden geçirilmesi ve manuel müdahale gerektirdiği görüldü.
-- Şu an ve yakın vadede mutlak suretle insan denetimli bir sürecin işletilmesi gerektiği gözlemlendi.
-- Mutlak suretle çıktıların maliyeti ölçümlenmeli ve insan denetimi için gereken kaynaklar optimize edilmelidir.
-- Hassas bilgilerin korunması, vekil ajanların güvenliğinin sağlanması ve olası veri sızıntılarının önlenmesi için ek güvenlik önlemleri alınmalıdır. *(GuardRail, Red Team gibi yaklaşımlar değerlendirilmektedir)*
-
-## Sonraki Planlar ve Hedefler
-
-- **PoC** çalışmasının başarıyla tamamlanmasının ardından, yapay zeka tabanlı modernizasyon sürecinin diğer modüllere de genişletilmesi planlanmakta *(Güncelleme: Tüm modüller geliştirmelerine başlamış durumda)*
-- Yapay zeka asistanlarının eğitiminde kullanılacak veri setlerinden hareketle daha küçük ve **domain**'e özgü dil modelleri *(Custom LLM)* oluşturulması değerlendirilmekte.
-- **RAG** *(Retrieval Augmented Generation)* yaklaşımının daha etkin kullanılması için doküman yönetim sistemlerinin entegrasyonu planlanabilir. *(Güncelleme: RAG yaklaşımı için gerekli altyapı ve süreçlerin oluşturulması için çalışmalara başlandı ve Graph RAG tabanlı bir senaryo da geliştirilmekte)*
-- Süreçte kullanılan **prompt**'ların sürekli iyileştirilmesi ve optimize edilmesi için bir geri bildirim mekanizması oluşturulması planlanmaktadır.
-- **MCP** tabanlı etkileşimlerin daha da geliştirilmesi ve yaygınlaştırılması üzerinde çalışılmaktadır.
-
----
-
 ## PoC Çalışma Stratejisi
 
 Bu kapsamlı çalışmada güncel olarak uygulanan metodoloji aşağıdaki grafikte özetlenmiştir.
@@ -552,12 +576,32 @@ Paralel olarak yürütülen diğer süreçte ise dil modellerinin domain sınır
 
 | **Pros** | **Cons** |
 | --- | --- |
-| Artan development hızı(%70) | Sarp anlama eğrisi |
+| Artan development hızı (%70) | Sarp anlama eğrisi |
 | "Up to date" dokümantasyon | Token/dolayı enerji maliyeti |
-| Proaktif düzenleme fırsatları | İdeal senaryoda belirsiz kurgu(setup) maliyeti |
+| Proaktif düzenleme fırsatları | İdeal senaryoda belirsiz kurgu (setup) maliyeti |
 | Yenilenen domain kültürü | Olası teknik borçlanma |
 
-## Güncelleme: 2026 - Nisan
+## Sonuçlar
+
+Bu çalışma kapsamında elde edilen başlıca sonuçlar aşağıdaki gibi özetlenebilir:
+
+- Yapay zeka tabanlı modernizasyon sürecinde, geleneksel yöntemlere kıyasla geliştirme süresinin neredeyse %40 oranında azaldığı gözlemlendi.
+- Üretilen kodların kalitesi, manuel olarak yazılan kodlarla karşılaştırıldığında benzer seviyelerde bulundu ancak karmaşık senaryolarda daha uzun review süreleri gerekti.
+- Teknik borçların azaltılması ve kodun daha modüler hale getirilmesi sağlandı.
+- Yapay zeka asistanlarının doğru şekilde yönlendirilmesi ve etkileşimde bulunulması, sürecin başarısında kritik rol oynadı. Ancak, bazı durumlarda yapay zeka asistanlarının ürettiği kodların gözden geçirilmesi ve manuel müdahale gerektirdiği görüldü.
+- Şu an ve yakın vadede mutlak suretle insan denetimli bir sürecin işletilmesi gerektiği gözlemlendi.
+- Mutlak suretle çıktıların maliyeti ölçümlenmeli ve insan denetimi için gereken kaynaklar optimize edilmelidir.
+- Hassas bilgilerin korunması, vekil ajanların güvenliğinin sağlanması ve olası veri sızıntılarının önlenmesi için ek güvenlik önlemleri alınmalıdır. *(GuardRail, Red Team gibi yaklaşımlar değerlendirilmektedir)*
+
+## Sonraki Planlar ve Hedefler
+
+- **PoC** çalışmasının başarıyla tamamlanmasının ardından, yapay zeka tabanlı modernizasyon sürecinin diğer modüllere de genişletilmesi planlanmakta *(Güncelleme: Tüm modüller geliştirmelerine başlamış durumda)*
+- Yapay zeka asistanlarının eğitiminde kullanılacak veri setlerinden hareketle daha küçük ve **domain**'e özgü dil modelleri *(Custom LLM)* oluşturulması değerlendirilmekte.
+- **RAG** *(Retrieval Augmented Generation)* yaklaşımının daha etkin kullanılması için doküman yönetim sistemlerinin entegrasyonu planlanabilir. *(Güncelleme: RAG yaklaşımı için gerekli altyapı ve süreçlerin oluşturulması için çalışmalara başlandı ve Graph RAG tabanlı bir senaryo da geliştirilmekte)*
+- Süreçte kullanılan **prompt**'ların sürekli iyileştirilmesi ve optimize edilmesi için bir geri bildirim mekanizması oluşturulması planlanmaktadır.
+- **MCP** tabanlı etkileşimlerin daha da geliştirilmesi ve yaygınlaştırılması üzerinde çalışılmaktadır.
+
+### Güncelleme: Nisan 2026
 
 - Modüller kendi repolarında geliştirmelere başlamış durumdadır.
 - Uçtan uca feature geliştirebilen ajan eklenmiştir.
@@ -718,7 +762,7 @@ graph LR
     style AI4 fill:#e1bee7
 ```
 
-### Spec-Oriented Development Iş Akışı
+### Spec-Oriented Development Akış Diyagramı
 
 ```mermaid
 flowchart TD

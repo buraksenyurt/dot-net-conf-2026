@@ -38,6 +38,8 @@ services:
       - "15673:15672" 
     networks:
       - aio-network
+    volumes:
+    - sonarqube_data:/opt/sonarqube/data
 
   sonarqube:
     image: sonarqube:latest
@@ -65,6 +67,7 @@ services:
 volumes:
   postgres_data:
   qdrant_storage:
+  sonarqube_data:
 
 networks:
   aio-network:
