@@ -2,7 +2,14 @@
 
 ## Genel Bakış
 
-Bu senaryo, Bayi Yönetim Sistemi (DMS) domain'i üzerine inşa edilmiş bir **Model Context Protocol (MCP) Server** uygulamasıdır. Microsoft'un resmi `ModelContextProtocol` NuGet paketi kullanılır ve workspace içindeki `MCP/DmsMcpServer/` klasöründe çalışır.
+Bu senaryo, Bayi Yönetim Sistemi (DMS) domain'i üzerine inşa edilmiş bir **Model Context Protocol (MCP) Server** uygulamasıdır. Microsoft'un resmi `ModelContextProtocol` NuGet paketi kullanılır ve workspace içindeki `MCP/DmsMcpServer/` klasöründe çalışır. Temel amaç dil modeli bazlı vekil ajanlarda aşağıdakine benzer sorular için karşılık gelen araç setinin işletilmesini sağlamaktır. Bu araç seti MCP Server tarafından kullanılan backend api noktalarını kullanır.
+
+| **Soru** | **Beklenen Araç Çağrıları** |
+| --- | --- |
+| Şu an opsiyonlanabilen araçlar varsa listeler misin? | `list_vehicles` |
+| Tezlaa aracı 5 günlüğüne opsiyonlamak isteyen bir müşterimiz var. Kapora olarak 10_000 Dolar yatırdı. | `list_vehicles` -> `create_option` |
+| Spidi Gonzalez için bir araç opsiyonlamak istiyorum. | `list_customers` -> `list_vehicles` -> `create_option` |
+| Envanterden bir Satışta aracı al, Burak Selim adlı müşteri için 7 günlük opsiyon oluştur. | `list_vehicles` -> `list_customers` -> `create_option` |
 
 ---
 
@@ -12,7 +19,7 @@ Bu senaryo, Bayi Yönetim Sistemi (DMS) domain'i üzerine inşa edilmiş bir **M
 MCP/
 └── DmsMcpServer/
     ├── DmsMcpServer.csproj
-    ├── Program.cs              ← stdio transport, DI kayıtları
+    ├── Program.cs              ← Streamable HTTP transport, DI kayıtları
     ├── Tools/
     │   ├── VehicleTools.cs     ← list_vehicles, add_vehicle, change_vehicle_status, validate_vin
     │   ├── CustomerTools.cs    ← list_customers, register_customer
@@ -38,9 +45,7 @@ MCP/
 
 ## Transport
 
-**`stdio`** — Claude Desktop, VS Code Copilot veya başka bir MCP client ile doğrudan entegre olabilir. Ayrı bir port veya web sunucusu gerektirmez.
-
-> Üretim ortamında `stdio` yerine `Streamable HTTP` kullanılması önerilir, ancak bu senaryo için `stdio` yeterlidir.
+**`Streamable HTTP`** — Claude Desktop, VS Code Copilot veya başka bir MCP client ile doğrudan entegre olabilir. Ayrı bir port veya web sunucusu gerektirmez.
 
 ---
 
@@ -109,7 +114,7 @@ AI (sırasıyla tool çağrıları):
 
 1. `MCP/DmsMcpServer/` klasöründe `dotnet new console` ile proje oluştur
 2. NuGet paketlerini ekle
-3. `Program.cs` içinde `stdio` transport ile MCP host'u kur
+3. `Program.cs` içinde `Streamable HTTP` transport ile MCP host'u kur
 4. `HttpClients/DmsApiClient.cs` — Typed `HttpClient` ile backend API bağlantısını kur
 5. Her `Tools/*.cs` dosyasını `[McpServerToolType]` / `[McpServerTool]` attribute'ları ile implement et
 6. `VehicleInventory.slnx`'e projeyi ekle
@@ -120,3 +125,4 @@ AI (sırasıyla tool çağrıları):
 
 - Backend API çalışıyor olmalı: `dotnet run` → `http://localhost:5280`
 - Docker servisler ayakta olmalı: `docker-compose up -d` (postgres, pgadmin)
+- MCP Server çalışıyor olmalı: `dotnet run` → `http://localhost:5290`
