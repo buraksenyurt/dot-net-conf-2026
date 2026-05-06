@@ -1,16 +1,8 @@
 {
     "servers": {
         "dms-mcp-server": {
-            "type": "stdio",
-            "command": "dotnet",
-            "args": [
-                "run",
-                "--project",
-                "${workspaceFolder}/MCP/DmsMcpServer"
-            ],
-            "env": {
-                "DmsApi__BaseUrl": "http://localhost:5280"
-            }
+            "type": "http",
+            "url": "http://localhost:5290/mcp"
         }
     }
 }

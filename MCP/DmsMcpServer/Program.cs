@@ -1,11 +1,6 @@
 ﻿using DmsMcpServer.HttpClients;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.Logging.ClearProviders();
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<DmsApiClient>(client =>
 {
@@ -14,9 +9,25 @@ builder.Services.AddHttpClient<DmsApiClient>(client =>
     client.Timeout = TimeSpan.FromSeconds(30);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .WithExposedHeaders("Mcp-Session-Id"));
+});
+
 builder.Services
     .AddMcpServer()
-    .WithStdioServerTransport()
+    .WithHttpTransport()
     .WithToolsFromAssembly(typeof(Program).Assembly);
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+app.UseCors();
+
+// MCP SSE endpoint'lerini yayınla: GET /sse ve POST /message
+app.MapMcp("/mcp");
+
+app.Run();

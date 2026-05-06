@@ -4,8 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace DmsMcpServer.HttpClients;
 
-// ─── Response Models ───────────────────────────────────────────────────────────
-
 public record VehicleResult(
     Guid Id,
     string VIN,
@@ -66,8 +64,6 @@ public record PagedResult<T>(
     int TotalPages
 );
 
-// ─── Request Models ────────────────────────────────────────────────────────────
-
 public record AddVehicleRequest(
     string Vin,
     string Brand,
@@ -106,15 +102,8 @@ public record CreateOptionRequest(
     string? Notes = null
 );
 
-// ─── API Result Wrapper ────────────────────────────────────────────────────────
-
 public record ApiResponse<T>(bool Success, T? Data, string? Error);
 
-// ─── DmsApiClient ──────────────────────────────────────────────────────────────
-
-/// <summary>
-/// DMS backend API'ye ait tüm HTTP çağrılarını yöneten Typed HttpClient.
-/// </summary>
 public class DmsApiClient
 {
     private readonly HttpClient _http;
@@ -129,8 +118,6 @@ public class DmsApiClient
     {
         _http = http;
     }
-
-    // ── Vehicles ───────────────────────────────────────────────────────────────
 
     public async Task<ApiResponse<PagedResult<VehicleResult>>> GetVehiclesAsync(
         string? status = null,
@@ -154,9 +141,7 @@ public class DmsApiClient
         return await PostForIdAsync("api/v1/vehicles", request);
     }
 
-    // ── Customers ──────────────────────────────────────────────────────────────
-
-    public async Task<ApiResponse<PagedResult<CustomerResult>>> GetCustomersAsync(
+        public async Task<ApiResponse<PagedResult<CustomerResult>>> GetCustomersAsync(
         string? search = null,
         string? customerType = null,
         int page = 1,
@@ -176,8 +161,6 @@ public class DmsApiClient
     {
         return await PostForIdAsync("api/v1/customers", request);
     }
-
-    // ── Vehicle Options ────────────────────────────────────────────────────────
 
     public async Task<ApiResponse<Guid>> CreateOptionAsync(CreateOptionRequest request)
     {
@@ -206,8 +189,6 @@ public class DmsApiClient
     {
         return await GetAsync<List<VehicleOptionResult>>($"api/service-advisors/{advisorId}/dashboard");
     }
-
-    // ── Private Helpers ────────────────────────────────────────────────────────
 
     private async Task<ApiResponse<T>> GetAsync<T>(string url)
     {
