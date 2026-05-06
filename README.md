@@ -41,8 +41,8 @@ Legacy bir sistemi modernize etmek için yapay zeka teknolojilerinden nasıl yar
   - [GitHub Copilot Ajanları](#github-copilot-ajanları)
   - [Skill'ler](#skilller)
   - [Ajan-Skill İlişki Matrisi](#ajan-skill-i̇lişki-matrisi)
-  - [Kullanım](#kullanım)
-  - [Not](#not)
+  - [Geliştirme Yaparken](#geliştirme-yaparken)
+  - [Notlar](#notlar)
 
 ## Hızlı Başlangıç
 
@@ -206,7 +206,7 @@ ChatApp şu adresten ayağa kalkar: `http://localhost:5200`
 
 ### MCP
 
-**DmsMcpServer**, VS Code GitHub Copilot Agent entegrasyonu için `stdio` transport üzerinden çalışan bir MCP sunucusudur. Backend API'ye bağlanır.
+**DmsMcpServer**, VS Code GitHub Copilot Agent entegrasyonu için `Streamable HTTP` standardı üzerinden çalışan bir MCP sunucusudur. Backend API'ye bağlanır.
 
 **Ön koşul:** Backend API'nin çalışıyor olması gerekir (`http://localhost:5280`).
 
@@ -214,13 +214,12 @@ ChatApp şu adresten ayağa kalkar: `http://localhost:5200`
 
 ```json
 {
-  "servers": {
-    "dms-mcp-server": {
-      "type": "stdio",
-      "command": "dotnet",
-      "args": ["run", "--project", "MCP/DmsMcpServer/DmsMcpServer.csproj"]
+    "servers": {
+        "dms-mcp-server": {
+            "type": "http",
+            "url": "http://localhost:5290/mcp"
+        }
     }
-  }
 }
 ```
 
@@ -461,7 +460,7 @@ Chatbot uygulamasına ait örnek bir çalışma zamanını aşağıda görebilir
 
 ## MCP *(Model Context Protocol)* Düzeneği
 
-**MCP**, yapay zeka modellerine harici araçlar *(tools)* aracılığıyla gerçek sistem işlemleri yaptırma imkânı sunan açık bir protokoldür. Bu demo projesinde `MCP/DmsMcpServer/` klasöründe, Microsoft'un resmi `ModelContextProtocol` NuGet paketi ile geliştirilmiş bir **.NET konsol uygulaması** yer alır. `stdio` transport üzerinden çalışır ve `VehicleInventory.API`'ye bağlı **11 tool** sunar: araç/müşteri sorgulama ve işlem tool'larının yanı sıra RAG altyapısı gerektirmeden `docs/` klasöründen user story ve ADR okuyabilen **Developer Productivity tool'ları** da içerir.
+**MCP**, yapay zeka modellerine harici araçlar *(tools)* aracılığıyla gerçek sistem işlemleri yaptırma imkânı sunan açık bir protokoldür. Bu demo projesinde `MCP/DmsMcpServer/` klasöründe, Microsoft'un resmi `ModelContextProtocol` NuGet paketi ile geliştirilmiş bir **.NET konsol uygulaması** yer alır. `Streamable HTTP` transport üzerinden çalışır ve `VehicleInventory.API`'ye bağlı **11 tool** sunar: araç/müşteri sorgulama ve işlem tool'larının yanı sıra RAG altyapısı gerektirmeden `docs/` klasöründen user story ve ADR okuyabilen **Developer Productivity tool'ları** da içerir.
 
 **Örnek Akış;**
 
@@ -503,7 +502,7 @@ Tool kataloğu, proje yapısı ve entegrasyon detayları için: [MCP Overivew ](
 | **Kod Kalitesi ve Güvenlik** | SonarQube *(SonarQube MCP Server ile birlikte)* |
 | **Loglama** | Serilog |
 | **RAG Altyapısı** | Microsoft Semantic Kernel, Qdrant, LM Studio *(nomic-embed-text-v1.5, meta-llama-3-8b-instruct)* |
-| **MCP** | ModelContextProtocol *(Microsoft)*, `stdio` transport, DmsMcpServer |
+| **MCP** | ModelContextProtocol *(Microsoft)*, `Streamable HTTP` transport, DmsMcpServer |
 | **Altyapı** | Docker Compose *(PostgreSQL, pgAdmin, RabbitMQ, SonarQube, Qdrant)* |
 
 ---
@@ -853,7 +852,7 @@ Bir Agent'a görev verildiğinde önce niyet belirlenir ve aşağıdaki matrise 
 | `devops-engineer` | `configure-cicd-pipeline` | `run-and-analyze-tests` |
 | `qa-engineer` | `run-and-analyze-tests` | `write-user-story` |
 
-### Kullanım
+### Geliştirme Yaparken
 
 Agent ve Skill tanımları **GitHub Copilot Chat** üzerinden kullanılır:
 
@@ -869,7 +868,7 @@ US-001 senaryosu için AddVehicleCommand endpoint'ini geliştir.
 
 Ayrıntılı prompt örnekleri için: [`docs/prompts/README.md`](docs/prompts/README.md)
 
-### Not
+### Notlar
 
 Bu simülasyon **eğitim ve sunum amaçlıdır**. Gerçek kurumsal uygulamanın kod ve verileri gizlilik nedeniyle paylaşılamamıştır.
 
