@@ -126,3 +126,7 @@ AI (sırasıyla tool çağrıları):
 - Backend API çalışıyor olmalı: `dotnet run` → `http://localhost:5280`
 - Docker servisler ayakta olmalı: `docker-compose up -d` (postgres, pgadmin)
 - MCP Server çalışıyor olmalı: `dotnet run` → `http://localhost:5290`
+
+## Inventory MCP Client
+
+> VS Copilot arabirimi yerine local LLM kullanarak MCP server araçlarını çalıştıran deneysel örnek. Henüz geliştirme aşamasında.
