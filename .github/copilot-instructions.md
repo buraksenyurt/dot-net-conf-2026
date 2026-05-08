@@ -64,6 +64,7 @@ The README follows this narrative structure:
 | `business-analyst` | `write-user-story` | None |
 | `devops-engineer` | `configure-cicd-pipeline` | `run-and-analyze-tests` |
 | `qa-engineer` | `run-and-analyze-tests` | `write-user-story` |
+| `wireframe-designer` | `create-wireframe`, `validate-wireframe` | None |
 
 ### Skill Invocation Rules for Custom Agents
 
