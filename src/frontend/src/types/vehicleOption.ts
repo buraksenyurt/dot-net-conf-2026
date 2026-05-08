@@ -57,3 +57,43 @@ export interface CreateCustomerRequest {
   companyName?: string
   taxNumber?: string
 }
+
+// US-007 ─────────────────────────────────────────────────────────────────────
+
+export const VehicleOptionStatus = {
+  Active: 1,
+  Expired: 2,
+  Cancelled: 3
+} as const
+
+export type VehicleOptionStatus = (typeof VehicleOptionStatus)[keyof typeof VehicleOptionStatus]
+
+export interface VehicleOptionSummaryDto {
+  id: string
+  vehicleId: string
+  vehicleDisplayName: string
+  vehicleVIN: string
+  customerId: string
+  customerDisplayName: string
+  serviceAdvisorId: string
+  serviceAdvisorDisplayName: string
+  expiresAt: string
+  optionFeeAmount: number
+  optionFeeCurrency: string
+  notes?: string
+  status: VehicleOptionStatus
+  isExpired: boolean
+  createdAt: string
+}
+
+export interface VehicleOptionSummaryQuery {
+  customerSearch?: string
+  vehicleSearch?: string
+  status?: VehicleOptionStatus | null
+  createdFrom?: string | null
+  createdTo?: string | null
+  page: number
+  pageSize: number
+  sortBy: string
+  sortDirection: 'asc' | 'desc'
+}

@@ -1,0 +1,374 @@
+<!-- 
+  TYPE: Wireframe
+  LAYOUT: MasterLayout (Sidebar + Header)
+  PAGE: Vehicle Option Summary List
+  DESC: Tüm araç opsiyonlama kayıtlarının filtrelenebilir özet listesi. US-007 referansı.
+  USER STORY: docs/business/US-007-vehicle-option-summary-list.md
+-->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wireframe: Araç Opsiyonlama Özet Listesi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        body { padding: 20px; background: #f8f9fa; }
+        .wireframe-box { border: 2px dashed #ccc; padding: 15px; background: #fff; margin-bottom: 20px; }
+        .wireframe-label { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block; }
+        .wireframe-note {
+            border: 1px dashed #adb5bd;
+            background: #fff3cd;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        th[aria-sort] { cursor: pointer; user-select: none; }
+        th[aria-sort]:hover { background-color: #e9ecef; }
+    </style>
+</head>
+<body>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Araç Opsiyonlama Listesi</li>
+        </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1 class="h3 mb-1">Araç Opsiyonlama Özet Listesi</h1>
+            <p class="text-muted mb-0">Tüm danışmanlara ait opsiyonlama kayıtlarını filtreleyin ve sorgulayın.</p>
+        </div>
+    </div>
+
+    <!-- ===================== FILTER SECTION ===================== -->
+    <div class="wireframe-box">
+        <span class="wireframe-label">Filtreleme Alanı (AC-2)</span>
+
+        <form role="search" aria-label="Opsiyon filtreleri" novalidate>
+            <div class="row g-3 align-items-end">
+
+                <!-- Müşteri Arama -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label for="customer-search" class="form-label">
+                        <i class="bi bi-person me-1" aria-hidden="true"></i>Müşteri Adı / Soyadı
+                    </label>
+                    <input
+                        type="search"
+                        id="customer-search"
+                        name="customerSearch"
+                        class="form-control"
+                        placeholder="Örn: Ahmet Yılmaz"
+                        aria-describedby="customer-search-hint"
+                    />
+                    <div id="customer-search-hint" class="form-text wireframe-note">
+                        BR-5: FirstName + LastName üzerinde ILIKE (kısmi, case-insensitive)
+                    </div>
+                </div>
+
+                <!-- Araç Arama -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label for="vehicle-search" class="form-label">
+                        <i class="bi bi-car-front me-1" aria-hidden="true"></i>Araç / VIN
+                    </label>
+                    <input
+                        type="search"
+                        id="vehicle-search"
+                        name="vehicleSearch"
+                        class="form-control"
+                        placeholder="Marka, model veya VIN"
+                        aria-describedby="vehicle-search-hint"
+                    />
+                    <div id="vehicle-search-hint" class="form-text wireframe-note">
+                        BR-5: Brand + Model + VIN alanlarında ILIKE
+                    </div>
+                </div>
+
+                <!-- Durum Filtresi -->
+                <div class="col-12 col-md-6 col-lg-2">
+                    <label for="status-filter" class="form-label">
+                        <i class="bi bi-funnel me-1" aria-hidden="true"></i>Durum
+                    </label>
+                    <select id="status-filter" name="status" class="form-select" aria-label="Opsiyon durumu filtresi">
+                        <option value="">Tümü</option>
+                        <option value="1">Aktif</option>
+                        <option value="2">Süresi Dolmuş</option>
+                        <option value="3">İptal Edilmiş</option>
+                    </select>
+                </div>
+
+                <!-- Oluşturulma Tarihi — Başlangıç -->
+                <div class="col-12 col-md-3 col-lg-2">
+                    <label for="created-from" class="form-label">
+                        <i class="bi bi-calendar me-1" aria-hidden="true"></i>Tarihten
+                    </label>
+                    <input
+                        type="date"
+                        id="created-from"
+                        name="createdFrom"
+                        class="form-control"
+                        aria-describedby="date-range-hint"
+                    />
+                    <div id="date-range-hint" class="form-text wireframe-note">
+                        AC-2: Oluşturulma tarihi aralığı (UTC)
+                    </div>
+                </div>
+
+                <!-- Oluşturulma Tarihi — Bitiş -->
+                <div class="col-12 col-md-3 col-lg-2">
+                    <label for="created-to" class="form-label">
+                        <i class="bi bi-calendar-check me-1" aria-hidden="true"></i>Tarihe
+                    </label>
+                    <input
+                        type="date"
+                        id="created-to"
+                        name="createdTo"
+                        class="form-control"
+                        aria-describedby="date-range-hint"
+                    />
+                </div>
+
+                <!-- Aksiyon Butonları -->
+                <div class="col-12 col-lg-auto d-flex gap-2 align-items-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-1" aria-hidden="true"></i>Filtrele
+                    </button>
+                    <button type="reset" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Temizle
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <!-- END FILTER SECTION -->
+
+    <!-- ===================== ERROR STATE (AC-4) ===================== -->
+    <div class="alert alert-danger d-none" role="alert" aria-live="assertive" id="error-banner">
+        <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+        Opsiyonlama kayıtları yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin veya tekrar deneyin.
+    </div>
+
+    <!-- ===================== RESULTS SECTION ===================== -->
+    <div class="wireframe-box">
+        <span class="wireframe-label">Sonuç Tablosu — Opsiyon Listesi (AC-1, AC-3, BR-3)</span>
+
+        <!-- Tablo Üstü: Kayıt sayısı + Sayfa boyutu seçici -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <small class="text-muted" role="status" aria-live="polite">
+                Toplam <strong>[Dynamic: totalCount]</strong> kayıt gösteriliyor
+                <span class="wireframe-note ms-2">PagedResult.totalCount</span>
+            </small>
+            <div class="d-flex align-items-center gap-2">
+                <label for="page-size" class="form-label mb-0 text-nowrap">Sayfa boyutu:</label>
+                <select id="page-size" name="pageSize" class="form-select form-select-sm" style="width: auto;"
+                        aria-label="Sayfa başına kayıt sayısı">
+                    <option value="10">10</option>
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle mb-0"
+                   aria-label="Araç opsiyonlama özet listesi">
+                <thead class="table-light">
+                    <tr>
+                        <!-- BR-3: Sütun başlıklarına tıklayarak sıralama -->
+                        <th scope="col" aria-sort="none">
+                            <button class="btn btn-link btn-sm p-0 text-dark text-decoration-none fw-semibold"
+                                    aria-label="Müşteri adına göre sırala">
+                                Müşteri
+                                <i class="bi bi-arrow-down-up ms-1 text-muted" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col" aria-sort="none">
+                            <button class="btn btn-link btn-sm p-0 text-dark text-decoration-none fw-semibold"
+                                    aria-label="Araç adına göre sırala">
+                                Araç
+                                <i class="bi bi-arrow-down-up ms-1 text-muted" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col">VIN</th>
+                        <th scope="col">Durum</th>
+                        <th scope="col" aria-sort="ascending">
+                            <button class="btn btn-link btn-sm p-0 text-dark text-decoration-none fw-semibold"
+                                    aria-label="Bitiş tarihine göre sırala (artan)">
+                                Bitiş Tarihi
+                                <i class="bi bi-arrow-up ms-1 text-primary" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col" class="text-end">Opsiyon Ücreti</th>
+                        <th scope="col">Servis Danışmanı</th>
+                    </tr>
+                </thead>
+                <tbody id="option-list-body">
+
+                    <!-- Örnek Satır 1: Active (AC-3: yeşil badge) -->
+                    <tr>
+                        <td>
+                            <span class="fw-medium">Ahmet Yılmaz</span>
+                            <div class="wireframe-note mt-1">customerDisplayName</div>
+                        </td>
+                        <td>
+                            <span class="fw-medium">Honda Civic 2026</span>
+                            <div class="wireframe-note mt-1">vehicleDisplayName (Marka Model Yıl)</div>
+                        </td>
+                        <td>
+                            <code class="text-body">1HGBH41JXMN109186</code>
+                            <div class="wireframe-note mt-1">vehicleVIN</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-success" aria-label="Durum: Aktif">Aktif</span>
+                        </td>
+                        <td>
+                            <time datetime="2026-06-01">01.06.2026</time>
+                            <div class="wireframe-note mt-1">expiresAt (UTC → local format)</div>
+                        </td>
+                        <td class="text-end">
+                            <strong>5.000,00 ₺</strong>
+                            <div class="wireframe-note mt-1">optionFeeAmount + optionFeeCurrency</div>
+                        </td>
+                        <td>
+                            Mehmet Kaya
+                            <div class="wireframe-note mt-1">serviceAdvisorDisplayName</div>
+                        </td>
+                    </tr>
+
+                    <!-- Örnek Satır 2: Expired (AC-3: sarı/turuncu badge, BR-2) -->
+                    <tr>
+                        <td>
+                            <span class="fw-medium">Fatma Demir</span>
+                        </td>
+                        <td>
+                            <span class="fw-medium">Toyota Corolla 2025</span>
+                        </td>
+                        <td>
+                            <code class="text-body">2T1BURHE0JC006789</code>
+                        </td>
+                        <td>
+                            <span class="badge bg-warning text-dark" aria-label="Durum: Süresi Dolmuş">
+                                Süresi Dolmuş
+                            </span>
+                            <div class="wireframe-note mt-1">
+                                BR-2: DB'de Active ama ExpiresAt &lt; UTC Now → Expired göster
+                            </div>
+                        </td>
+                        <td>
+                            <time datetime="2026-04-15" class="text-warning fw-medium">15.04.2026</time>
+                        </td>
+                        <td class="text-end">
+                            <strong>3.500,00 ₺</strong>
+                        </td>
+                        <td>Ali Çelik</td>
+                    </tr>
+
+                    <!-- Örnek Satır 3: Cancelled (AC-3: gri badge) -->
+                    <tr>
+                        <td>
+                            <span class="fw-medium">Mustafa Kara</span>
+                        </td>
+                        <td>
+                            <span class="fw-medium">Ford Focus 2024</span>
+                        </td>
+                        <td>
+                            <code class="text-body">1FADP3F22EL256789</code>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary" aria-label="Durum: İptal Edilmiş">
+                                İptal Edilmiş
+                            </span>
+                        </td>
+                        <td>
+                            <time datetime="2026-05-20">20.05.2026</time>
+                        </td>
+                        <td class="text-end">
+                            <strong>4.200,00 ₺</strong>
+                        </td>
+                        <td>Mehmet Kaya</td>
+                    </tr>
+
+                    <!-- Placeholder rows indicator -->
+                    <tr class="table-light">
+                        <td colspan="7" class="text-center text-muted py-2">
+                            <em>… (sayfa başına 20 kayıt, toplam [totalCount] kayıt)</em>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===================== PAGINATION (AC-1, BR-4) ===================== -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3 gap-2">
+            <small class="text-muted">
+                Sayfa <strong>1</strong> / <strong>[Dynamic: totalPages]</strong>
+                &mdash; Toplam <strong>[Dynamic: totalCount]</strong> kayıt
+                <span class="wireframe-note ms-2">PagedResult: page, totalPages, totalCount</span>
+            </small>
+            <nav aria-label="Opsiyon listesi sayfalama">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Önceki sayfa" aria-disabled="true">
+                            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Sonraki sayfa">
+                            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+    <!-- END RESULTS SECTION -->
+
+    <!-- ===================== EMPTY STATE (AC-4) ===================== -->
+    <div class="wireframe-box d-none" id="empty-state" role="status" aria-live="polite">
+        <span class="wireframe-label">Boş Durum — Filtre Sonucu Kayıt Yok</span>
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-1 d-block mb-3" aria-hidden="true"></i>
+            <p class="mb-1 fw-medium">Opsiyonlama kaydı bulunamadı.</p>
+            <p class="small text-muted">
+                Arama kriterlerinizi değiştirip tekrar deneyebilirsiniz.
+                <br />
+                <button type="button" class="btn btn-link btn-sm p-0">Filtreleri temizle</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- ===================== DESIGN NOTES ===================== -->
+    <div class="wireframe-box mt-4">
+        <span class="wireframe-label">Wireframe Tasarım Notları (Geliştirici Referansı)</span>
+        <ul class="small text-muted mb-0">
+            <li><strong>AC-1:</strong> Varsayılan sıralama <code>expiresAt ASC</code> — en yakın bitiş tarihi üstte.</li>
+            <li><strong>AC-3 / BR-2:</strong> <code>isExpired=true</code> olan veya <code>ExpiresAt &lt; UTC Now &amp;&amp; status=Active</code> olanlar <code>Expired</code> badge gösterir; DB güncellenmez.</li>
+            <li><strong>BR-4:</strong> Sayfa boyutu seçici: 10 / 20 (varsayılan) / 50. <code>pageSize</code> query param olarak gönderilir.</li>
+            <li><strong>BR-1:</strong> Tüm danışmanların opsiyonları listelenir (US-005 dashboard'undan farklı olarak kısıtlama yoktur).</li>
+            <li><strong>AC-5:</strong> İlk yükleme &le; 2 sn, filtre güncelleme &le; 1 sn hedef performans.</li>
+            <li><strong>API:</strong> <code>GET /api/vehicle-options</code> — <code>VehicleOptionSummaryDto</code> + <code>PagedResult&lt;T&gt;</code> response.</li>
+            <li><strong>Sıralama:</strong> Sütun başlık butonlarına tıklanarak <code>sortBy</code> + <code>sortDirection</code> query param'ları değiştirilir.</li>
+            <li><strong>Hata Durumu:</strong> API hatasında <code>#error-banner</code> görünür hale getirilir; tablo alanı boş bırakılmaz.</li>
+        </ul>
+    </div>
+
+</body>
+</html>

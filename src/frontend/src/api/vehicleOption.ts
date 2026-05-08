@@ -1,5 +1,11 @@
 import axios from 'axios'
-import type { VehicleOption, CreateVehicleOptionRequest } from '../types/vehicleOption'
+import type {
+  VehicleOption,
+  CreateVehicleOptionRequest,
+  VehicleOptionSummaryDto,
+  VehicleOptionSummaryQuery
+} from '../types/vehicleOption'
+import type { PagedResult } from '../types/vehicleOption'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5280/api'
 
@@ -36,6 +42,15 @@ export const vehicleOptionApi = {
 
   async getByCustomer(customerId: string): Promise<VehicleOption[]> {
     const response = await api.get<VehicleOption[]>(`/vehicle-options/customer/${customerId}`)
+    return response.data
+  },
+
+  // US-007: Filtrelenebilir özet liste
+  async getSummary(query: VehicleOptionSummaryQuery): Promise<PagedResult<VehicleOptionSummaryDto>> {
+    const params = Object.fromEntries(
+      Object.entries(query).filter(([, v]) => v !== null && v !== undefined && v !== '')
+    )
+    const response = await api.get<PagedResult<VehicleOptionSummaryDto>>('/vehicle-options', { params })
     return response.data
   }
 }
