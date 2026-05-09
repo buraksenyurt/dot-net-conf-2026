@@ -49,7 +49,7 @@ public record VehicleOptionResult(
     decimal OptionFeeAmount,
     string OptionFeeCurrency,
     string? Notes,
-    string Status,
+    int Status,
     bool IsExpired,
     DateTime CreatedAt,
     Guid? ServiceAdvisorId,
@@ -183,6 +183,24 @@ public class DmsApiClient
         {
             return new ApiResponse<bool>(false, false, ex.Message);
         }
+    }
+
+    public async Task<ApiResponse<PagedResult<VehicleOptionResult>>> GetOptionSummaryAsync(
+        int? status = null,
+        string? customerSearch = null,
+        string? vehicleSearch = null,
+        int page = 1,
+        int pageSize = 20)
+    {
+        var query = BuildQuery(
+            ("page", page.ToString()),
+            ("pageSize", pageSize.ToString()),
+            ("status", status?.ToString()),
+            ("customerSearch", customerSearch),
+            ("vehicleSearch", vehicleSearch)
+        );
+
+        return await GetAsync<PagedResult<VehicleOptionResult>>($"api/vehicle-options{query}");
     }
 
     public async Task<ApiResponse<List<VehicleOptionResult>>> GetAdvisorDashboardAsync(Guid advisorId)

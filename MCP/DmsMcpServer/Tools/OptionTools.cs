@@ -12,6 +12,70 @@ public class OptionTools
 
     public OptionTools(DmsApiClient api) => _api = api;
 
+    [McpServerTool(Name = "list_options")]
+    [Description(
+        "Araç opsiyonlarını listeler ve filtreler. " +
+        "status parametresi ile durum filtrelemesi yapılabilir: " +
+        "1=Active (Aktif), 2=Expired (Süresi Dolmuş), 3=Cancelled (İptal Edilmiş). " +
+        "Parametre verilmezse tüm opsiyonlar listelenir. " +
+        "customerSearch ile müşteri adına, vehicleSearch ile araç markası/modeli/VIN'e göre arama yapılabilir. " +
+        "Örnek kullanım: süresi dolmuş opsiyonlar, aktif opsiyonlar, belirli müşterinin opsiyonları.")]
+    public async Task<string> ListOptions(
+        [Description("Durum filtresi: 1=Active, 2=Expired, 3=Cancelled. Boş bırakılırsa tümü listelenir.")] int? status = null,
+        [Description("Müşteri adı ile arama (kısmi eşleşme)")] string? customerSearch = null,
+        [Description("Araç markası, modeli veya VIN ile arama (kısmi eşleşme)")] string? vehicleSearch = null,
+        [Description("Sayfa numarası (varsayılan: 1)")] int page = 1,
+        [Description("Sayfa boyutu (varsayılan: 20, maks: 50)")] int pageSize = 20)
+    {
+        var result = await _api.GetOptionSummaryAsync(status, customerSearch, vehicleSearch, page, pageSize);
+
+        if (!result.Success)
+            return $"Hata: {result.Error}";
+
+        var paged = result.Data!;
+
+        if (!paged.Items.Any())
+        {
+            var filterDesc = status switch
+            {
+                1 => "aktif",
+                2 => "süresi dolmuş",
+                3 => "iptal edilmiş",
+                _ => null
+            };
+            return filterDesc != null
+                ? $"Kayıt bulunamadı: {filterDesc} opsiyon yok."
+                : "Kayıt bulunamadı.";
+        }
+
+        var statusLabel = status switch
+        {
+            1 => "Aktif",
+            2 => "Süresi Dolmuş",
+            3 => "İptal Edilmiş",
+            _ => "Tüm"
+        };
+
+        return JsonSerializer.Serialize(new
+        {
+            filtre = statusLabel,
+            toplam = paged.TotalCount,
+            sayfa = $"{paged.Page}/{paged.TotalPages}",
+            opsiyonlar = paged.Items.Select(o => new
+            {
+                id = o.Id,
+                araç = $"{o.VehicleDisplayName} ({o.VehicleVIN})",
+                müşteri = o.CustomerDisplayName,
+                durum = o.Status switch { 1 => "Active", 2 => "Expired", 3 => "Cancelled", _ => o.Status.ToString() },
+                süresiDolmuMu = o.IsExpired,
+                bitişTarihi = o.ExpiresAt.ToString("yyyy-MM-dd"),
+                ücret = $"{o.OptionFeeAmount} {o.OptionFeeCurrency}",
+                danışman = o.ServiceAdvisorDisplayName ?? "-",
+                notlar = o.Notes
+            })
+        }, new JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+    }
+
     [McpServerTool(Name = "create_option")]
     [Description(
         "Bir aracı belirli bir müşteri adına rezerve eder (opsiyon oluşturur). " +
@@ -105,7 +169,7 @@ public class OptionTools
                 id = o.Id,
                 vehicle = $"{o.VehicleDisplayName} ({o.VehicleVIN})",
                 customer = o.CustomerDisplayName,
-                status = o.Status,
+                status = o.Status switch { 1 => "Active", 2 => "Expired", 3 => "Cancelled", _ => o.Status.ToString() },
                 isExpired = o.IsExpired,
                 expiresAt = o.ExpiresAt.ToString("yyyy-MM-dd"),
                 optionFee = $"{o.OptionFeeAmount} {o.OptionFeeCurrency}",

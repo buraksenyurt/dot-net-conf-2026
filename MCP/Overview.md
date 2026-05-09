@@ -10,6 +10,8 @@ Bu senaryo, Bayi Yönetim Sistemi (DMS) domain'i üzerine inşa edilmiş bir **M
 | Tezlaa aracı 5 günlüğüne opsiyonlamak isteyen bir müşterimiz var. Kapora olarak 10_000 Dolar yatırdı. | `list_vehicles` -> `create_option` |
 | Spidi Gonzalez için bir araç opsiyonlamak istiyorum. | `list_customers` -> `list_vehicles` -> `create_option` |
 | Envanterden bir Satışta aracı al, Alvo Yarnsby adlı müşteri için 7 günlük opsiyon oluştur. | `list_vehicles` -> `list_customers` -> `create_option` |
+| Süresi dolmuş opsiyonlu araçların listesini getirir misin? | `list_options(status=2)` |
+| Mertzedes araçlar üzerindeki opsiyonlar? | list_options(vehicleSearch="Mertzedes") |
 
 ---
 
