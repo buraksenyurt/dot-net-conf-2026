@@ -61,7 +61,7 @@ GET  /api/service-advisors/{id:guid}/dashboard
   "vehicleDisplayName": "Honda Civic 2026",
   "vehicleVIN": "1HGBH41JXMN109186",
   "customerId": "guid",
-  "customerDisplayName": "Ahmet Yılmaz",
+  "customerDisplayName": "John Doe",
   "expiresAt": "2026-03-15T00:00:00Z",
   "optionFeeAmount": 5000,
   "optionFeeCurrency": "TRY",
@@ -70,7 +70,7 @@ GET  /api/service-advisors/{id:guid}/dashboard
   "isExpired": false,
   "createdAt": "...",
   "serviceAdvisorId": "guid",
-  "serviceAdvisorDisplayName": "Mehmet Kaya"
+  "serviceAdvisorDisplayName": "Serko Havrick"
 }
 ```
 

@@ -67,7 +67,7 @@ onMounted(() => load())
                 v-model="query.customerSearch"
                 type="search"
                 class="form-control"
-                placeholder="Örn: Ahmet Yılmaz"
+                placeholder="Örn: John Doe"
                 aria-describedby="customer-search-hint"
               />
               <div id="customer-search-hint" class="form-text text-muted">

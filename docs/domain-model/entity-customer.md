@@ -47,8 +47,8 @@ Bireysel müşteri oluşturur. `CompanyName` ve `TaxNumber` otomatik olarak `nul
 
 ```csharp
 Customer.CreateIndividual(
-    firstName: "Ahmet",
-    lastName: "Yılmaz",
+    firstName: "Alvo",
+    lastName: "Yarnsby",
     email: emailValueObject,
     phone: "+90 532 000 0000"
 ) // → Result<Customer>
@@ -59,11 +59,11 @@ Kurumsal müşteri oluşturur. `CompanyName` ve `TaxNumber` zorunludur.
 
 ```csharp
 Customer.CreateCorporate(
-    firstName: "Mehmet",
-    lastName: "Demir",
+    firstName: "Borko",
+    lastName: "Vexler",
     email: emailValueObject,
     phone: "+90 212 000 0000",
-    companyName: "Demir Otomotiv A.Ş.",
+    companyName: "Vexler Otomotiv A.Ş.",
     taxNumber: "1234567890"
 ) // → Result<Customer>
 ```
@@ -77,8 +77,8 @@ Bireysel müşterilerde çağrılırsa hata döner.
 
 ### `GetDisplayName`
 Görüntüleme için birleştirilmiş isim döner:
-- **Individual**: `"Ahmet Yılmaz"`
-- **Corporate**: `"Demir Otomotiv A.Ş. (Mehmet Demir)"`
+- **Individual**: `"John Doe"`
+- **Corporate**: `"Vexler Otomotiv A.Ş. (Borko Vexler)"`
 
 ## İş Kuralları
 

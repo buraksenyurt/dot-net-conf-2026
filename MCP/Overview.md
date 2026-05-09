@@ -9,7 +9,7 @@ Bu senaryo, Bayi Yönetim Sistemi (DMS) domain'i üzerine inşa edilmiş bir **M
 | Şu an opsiyonlanabilen araçlar varsa listeler misin? | `list_vehicles` |
 | Tezlaa aracı 5 günlüğüne opsiyonlamak isteyen bir müşterimiz var. Kapora olarak 10_000 Dolar yatırdı. | `list_vehicles` -> `create_option` |
 | Spidi Gonzalez için bir araç opsiyonlamak istiyorum. | `list_customers` -> `list_vehicles` -> `create_option` |
-| Envanterden bir Satışta aracı al, Burak Selim adlı müşteri için 7 günlük opsiyon oluştur. | `list_vehicles` -> `list_customers` -> `create_option` |
+| Envanterden bir Satışta aracı al, Alvo Yarnsby adlı müşteri için 7 günlük opsiyon oluştur. | `list_vehicles` -> `list_customers` -> `create_option` |
 
 ---
 
@@ -90,11 +90,11 @@ Bu araçlar, AI'ın kendi kaynaklarını okumasını sağlar — RAG altyapısı
 
 ```text
 Kullanıcı → AI:
-  "Envanterden bir Satışta aracı al, Burak Selim adlı müşteri için 7 günlük opsiyon oluştur."
+  "Envanterden bir Satışta aracı al, Alvo Yarnsby adlı müşteri için 7 günlük opsiyon oluştur."
 
 AI (sırasıyla tool çağrıları):
   1. list_vehicles(status="OnSale")          → [{ id, brand, model, vin, ... }]
-  2. list_customers(search="Burak Selim")  → [{ id, displayName, ... }]
+  2. list_customers(search="Alvo Yarnsby")  → [{ id, displayName, ... }]
   3. create_option(vehicleId, customerId, validityDays=7, optionFee=0)
      → "Opsiyon oluşturuldu. Araç 'Reserved' durumuna geçti."
 ```

@@ -93,7 +93,7 @@ GET  /api/service-advisors/{id}/dashboard
 // Uygulama katmanında oluşturma
 var emailResult = Email.Create("advisor@dealership.com");
 var hash = _passwordHasher.Hash("SecurePass123!");
-var result = ServiceAdvisor.Create("Ahmet", "Yılmaz", emailResult.Value, hash, "Satış");
+var result = ServiceAdvisor.Create("Alvo", "Yarnsby", emailResult.Value, hash, "Satış");
 
 // Oturum açma (LoginServiceAdvisorCommandHandler)
 var advisor = await _repository.GetByEmailAsync(command.Email);

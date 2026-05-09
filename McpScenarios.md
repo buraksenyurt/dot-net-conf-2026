@@ -7,7 +7,7 @@ Bu dokümanda MCP Server örneğine ait iki senaryo gösterilmektedir. Bu senary
 Bu senaryoda sistemde kayıtlı olan bir müşteri için yine sistemde var olan araçlardan birisinin satın alma opsiyonlu olarak ayrılması söz konusudur. Yetkili personel *(ki bu denemede VS Code kullanan geliştirici :D)* şöyle bir prompt girer.
 
 ```text
-Burak Selim için yeni bir araç opsiyonlamak istiyorum.
+Alvo Yarnsby için yeni bir araç opsiyonlamak istiyorum.
 ```
 
 Buna göre VS Code sorulan soruyla ilgili bir MCP server olup olmadığına bakar ve ilgili aracı keşfettikten sonra olaylar aşağıdaki gibi gelişir.

@@ -33,7 +33,7 @@ public class GetVehicleOptionSummaryQueryHandlerTests
         return Vehicle.Create(vinObj, spec, purchase, suggested).Value!;
     }
 
-    private static Customer CreateCustomer(string firstName = "Ahmet", string lastName = "Yılmaz", string email = "ahmet@example.com")
+    private static Customer CreateCustomer(string firstName = "Alvo", string lastName = "Yarnsby", string email = "alvo@example.com")
     {
         var emailObj = Email.Create(email).Value!;
         return Customer.CreateIndividual(firstName, lastName, emailObj, "5551234567").Value!;
@@ -154,7 +154,7 @@ public class GetVehicleOptionSummaryQueryHandlerTests
     public async Task Handle_DtoFields_MappedCorrectly()
     {
         var vehicle = CreateVehicle();
-        var customer = CreateCustomer("Ahmet", "Yılmaz");
+        var customer = CreateCustomer("Alvo", "Yarnsby");
         var option = CreateActiveOption(vehicle, customer);
         SetupRepository(new[] { option }, 1);
 
@@ -165,7 +165,7 @@ public class GetVehicleOptionSummaryQueryHandlerTests
         var dto = result.Items.First();
         dto.VehicleDisplayName.Should().Be("Honda Civic 2026");
         dto.VehicleVIN.Should().Be("1HGBH41JXMN109186");
-        dto.CustomerDisplayName.Should().Be("Ahmet Yılmaz");
+        dto.CustomerDisplayName.Should().Be("John Doe");
         dto.OptionFeeAmount.Should().Be(5000);
         dto.OptionFeeCurrency.Should().Be("TRY");
         dto.ServiceAdvisorDisplayName.Should().BeNull();

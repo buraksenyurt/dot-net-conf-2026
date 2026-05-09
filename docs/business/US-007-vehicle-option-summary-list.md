@@ -79,11 +79,11 @@ Müşteri adı araması `FirstName` ve `LastName` alanları üzerinde yapılır.
 **Beklenen sonuç**: Tüm opsiyonlar bitiş tarihine göre artan sırada, durum badge'leriyle listelenir; sayfalama kontrolü görünür
 
 ### Senaryo 2: Müşteri Adına Göre Filtreleme
-**Koşul**: "Ahmet Yılmaz" adlı müşteriye ait aktif bir opsiyon kayıtlı  
+**Koşul**: "John Doe" adlı müşteriye ait aktif bir opsiyon kayıtlı  
 **Adımlar**:
-1. Danışman müşteri arama kutusuna "ahmet" yazar
+1. Danışman müşteri arama kutusuna "John" yazar
 2. Filtre uygulanır  
-**Beklenen sonuç**: Sadece "Ahmet Yılmaz"a ait opsiyonlar listelenir; diğer müşterilerin opsiyonları görünmez
+**Beklenen sonuç**: Sadece "John Doe"a ait opsiyonlar listelenir; diğer müşterilerin opsiyonları görünmez
 
 ### Senaryo 3: Durum Filtrelemesi — Yalnızca Aktif
 **Koşul**: Active, Expired ve Cancelled opsiyonlar mevcut  
@@ -149,9 +149,9 @@ GET /api/vehicle-options
   "vehicleDisplayName": "Honda Civic 2026",
   "vehicleVIN": "1HGBH41JXMN109186",
   "customerId": "guid",
-  "customerDisplayName": "Ahmet Yılmaz",
+  "customerDisplayName": "John Doe",
   "serviceAdvisorId": "guid",
-  "serviceAdvisorDisplayName": "Mehmet Kaya",
+  "serviceAdvisorDisplayName": "Serko Havrick",
   "expiresAt": "2026-06-01T00:00:00Z",
   "optionFeeAmount": 5000.00,
   "optionFeeCurrency": "TRY",

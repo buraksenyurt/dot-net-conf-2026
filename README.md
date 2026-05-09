@@ -235,7 +235,7 @@ dotnet run
 Sonrasında MCP Server başlatılır ve VS Code arabiriminde bir ajan seçilip örnek bir istekte bulunulur.
 
 ```text
-Envanterden bir Satışta aracı al, Burak Selim adlı müşteri için 7 günlük opsiyon oluştur.
+Envanterden bir Satışta aracı al, Alvo Yarnsby adlı müşteri için 7 günlük opsiyon oluştur.
 ```
 
 ### SonarQube
@@ -512,13 +512,13 @@ Chatbot uygulamasına ait örnek bir çalışma zamanını aşağıda görebilir
 
 ```text
 Kullanıcı → AI:
-  "Envanterden satışta olan bir aracı al, Burak Selim adlı müşteri için
+  "Envanterden bir Satışta aracı al, Alvo Yarnsby adlı müşteri için
    7 günlük opsiyon oluştur."
 
 AI (sırasıyla tool çağrıları):
   1. list_vehicles(status="OnSale")          → araç listesi
-  2. list_customers(search="Burak Selim")   → [] (bulunamadı)
-  3. register_customer(name="Burak Selim")  → yeni müşteri kaydı
+  2. list_customers(search="Alvo Yarnsby")   → [] (bulunamadı)
+  3. register_customer(name="Alvo Yarnsby")  → yeni müşteri kaydı
   4. create_option(vehicleId, customerId, validityDays=7)
      → "Opsiyon oluşturuldu. Araç 'Reserved' durumuna geçti."
 ```

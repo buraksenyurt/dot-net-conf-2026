@@ -50,6 +50,12 @@
               Yeni Opsiyon
             </router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="/vehicle-options/summary" class="nav-link text-white d-flex align-items-center" active-class="active">
+              <i class="bi bi-table me-2"></i>
+              Opsiyon Özeti
+            </router-link>
+          </li>
 
           <!-- Servis Danışmanı bölümü -->
           <li class="nav-item mt-2">
@@ -111,6 +117,7 @@
                <span v-else-if="$route.path === '/vehicles/new'">Yeni Araç Ekle</span>
                <span v-else-if="$route.path === '/vehicle-options'">Opsiyonlar</span>
                <span v-else-if="$route.path === '/vehicle-options/new'">Yeni Opsiyon</span>
+               <span v-else-if="$route.path === '/vehicle-options/summary'">Opsiyon Özeti</span>
                <span v-else-if="$route.path === '/advisor/dashboard'">Danışman Panosu</span>
                <span v-else>Araç Envanter Sistemi</span>
              </h5>

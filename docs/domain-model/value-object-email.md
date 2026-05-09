@@ -27,11 +27,11 @@ Bu sayede `User@EXAMPLE.com` ile `user@example.com` aynı e-posta olarak değerl
 ## Kullanım
 
 ```csharp
-var result = Email.Create("ahmet.yilmaz@example.com");
+var result = Email.Create("alvo.yarnsby@example.com");
 
 if (result.IsSuccess)
 {
-    Console.WriteLine(result.Value!.Value); // "ahmet.yilmaz@example.com"
+    Console.WriteLine(result.Value!.Value); // "alvo.yarnsby@example.com"
 }
 else
 {
