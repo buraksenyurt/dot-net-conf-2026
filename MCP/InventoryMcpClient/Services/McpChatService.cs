@@ -48,9 +48,16 @@ public sealed class McpChatService : IMcpChatService, IHostedService, IAsyncDisp
             "MCP: connected to {Url}. {Count} tools: {Names}",
             mcpServerUrl, _tools.Count, string.Join(", ", _tools.Select(t => t.Name)));
 
+        var networkTimeout = TimeSpan.FromSeconds(
+            _config.GetValue<int>("McpClient:NetworkTimeoutSeconds", 600));
+
         var openAiClient = new OpenAIClient(
             new ApiKeyCredential("lm-studio"),
-            new OpenAIClientOptions { Endpoint = new Uri(lmStudioUrl) });
+            new OpenAIClientOptions
+            {
+                Endpoint       = new Uri(lmStudioUrl),
+                NetworkTimeout = networkTimeout
+            });
 
         _chatClient = openAiClient.GetChatClient(chatModel).AsIChatClient();
 
@@ -188,9 +195,12 @@ public sealed class McpChatService : IMcpChatService, IHostedService, IAsyncDisp
             ("vin",       ["validate_vin",  "add_vehicle"]),
             ("müşteri",   ["list_customers", "register_customer"]),
             ("kayıt",     ["register_customer"]),
-            ("opsiyon",   ["create_option", "cancel_option", "get_advisor_dashboard"]),
+            ("opsiyon",   ["list_options", "create_option", "cancel_option", "get_advisor_dashboard"]),
             ("rezerv",    ["create_option"]),
             ("iptal",     ["cancel_option"]),
+            ("süresi",    ["list_options"]),
+            ("dolmuş",    ["list_options"]),
+            ("aktif",     ["list_options"]),
             ("dashboard", ["get_advisor_dashboard"]),
             ("danışman",  ["get_advisor_dashboard"]),
             ("hikaye",    ["get_user_story"]),

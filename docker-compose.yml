@@ -55,6 +55,8 @@ services:
   qdrant:
     image: qdrant/qdrant
     container_name: aio-qdrant
+    environment:
+      QDRANT__TELEMETRY_DISABLED: "true"
     ports:
       - "6333:6333" # REST API Portu
       - "6334:6334" # GRPC Portu
