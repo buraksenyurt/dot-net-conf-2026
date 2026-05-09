@@ -185,6 +185,38 @@ import [ComponentName] from '@/components/organisms/[ComponentName].vue'
 - API hatalarını kullanıcıya anlaşılır mesajla göster
 - `v-model` ile two-way binding, `computed` ile derived state
 
+### 6. Router ve Navigasyon Menüsünü Güncelle
+
+Yeni sayfa bir kullanıcı aksiyonu gerektiriyorsa (menüden erişilebilir bir sayfa ise) aşağıdaki adımları da uygula:
+
+#### 6a. Router'a Route Ekle
+```typescript
+// src/frontend/src/router/index.ts
+import [PageComponent] from '../views/[PageComponent].vue'
+
+// routes dizisine ekle:
+{ path: '/[path]', name: '[route-name]', component: [PageComponent], meta: { requiresAuth: true } },
+```
+
+#### 6b. Sidebar Menüsüne Link Ekle
+```vue
+<!-- src/frontend/src/App.vue — ilgili bölüme ekle -->
+<li class="nav-item">
+  <router-link to="/[path]" class="nav-link text-white d-flex align-items-center" active-class="active">
+    <i class="bi bi-[icon-name] me-2"></i>
+    [Türkçe Menü Adı]
+  </router-link>
+</li>
+```
+
+#### 6c. Header Başlığını Ekle
+```vue
+<!-- src/frontend/src/App.vue — header v-else-if zincirini genişlet -->
+<span v-else-if="$route.path === '/[path]'">[Türkçe Sayfa Başlığı]</span>
+```
+
+> **Not:** Sadece form, liste veya özet gibi bağımsız ekranlar menüye eklenir. Modal veya iç bileşenler için bu adım atlanır.
+
 ## Kontrol Listesi
 - [ ] HTML wireframe incelendi
 - [ ] TypeScript interface'ler tanımlandı
@@ -193,4 +225,7 @@ import [ComponentName] from '@/components/organisms/[ComponentName].vue'
 - [ ] ARIA etiketleri mevcut (accessibility)
 - [ ] Loading state yönetildi
 - [ ] Hata durumları gösteriliyor
+- [ ] Router'a route eklendi (gerekiyorsa)
+- [ ] Sidebar menüsüne link eklendi (gerekiyorsa)
+- [ ] Header başlık mapping'i eklendi (gerekiyorsa)
 - [ ] `yarn dev` ile test edildi
